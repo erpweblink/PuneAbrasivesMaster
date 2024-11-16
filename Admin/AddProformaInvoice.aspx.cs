@@ -584,36 +584,33 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
                                 Cls_Main.Conn_Close();
                             }
 
-                            if (CheckBox1.Checked == true)
-                            {
-
-                                mailsendforCustomer();
-                            }
-                            if (gvUserMail.Rows.Count > 0)
-                            {
-                                foreach (GridViewRow g2 in gvUserMail.Rows)
-                                {
-                                    bool chk = (g2.FindControl("chkSelect") as CheckBox).Checked;
-
-                                    while (chk == true)
-                                    {
-                                        flgs = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                flgs = false;
-                            }
-                            if (flgs == true)
-                            {
-
-                                mailsendforCustomerContact();
-
-                            }
+                           
                             //Save Tax Invoice Details End
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Proforma Invoice Updated Successfully..!!');window.location='ProformaInvoiceList.aspx'; ", true);
+                        }
+
+                        if (gvUserMail.Rows.Count > 0)
+                        {
+                            foreach (GridViewRow g2 in gvUserMail.Rows)
+                            {
+                                bool chk = (g2.FindControl("chkSelect") as CheckBox).Checked;
+
+                                while (chk == true)
+                                {
+                                    flgs = true;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            flgs = false;
+                        }
+                        if (flgs == true)
+                        {
+
+                            mailsendforCustomerContact();
+
                         }
                     }
                 }
@@ -1870,83 +1867,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         }
 
     }
-    private void mailsendforCustomer()
-    {
-        try
-        {
-            Report(txtInvoiceno.Text);
-            string strMessage = "Hello Sir/Ma'am " + txtbillingcustomer.Text.Trim() + "<br/>" +
-              "We wish to thank you for your valued inquiry towards " + "<strong>Pune Abrasives Pvt. Ltd.....!!!<strong>" + "<br/>" +
-                 "We sent you an Proforma Invoice." + "Proforma Invoice - " + txtInvoiceno.Text.Trim() + "/" + txtinvoiceDate.Text.Trim() + ".pdf" + "<br/>" +
 
-                 "Please find herewith attached best offer for your reference." + "<br/>" +
-
-                 "Hope this offer is in line with your requirements." + "<br/>" +
-
-                 //"Looking forward to your valuable reply with Quotation." + "<br/>" +
-
-                 "Feel free to contact us for any further queries & Clarifications." + "<br/>" +
-
-                 "Kind Regards," + "<br/>" +
-                 "<strong>Pune Abrasives Pvt. Ltd.<strong>";
-            string fileName = txtInvoiceno.Text + "-" + "QuotationInvoice.pdf";
-            string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
-            string mailTo = txtemail.Text.Trim().ToLower();
-            MailMessage mm = new MailMessage();
-            // mm.From = new MailAddress(fromMailID);
-
-            mm.Subject = txtbillingcustomer.Text + "_ProformaInvoice.pdf";
-             mm.To.Add(mailTo);
-          //  mm.To.Add("shubhpawar59@gmail.com");
-
-            mm.CC.Add("girish.kulkarni@puneabrasives.com");
-            //mm.CC.Add("b.tikhe@puneabrasives.com");
-            mm.CC.Add(Session["EmailID"].ToString().Trim().ToLower());
-            if (bytePdf != null)
-            {
-                Stream stream = new MemoryStream(bytePdf);
-                Attachment aa = new Attachment(stream, fileName);
-                mm.Attachments.Add(aa);
-            }
-            StreamReader reader = new StreamReader(Server.MapPath("~/Templates/CommentPage_templet.html"));
-            string readFile = reader.ReadToEnd();
-            string myString = "";
-            myString = readFile;
-
-            string multilineText = strMessage;
-            string formattedText = multilineText.Replace("\n", "<br />");
-
-            myString = myString.Replace("$Comment$", formattedText);
-
-            mm.Body = myString.ToString();
-            mm.IsBodyHtml = true;
-            //mm.From = new MailAddress("girish.kulkarni@puneabrasives.com", fromMailID);
-            mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
-
-            // Set the "Reply-To" header to indicate the desired display address
-            mm.ReplyToList.Add(new MailAddress(fromMailID));
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
-            smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
-            System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-            NetworkCred.UserName = ConfigurationManager.AppSettings["mailUserName"].ToLower();
-            NetworkCred.Password = ConfigurationManager.AppSettings["mailUserPass"].ToString();
-
-            smtp.UseDefaultCredentials = false;
-            smtp.Credentials = NetworkCred;
-            smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (object s, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
-            {
-                return true;
-            };
-            smtp.Send(mm);
-        }
-        catch (Exception ex)
-        {
-            string errorMsg = "An error occurred : " + ex.Message;
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
-        }
-    }
     public void Report(string Invoiceno)
     {
         try
