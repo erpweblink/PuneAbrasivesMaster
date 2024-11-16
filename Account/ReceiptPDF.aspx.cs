@@ -147,7 +147,7 @@ public partial class Account_ReceiptPDF : System.Web.UI.Page
             cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 25);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Pune Abrasives Pvt. Ltd.", 90, 800, 0);
             cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 11);
-            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Plot No. 84, 2nd Floor D2 Block, MIDC Chinchwad, KSB Chowk,Near Shell Petrol Pump,Pune - 411019", 90, 785, 0);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PLOT NO.84, D-II BLOCK, MIDC, CHINCHWAD PUNE- 411019.", 90, 785, 0);
             cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 11);
             cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "TEL NO : +91 9860441689, 9511712429   EMAIL : girish.kulkarni@puneabrasives.com  ", 90, 772, 0);
             cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 11);

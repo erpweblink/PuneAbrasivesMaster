@@ -208,9 +208,9 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
                 cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 25);
                 cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Pune Abrasives Pvt. Ltd.", 200, 815, 0);
                 cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 11);
-                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Plot No. 84, 2nd Floor D2 Block, MIDC Chinchwad, KSB Chowk,Near Shell Petrol Pump,Pune - 411019", 110, 800, 0);
+                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PLOT NO.84, D-II BLOCK, MIDC, CHINCHWAD PUNE- 411019.", 190, 800, 0);
                 cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 11);
-                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "EMAIL : girish.kulkarni@puneabrasives.com", 250, 785, 0);
+                cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "EMAIL : girish.kulkarni@puneabrasives.com", 230, 785, 0);
                 cb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 11);
                 cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "", 227, 740, 0);
                 cb.EndText();
@@ -224,9 +224,9 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
                 cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
                 cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "GSTIN :27ABCCS7002A1ZW" + "", 20, 765, 0);
                 cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
-                cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PAN NO: ATFP****J" + "", 140, 765, 0);
+                cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PAN NO: ABCCS7002A" + "", 140, 765, 0);
                 cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
-                cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "MAHARASHTRA STATE GST CODE : 27" + "", 230, 765, 0);
+                cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "MAHARASHTRA STATE GST CODE : 27" + "", 240, 765, 0);
                 cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
                 cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "CONTACT : +91 9860441689, 9511712429", 400, 765, 0);
                 cbbb.EndText();

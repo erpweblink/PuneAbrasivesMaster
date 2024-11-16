@@ -307,7 +307,7 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                                                 lblDescription = Dt.Rows[0]["Description"].ToString();
                                                 lblhsn = Dt.Rows[0]["HSN"].ToString();
                                             }
-                                            SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryDtls where RefNo='" + txtAgainstnumber.Text + "'", con);
+                                            SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryDtls where RefNo='" + txtAgainstnumber.Text + "' AND Productname='" + Product + "'", con);
                                             DataTable Dt1 = new DataTable();
                                             sad2.Fill(Dt1);
                                             con.Close(); // Close the connection when done
@@ -490,7 +490,7 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                                                 lblDescription = Dt.Rows[0]["Description"].ToString();
                                                 lblhsn = Dt.Rows[0]["HSN"].ToString();
                                             }
-                                            SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryDtls where RefNo='" + txtAgainstnumber.Text + "'", con);
+                                            SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryDtls where RefNo='" + txtAgainstnumber.Text + "' AND Productname='" + Product + "'", con);
                                             DataTable Dt1 = new DataTable();
                                             sad2.Fill(Dt1);
                                             con.Close(); // Close the connection when done

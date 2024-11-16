@@ -278,7 +278,7 @@
                                                     </div>
                                                     <div class="col-md-2 spancls">Bank Name<i class="reqcls">*&nbsp;</i> : </div>
                                                     <div class="col-md-4">
-                                                        <asp:TextBox ID="txtbankname" CssClass="form-control" runat="server" Width="100%" ReadOnly="true"></asp:TextBox>
+                                                        <asp:TextBox ID="txtbankname" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>
                                                         <asp:AutoCompleteExtender ID="AutoCompleteExtender2" runat="server" CompletionListCssClass="completionList"
                                                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetBankList"
