@@ -206,7 +206,7 @@ public partial class Account_Receipt : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT BankName from tblBankMaster where " + "BankName like @Search + '%' AND isdeleted='0' ";
+                com.CommandText = "select DISTINCT BankName from tblBankMaster where " + "BankName like '%'+ @Search + '%'  ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1328,11 +1328,11 @@ public partial class Account_Receipt : System.Web.UI.Page
     {
         if (ddltoaccountName.Text == "Bank" || ddltoaccountName.Text == "CC" || ddltoaccountName.Text == "OD" || ddltoaccountName.Text == "OD")
         {
-            txtbankname.Text = "HDFC Bank";
+            txtbankname.Text = "HDFC BANK LIMITED";
         }
         else
         {
-            txtbankname.Text = "Shirke Sir";
+            txtbankname.Text = "Account";
         }
     }
 
