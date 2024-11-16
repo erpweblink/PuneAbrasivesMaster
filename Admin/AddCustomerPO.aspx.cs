@@ -1690,6 +1690,19 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
         DataTable Dt = Cls_Main.Read_Table("SELECT ID FROM [tbl_CompanyMaster] where CompanyName='" + txtcompanyname.Text + "' ");
         Response.Redirect("CompanyMaster.aspx?ID=" + objcls.encrypt(Dt.Rows[0]["ID"].ToString()) + "&OAID=" + objcls.encrypt(txtpono.Text) + "");
     }
+
+    protected void ddlContacts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SqlDataAdapter Da = new SqlDataAdapter("select Name,EmailID,Number from tbl_CompanyMaster AS CM left join tbl_CompanyContactDetails AS CC on CM.CompanyCode=CC.CompanyCode  WHERE CC.ID='" + ddlContacts.SelectedValue + "'", Cls_Main.Conn);
+        DataTable Dt = new DataTable();
+        Da.Fill(Dt);
+        if (Dt.Rows.Count > 0)
+        {
+
+            txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
+            txtemail.Text = Dt.Rows[0]["EmailID"].ToString();
+        }
+    }
 }
 
 

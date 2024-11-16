@@ -298,7 +298,7 @@
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label2" runat="server" Font-Bold="true" CssClass="form-label"><span class="spncls">*</span>Kindd Att  :</asp:Label>
 
-                                    <asp:DropDownList runat="server" ID="ddlContacts" CssClass="form-control">
+                                    <asp:DropDownList runat="server" ID="ddlContacts" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlContacts_SelectedIndexChanged">
                                     </asp:DropDownList>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" InitialValue="-- Select Kindd Att --" runat="server" ErrorMessage="Please Add Contact person" ControlToValidate="ddlContacts" ForeColor="Red"></asp:RequiredFieldValidator>
 
