@@ -250,22 +250,22 @@
         <ContentTemplate>
             <div class="page-wrapper">
                 <div class="page-body">
-              
+
                     <div class="container py-3">
                         <div class="card">
-                          <div class="card-header text-uppercase text-black">
-                        <div class="row">
-                            <div class="col-10 col-md-10">
-                                <h5>ADD PAYMENT</h5>
+                            <div class="card-header text-uppercase text-black">
+                                <div class="row">
+                                    <div class="col-10 col-md-10">
+                                        <h5>ADD PAYMENT</h5>
+                                    </div>
+                                    <div class="col-2 col-md-2">
+                                        <asp:Button ID="Button1" CssClass="form-control btn btn-warning" Font-Bold="true" runat="server" Text="Payment List" OnClick="Button1_Click" />
+                                    </div>
+
+                                </div>
+
+
                             </div>
-                            <div class="col-2 col-md-2">
-                                <asp:Button ID="Button1" CssClass="form-control btn btn-warning" Font-Bold="true" runat="server" Text="Payment List" OnClick="Button1_Click" />
-                            </div>                        
-
-                        </div>
-
-
-                    </div>
 
                             <asp:HiddenField ID="hidden" runat="server" />
                             <asp:HiddenField ID="hidden1" runat="server" />
@@ -309,7 +309,7 @@
                                                     </div>
                                                     <div class="col-md-2 spancls">Bank Name<i class="reqcls">*&nbsp;</i> : </div>
                                                     <div class="col-md-4">
-                                                        <asp:TextBox ID="txtbankname" CssClass="form-control" runat="server" Width="100%" ReadOnly="true"></asp:TextBox>
+                                                        <asp:TextBox ID="txtbankname" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>
                                                         <asp:AutoCompleteExtender ID="AutoCompleteExtender2" runat="server" CompletionListCssClass="completionList"
                                                             CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                                             CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetBankList"
@@ -548,7 +548,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div><asp:Label runat="server" ID="lblFooterPaidVal" Visible="false" ></asp:Label>
+                                </div>
+                                <asp:Label runat="server" ID="lblFooterPaidVal" Visible="false"></asp:Label>
                             </div>
 
                         </div>

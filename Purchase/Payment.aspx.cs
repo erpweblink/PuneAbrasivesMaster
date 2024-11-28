@@ -16,6 +16,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using iTextSharp.tool.xml;
 
+
 public partial class Purchase_Payment : System.Web.UI.Page
 {
     SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["constr"].ConnectionString);
@@ -198,7 +199,7 @@ public partial class Purchase_Payment : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "select DISTINCT BankName from tblBankMaster where " + "BankName like @Search + '%' AND isdeleted='0' ";
+                com.CommandText = "select DISTINCT BankName from tblBankMaster where " + "BankName like  '%'+ @Search + '%' ";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1759,93 +1760,43 @@ public partial class Purchase_Payment : System.Web.UI.Page
     {
         try
         {
-            //string strMessage = "Hello " + txtPartyName.Text.Trim() + "<br/>" +
-
-            //            "Greetings From " + "<strong>EXCEL ENCLOSURES<strong>" + "<br/>" +
-            //            "We have sent you Payment Voucher." + "<br/>" +
-
-            //             "We Look Foward to Conducting Future Business with you." + "<br/>" +
-
-            //            "Kind Regards," + "<br/>" +
-            //            "<strong>EXCEL ENCLOSURES<strong>";
-
-            //string pdfname = txtPartyName.Text + "_" + txtbankname.Text + "_" + txtdate.Text + ".pdf";
-
-            //MemoryStream file = new MemoryStream(PDFF(id).ToArray());
-
-            //file.Seek(0, SeekOrigin.Begin);
-            //Attachment data = new Attachment(file, pdfname, "application/pdf");
-            //ContentDisposition disposition = data.ContentDisposition;
-            //disposition.CreationDate = System.DateTime.Now;
-            //disposition.ModificationDate = System.DateTime.Now;
-            //disposition.DispositionType = DispositionTypeNames.Attachment;
-
-            ////message.Body = txtmessagebody.Text;
-            //string FromMailID = ConfigurationManager.AppSettings["mailUserName"];
-            ////string FromMailID = "purchase @excelenclosures.com";
-            // string ToMailID = "erpweblink@gmail.com";//lblEmailID.Text;
-            ////string ToMailID = lblEmailID.Text;
-
-            //MailMessage mm = new MailMessage();
-            //mm.From = new MailAddress(FromMailID);
-            //mm.Subject = Subject;
-            //mm.To.Add(ToMailID);
-            ////mm.CC.Add("info@excelenclosures.net");
-            //mm.Attachments.Add(data);//Attach the file
-            //mm.Body = strMessage;
-            //mm.IsBodyHtml = true;
-            //SmtpClient smtp = new SmtpClient();
-            //smtp.Host = ConfigurationManager.AppSettings["Host"];
-            //smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
-            //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-            //NetworkCred.UserName = ConfigurationManager.AppSettings["mailUserName"];
-            //NetworkCred.Password = ConfigurationManager.AppSettings["mailUserPass"];
-            ////NetworkCred.UserName = "purchase@excelenclosures.com";
-            ////NetworkCred.Password = "pur#%@2018";
-            //smtp.UseDefaultCredentials = true;
-            //smtp.Credentials = NetworkCred;
-            //smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
-
-            //System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (object s, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
-            //{
-            //    return true;
-            //};
-            //smtp.Send(mm);
-
 
             string strMessage = "Hello " + txtPartyName.Text.Trim() + "<br/>" +
 
-                        "Greetings From " + "<strong>EXCEL ENCLOSURES<strong>" + "<br/>" +
+                        "Greetings From " + "<strong>Pune Abrasives Pvt. Ltd.<strong>" + "<br/>" +
                         "We have sent you Payment Voucher." + "<br/>" +
 
                          "We Look Foward to Conducting Future Business with you." + "<br/>" +
 
                         "Kind Regards," + "<br/>" +
-                        "<strong>EXCEL ENCLOSURES<strong>";
+                        "<strong>Pune Abrasives Pvt. Ltd.<strong>";
             string pdfname = txtPartyName.Text + "_" + txtbankname.Text + "_" + txtdate.Text + ".pdf";
 
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress("purchase@excelenclosures.com");
-            //message.To.Add(lblEmailID.Text.Trim());
+            MailMessage mm = new MailMessage();
+            // mm.From = new MailAddress(fromMailID);
+            string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
+            mm.Subject = "Payment Voucher";
+            // mm.To.Add("shubhpawar59@gmail.com");
+            mm.To.Add(lblEmailID.Text);
+            mm.CC.Add("girish.kulkarni@puneabrasives.com");
+            mm.CC.Add("virendra.sud@puneabrasives.com");
+            mm.CC.Add("accounts@puneabrasives.com");
+            mm.CC.Add(Session["EmailID"].ToString().Trim().ToLower());
+            StreamReader reader = new StreamReader(Server.MapPath("~/Templates/CommentPage_templet.html"));
+            string readFile = reader.ReadToEnd();
+            string myString = "";
+            myString = readFile;
 
-            //message.To.Add("erp@weblinkservices.net");
-            message.To.Add(lblEmailID.Text);
+            string multilineText = strMessage;
+            string formattedText = multilineText.Replace("\n", "<br />");
 
-            //message.To.Add(txt_Mail.Text);// Email-ID of Receiver  
-            message.Subject = "Payment Voucher";// Subject of Email  
-            message.Body = strMessage;
-            //msgendeaour.Subject = "Vendor PO Invoice";// Subject of Email  
-            //msgendeaour.Body = strMessage;
-            //msgenaccount.Subject = "Vendor PO Invoice";// Subject of Email  
-            //msgenaccount.Body = strMessage;
+            myString = myString.Replace("$Comment$", formattedText);
 
-            message.From = new System.Net.Mail.MailAddress("purchase@excelenclosures.com");// Email-ID of Sender  
-            message.IsBodyHtml = true;
-            //msgendeaour.From = new System.Net.Mail.MailAddress("enquiry@weblinkservices.net");// Email-ID of Sender  
-            //msgendeaour.IsBodyHtml = true;
-            //msgenaccount.From = new System.Net.Mail.MailAddress("enquiry@weblinkservices.net");// Email-ID of Sender  
-            //msgenaccount.IsBodyHtml = true;
-            // MemoryStream file = new MemoryStream(PDF("This is pdf file text", Server.MapPath("~/Files/")).ToArray());
+            mm.Body = myString.ToString();
+
+            mm.IsBodyHtml = true;
+         
+            mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
             MemoryStream file = new MemoryStream(PDFF(id).ToArray());
 
             file.Seek(0, SeekOrigin.Begin);
@@ -1854,23 +1805,25 @@ public partial class Purchase_Payment : System.Web.UI.Page
             disposition.CreationDate = System.DateTime.Now;
             disposition.ModificationDate = System.DateTime.Now;
             disposition.DispositionType = DispositionTypeNames.Attachment;
-            message.Attachments.Add(data);//Attach the file  
-                                          //msgendeaour.Attachments.Add(data);//Attach the file
-                                          //msgenaccount.Attachments.Add(data);//Attach the file
+            mm.Attachments.Add(data);
+            // Set the "Reply-To" header to indicate the desired display address
+            mm.ReplyToList.Add(new MailAddress(fromMailID));
 
-            //message.Body = txtmessagebody.Text;
-            SmtpClient SmtpMail = new SmtpClient();
-            SmtpMail.Host = "smtpout.secureserver.net";//name or IP-Address of Host used for SMTP transactions 
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
+            smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
+            System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+            NetworkCred.UserName = ConfigurationManager.AppSettings["mailUserName"].ToLower();
+            NetworkCred.Password = ConfigurationManager.AppSettings["mailUserPass"].ToString();
 
-            SmtpMail.Port = 587;//Port for sending the mail  
-            SmtpMail.Credentials = new System.Net.NetworkCredential("enquiry@weblinkservices.net", "wlspl@123");//username/password of network, if apply  
-            SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
-            SmtpMail.EnableSsl = false;
-            SmtpMail.ServicePoint.MaxIdleTime = 0;
-            SmtpMail.ServicePoint.SetTcpKeepAlive(true, 2000000, 2000000);
-            message.BodyEncoding = Encoding.Default;
-            message.Priority = MailPriority.High;
-            SmtpMail.Send(message);
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = NetworkCred;
+            smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (object s, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+            {
+                return true;
+            };
+            smtp.Send(mm);
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Data Saved Sucessfully');window.location.href='Payment.aspx';", true);
 
@@ -1884,7 +1837,7 @@ public partial class Purchase_Payment : System.Web.UI.Page
     public MemoryStream PDF(int? id)
     {
         MemoryStream pdf = new MemoryStream();
-        DataTable Dt = new DataTable();
+        System.Data.DataTable Dt = new DataTable();
         SqlDataAdapter Da = new SqlDataAdapter("select * from vw_PaymentPDF where Id = '" + id + "'", con);
 
         Da.Fill(Dt);

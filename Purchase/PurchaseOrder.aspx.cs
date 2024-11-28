@@ -16,6 +16,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using System.Globalization;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 public partial class Purchase_PurchaseOrder : System.Web.UI.Page
 {
@@ -1246,6 +1247,31 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
                         "<strong>Pune Abrasive Pvt. Ltd.<strong>";
         string pdfname = "Purchase Order - " + txtPONo.Text.Trim() + "/" + txtPodate.Text.Trim() + ".pdf";
 
+        MailMessage mm = new MailMessage();
+        // mm.From = new MailAddress(fromMailID);
+        string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
+        mm.Subject = "Purchase Order Invoice";
+        // mm.To.Add("shubhpawar59@gmail.com");
+        mm.To.Add(lblEmailID.Text);
+        mm.CC.Add("girish.kulkarni@puneabrasives.com");
+        mm.CC.Add("virendra.sud@puneabrasives.com");
+        mm.CC.Add("accounts@puneabrasives.com");
+        mm.CC.Add(Session["EmailID"].ToString().Trim().ToLower());
+        StreamReader reader = new StreamReader(Server.MapPath("~/Templates/CommentPage_templet.html"));
+        string readFile = reader.ReadToEnd();
+        string myString = "";
+        myString = readFile;
+
+        string multilineText = strMessage;
+        string formattedText = multilineText.Replace("\n", "<br />");
+
+        myString = myString.Replace("$Comment$", formattedText);
+
+        mm.Body = myString.ToString();
+
+        mm.IsBodyHtml = true;
+
+        mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
         MemoryStream file = new MemoryStream(PDF(Id).ToArray());
 
         file.Seek(0, SeekOrigin.Begin);
@@ -1254,38 +1280,25 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
         disposition.CreationDate = System.DateTime.Now;
         disposition.ModificationDate = System.DateTime.Now;
         disposition.DispositionType = DispositionTypeNames.Attachment;
-
-        //msgendeaour.Attachments.Add(data);//Attach the file
-        //msgenaccount.Attachments.Add(data);//Attach the file
-
-        string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
-        string mailTo = lblEmailID.Text.Trim().ToLower();
-        MailMessage mm = new MailMessage();
-
         mm.Attachments.Add(data);
-        mm.Subject = "Purchase Order Invoice";
-        mm.To.Add(mailTo);
+        // Set the "Reply-To" header to indicate the desired display address
+        mm.ReplyToList.Add(new MailAddress(fromMailID));
 
-        mm.CC.Add("girish.kulkarni@puneabrasives.com");
-        //  mm.CC.Add("b.tikhe@puneabrasives.com");
-        mm.CC.Add(Session["EmailID"].ToString().Trim().ToLower());
+        SmtpClient smtp = new SmtpClient();
+        smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
+        smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
+        System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+        NetworkCred.UserName = ConfigurationManager.AppSettings["mailUserName"].ToLower();
+        NetworkCred.Password = ConfigurationManager.AppSettings["mailUserPass"].ToString();
 
-        mm.Body = strMessage;
-        mm.IsBodyHtml = true;
-        mm.From = new MailAddress("girish.kulkarni@puneabrasives.com", fromMailID);
-        //message.Body = txtmessagebody.Text;
-        SmtpClient SmtpMail = new SmtpClient();
-        SmtpMail.Host = "us2.smtp.mailhostbox.com"; // Name or IP-Address of Host used for SMTP transactions  
-        SmtpMail.Port = 25; // Port for sending the mail  
-        SmtpMail.Credentials = new System.Net.NetworkCredential("girish.kulkarni@puneabrasives.com", "Qi#dKZN1"); // Username/password of network, if apply  
-        SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
-        SmtpMail.EnableSsl = false;
-
-        SmtpMail.ServicePoint.MaxIdleTime = 0;
-        SmtpMail.ServicePoint.SetTcpKeepAlive(true, 2000, 2000);
-        mm.BodyEncoding = Encoding.Default;
-        mm.Priority = MailPriority.High;
-        SmtpMail.Send(mm);
+        smtp.UseDefaultCredentials = false;
+        smtp.Credentials = NetworkCred;
+        smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+        System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (object s, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        };
+        smtp.Send(mm);
     }
 
     public MemoryStream PDF(int? Id)

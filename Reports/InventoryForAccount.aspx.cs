@@ -200,8 +200,8 @@ public partial class Admin_InventoryForAccount : System.Web.UI.Page
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
-            Label Productname = (Label)e.Row.FindControl("Productname");
-            if (Productname.Text == "Total")
+            Label Batch = (Label)e.Row.FindControl("Batch");
+            if (Batch.Text == "Total")
             {
                 e.Row.BackColor = System.Drawing.Color.LightPink;
             }
