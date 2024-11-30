@@ -195,7 +195,7 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-      <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
+    <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
             <div id="loader" class="loader-wrapper">
@@ -261,48 +261,57 @@
             </div>
             <div class="container-fluid">
 
-                <div class="col-md-12" style="padding: 0px; margin-top: 5px;">
-                    <div id="DivRoot1" align="left" runat="server">
-                        <div style="overflow: hidden;" id="DivHeaderRow1">
-                        </div>
-                        <div style="overflow: scroll;" class="dt-responsive table-responsive" onscroll="OnScrollDiv(this)" id="DivMainContent1">
 
-                            <asp:GridView ID="GVInvoice" runat="server" CellPadding="4" DataKeyNames="Id" PageSize="500" AllowPaging="true" Width="100%" OnRowDataBound="GVInvoice_RowDataBound"
-                                CssClass="grivdiv pagination-ys" OnRowCommand="GVInvoice_RowCommand" AutoGenerateColumns="false" OnPageIndexChanging="GVInvoice_PageIndexChanging">
-                                <Columns>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="flex-grow: 1;">
+                        <!-- Left empty for future content if needed -->
+                    </div>
+                    <div class="col-md-1" style="text-align: right;">
+                        <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                            <asp:ListItem Text="10" Value="10" />
+                            <asp:ListItem Text="50" Value="50" />
+                            <asp:ListItem Text="All" Value="100000" />
+                        </asp:DropDownList>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
 
-                                    <asp:TemplateField HeaderText="Sr.No." HeaderStyle-Width="50px" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblsno" runat="server" Text='<%# Container.DataItemIndex+1 %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Invoice No." HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblStatus" Visible="false" runat="server" Text='<%#Eval("Status")%>'></asp:Label>
-                                            <asp:Label ID="Invoiceno" runat="server" Text='<%# Eval("InvoiceNo") != "" ? Eval("InvoiceNo") : Eval("FinalBasic") %>'></asp:Label>
-                                            <asp:Label ID="lblFinalBasic" runat="server" Text='<%# Eval("FinalBasic") %>' Visible="false"></asp:Label>
+                    <asp:GridView ID="GVInvoice" runat="server" CellPadding="4" DataKeyNames="Id" PageSize="500" AllowPaging="true" Width="100%" OnRowDataBound="GVInvoice_RowDataBound"
+                        CssClass="grivdiv pagination-ys" OnRowCommand="GVInvoice_RowCommand" AutoGenerateColumns="false" OnPageIndexChanging="GVInvoice_PageIndexChanging">
+                        <Columns>
 
-                                            <asp:Label ID="lblIsApprove" runat="server" Text='<%# Eval("IsApprove") %>' Visible="false"></asp:Label>
+                            <asp:TemplateField HeaderText="Sr.No." HeaderStyle-Width="50px" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblsno" runat="server" Text='<%# Container.DataItemIndex+1 %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Invoice No." HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblStatus" Visible="false" runat="server" Text='<%#Eval("Status")%>'></asp:Label>
+                                    <asp:Label ID="Invoiceno" runat="server" Text='<%# Eval("InvoiceNo") != "" ? Eval("InvoiceNo") : Eval("FinalBasic") %>'></asp:Label>
+                                    <asp:Label ID="lblFinalBasic" runat="server" Text='<%# Eval("FinalBasic") %>' Visible="false"></asp:Label>
 
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Customer Name" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="Companyname" runat="server" Text='<%#Eval("BillingCustomer")%>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                                    <asp:Label ID="lblIsApprove" runat="server" Text='<%# Eval("IsApprove") %>' Visible="false"></asp:Label>
 
-                                    <asp:TemplateField HeaderText="Invoice Date" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="Invoicedate" runat="server" Text='<%# Eval("Invoicedate", "{0:dd-MM-yyyy}") %>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Total Price" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="Total_Price" runat="server" Text='<%#Eval("GrandTotalFinal")%>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <%-- <asp:TemplateField HeaderText="PDF" HeaderStyle-CssClass="gvhead">
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Customer Name" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="Companyname" runat="server" Text='<%#Eval("BillingCustomer")%>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Invoice Date" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="Invoicedate" runat="server" Text='<%# Eval("Invoicedate", "{0:dd-MM-yyyy}") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Total Price" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="Total_Price" runat="server" Text='<%#Eval("GrandTotalFinal")%>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <%-- <asp:TemplateField HeaderText="PDF" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:LinkButton ID="lnkRowView" runat="server" OnClientClick="showLoader();" Height="27px" CausesValidation="false" CommandName="RowView" ToolTip="View Tax Invoice PDF" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-file-pdf"  style="font-size: 32px; color:red;  "></i></asp:LinkButton>
                                             &nbsp;
@@ -312,35 +321,34 @@
 
                                         </ItemTemplate>
                                     </asp:TemplateField>--%>
-                                    <asp:TemplateField HeaderText="E-Invoice PDF" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="lnkEInvoicePDF" runat="server" CausesValidation="false" CommandName="DownloadPDFEInvoice" CommandArgument='<%# Eval("Id") %>' ToolTip="Download E-Invoice"><i class="fa fa-file-pdf" style="font-size:28px;color:green;"></i></asp:LinkButton>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="E-Way Bill PDF" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="lnkEWayPDF" runat="server" CausesValidation="false" CommandName="DownloadEWay" CommandArgument='<%# Eval("Id") %>' ToolTip="Download E-Way Bill"><i class="fa fa-file-pdf" style="font-size:28px;color:orangered;"></i></asp:LinkButton>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Action" HeaderStyle-CssClass="gvhead" HeaderStyle-Width="160px">
-                                        <ItemTemplate>
-                                            <asp:LinkButton ID="lnkRowView" runat="server" OnClientClick="showLoader();" Height="27px" CausesValidation="false" CommandName="RowView" ToolTip="View Tax Invoice PDF" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-file-pdf"  style="font-size: 28px; color:red;  "></i></asp:LinkButton>
-                                            &nbsp;   
+                            <asp:TemplateField HeaderText="E-Invoice PDF" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkEInvoicePDF" runat="server" CausesValidation="false" CommandName="DownloadPDFEInvoice" CommandArgument='<%# Eval("Id") %>' ToolTip="Download E-Invoice"><i class="fa fa-file-pdf" style="font-size:28px;color:green;"></i></asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="E-Way Bill PDF" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkEWayPDF" runat="server" CausesValidation="false" CommandName="DownloadEWay" CommandArgument='<%# Eval("Id") %>' ToolTip="Download E-Way Bill"><i class="fa fa-file-pdf" style="font-size:28px;color:orangered;"></i></asp:LinkButton>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Action" HeaderStyle-CssClass="gvhead" HeaderStyle-Width="160px">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkRowView" runat="server" OnClientClick="showLoader();" Height="27px" CausesValidation="false" CommandName="RowView" ToolTip="View Tax Invoice PDF" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-file-pdf"  style="font-size: 28px; color:red;  "></i></asp:LinkButton>
+                                    &nbsp;   
                                             <asp:LinkButton runat="server" ID="lnkEdit" OnClientClick="showLoader();" CommandName="RowEdit" CommandArgument='<%# Eval("InvoiceNo") %>' ToolTip="Add Component"><i class="fa fa-edit" style="font-size:28px;color:black;"></i></asp:LinkButton>
-                                            <asp:LinkButton ID="lnkbtnapprove" runat="server" Height="27px" CausesValidation="false" CommandName="Approve" ToolTip="Click Here To Approve" CommandArgument='<%#Eval("Id")%>' Visible='<%# Eval("Status").ToString() == "2" ? true : false %>' OnClientClick="Javascript:return confirm('Are you sure to create e-invoice (please check ones componant details added or not.).....!')"><i class="fa fa-check-circle" style="font-size:28px;color:green"  ></i></asp:LinkButton>
-                                            &nbsp;  
+                                    <asp:LinkButton ID="lnkbtnapprove" runat="server" Height="27px" CausesValidation="false" CommandName="Approve" ToolTip="Click Here To Approve" CommandArgument='<%#Eval("Id")%>' Visible='<%# Eval("Status").ToString() == "2" ? true : false %>' OnClientClick="Javascript:return confirm('Are you sure to create e-invoice (please check ones componant details added or not.).....!')"><i class="fa fa-check-circle" style="font-size:28px;color:green"  ></i></asp:LinkButton>
+                                    &nbsp;  
                                             <asp:LinkButton ID="lnkComponent" OnClientClick="showLoader();" runat="server" Height="27px" CausesValidation="false" CommandName="Showcomponent" ToolTip="Show Component" CommandArgument='<%# Eval("InvoiceNo") %>'><i class="fa fa-eye"  style="font-size: 28px; color:black;  "></i></asp:LinkButton>
-                                            <%--<asp:LinkButton ID="lblEinvoicepdf" runat="server" Height="27px" CausesValidation="false" CommandName="Einvoicepdf" Visible='<%# Eval("Status").ToString() == "3" ? true : false %>' ToolTip="View E-Invoice PDF" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:green;  "></i></asp:LinkButton>--%>
+                                    <%--<asp:LinkButton ID="lblEinvoicepdf" runat="server" Height="27px" CausesValidation="false" CommandName="Einvoicepdf" Visible='<%# Eval("Status").ToString() == "3" ? true : false %>' ToolTip="View E-Invoice PDF" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:green;  "></i></asp:LinkButton>--%>
                                                     &nbsp;
                                             <asp:LinkButton ID="lnkSendmail" runat="server" Height="27px" ToolTip="Send Mail" CausesValidation="false" CommandName="RowSendmail" OnClientClick="Javascript:return confirm('Are you sure to send mail..?')" CommandArgument='<%#Eval("Id")%>'><i class='fas fa-envelope' style='font-size:28px;color: red;'></i></asp:LinkButton>
 
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>
-                        </div>
-                    </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </div>
+
 
             </div>
             <rsweb:ReportViewer ID="ReportViewer1" runat="server" Visible="false"></rsweb:ReportViewer>
