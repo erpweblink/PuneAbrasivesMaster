@@ -718,17 +718,24 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
 
     protected void BindKindAtt()
     {
-        string com = "SELECT * FROM vwSupplierMaster where SupplierName='" + txtSupplierName.Text.Trim() + "'";
-        SqlDataAdapter adpt = new SqlDataAdapter(com, con);
-        DataTable dt = new DataTable();
-        adpt.Fill(dt);
-        ddlKindAtt.DataSource = dt;
-        ddlKindAtt.DataBind();
-        ddlKindAtt.DataTextField = "ContactName";
-        ddlKindAtt.DataValueField = "ContactName";
-        ddlKindAtt.DataBind();
+        try
+        {
+            string com = "SELECT * FROM tbl_vendormaster where Vendorname='" + txtSupplierName.Text.Trim() + "'";
+            SqlDataAdapter adpt = new SqlDataAdapter(com, con);
+            DataTable dt = new DataTable();
+            adpt.Fill(dt);
+            ddlKindAtt.DataSource = dt;
+            ddlKindAtt.DataBind();
+            ddlKindAtt.DataTextField = "Ownername";
+            ddlKindAtt.DataValueField = "Ownername";
+            ddlKindAtt.DataBind();
 
-        ddlKindAtt.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select Kind. Att--", "0"));
+            ddlKindAtt.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select Kind. Att--", "0"));
+        }
+        catch
+        {
+
+        }
     }
 
     protected void Insert(object sender, EventArgs e)
