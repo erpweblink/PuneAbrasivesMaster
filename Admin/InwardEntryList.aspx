@@ -246,6 +246,12 @@
                                             <asp:Label ID="Inwardno" runat="server" Text='<%#Eval("OrderNo")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Inward Date" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="InwardDate" runat="server" Text='<%# Eval("CreatedOn", "{0:dd-MM-yyyy}") %>'></asp:Label>
+
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Batch No." HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="Batch" runat="server" Text='<%#Eval("Batch")%>'></asp:Label>
@@ -261,17 +267,13 @@
                                             <asp:Label ID="InvoiceNo" runat="server" Text='<%#Eval("InvoiceNo")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Challan No." HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Invoice Date" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:Label ID="ChallanNo" runat="server" Text='<%#Eval("ChallanNo")%>'></asp:Label>
+                                            <asp:Label ID="InvoiceDate" runat="server" Text='<%# Eval("InvoiceDate", "{0:dd-MM-yyyy}") %>'></asp:Label>
+
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Challan Date" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="ChallanDate" runat="server" Text='<%# Eval("ChallanDate", "{0:dd-MM-yyyy}") %>'></asp:Label>
-                                            <%--<asp:Label ID="Quotationdate" runat="server" Text='<%#Eval("Quotationdate")%>'></asp:Label>--%>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+
                                     <asp:TemplateField HeaderText="Total Price" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="Total_Price" runat="server" Text='<%#Eval("Total_Price")%>'></asp:Label>
