@@ -55,9 +55,9 @@
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <label for="lblrate" class="form-label LblStyle"><span class="spncls">*</span>HSN/SAC Code  : </label>
-                                    <asp:TextBox ID="txtHSN" CssClass="form-control" MaxLength="8"  placeholder="HSN/SAC" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtHSN" CssClass="form-control" MaxLength="8" placeholder="HSN/SAC" runat="server"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator8" ValidationGroup="1" runat="server" ErrorMessage="Please Fill HSN/SAC" ControlToValidate="txtHSN" ForeColor="Red"></asp:RequiredFieldValidator>
-                       
+
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <label for="lblUnit" class="form-label LblStyle">Unit  : </label>
@@ -68,17 +68,21 @@
                                         <asp:ListItem Value="Ton" Text="Ton"></asp:ListItem>
                                     </asp:DropDownList>
                                 </div>
-                                  <div class="col-md-6 col-12 mb-3" id="divprice" runat="server" visible="false">
+                                <div class="col-md-6 col-12 mb-3" id="divprice" runat="server" visible="false">
                                     <label for="lblPrice" class="form-label LblStyle"><span class="spncls">*</span>Price : </label>
                                     <asp:TextBox ID="txtPrice" CssClass="form-control" TextMode="Number" placeholder="Enter Price" runat="server"></asp:TextBox>
-                                 <%--   <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ValidationGroup="1" runat="server" ErrorMessage="Please fill Price" ControlToValidate="txtPrice" ForeColor="Red"></asp:RequiredFieldValidator>--%>
+                                    <%--   <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ValidationGroup="1" runat="server" ErrorMessage="Please fill Price" ControlToValidate="txtPrice" ForeColor="Red"></asp:RequiredFieldValidator>--%>
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <label for="lblQtylimit" class="form-label LblStyle"><span class="spncls">*</span>Less Quantity limit : </label>
                                     <asp:TextBox ID="txtQtylimit" CssClass="form-control" placeholder="Enter Quantity limit " runat="server"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" ValidationGroup="1" runat="server" ErrorMessage="Please fill Quantity limit " ControlToValidate="txtQtylimit" ForeColor="Red"></asp:RequiredFieldValidator>
                                 </div>
-
+                                <div class="col-md-6 col-12 mb-3">
+                                    <label for="lblQtylimit" class="form-label LblStyle"><span class="spncls">*</span>Grade : </label>
+                                    <asp:TextBox ID="txtGarde" CssClass="form-control" placeholder="Enter grade " runat="server"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ValidationGroup="1" runat="server" ErrorMessage="Please fill Grade" ControlToValidate="txtGarde" ForeColor="Red"></asp:RequiredFieldValidator>
+                                </div>
                                 <div class="row" id="divpayment" runat="server" visible="false">
                                     <div class="col-md-6 col-12 mb-3">
                                         <label for="lblPaymentTerm" class="form-label LblStyle">Payment Term(In days) :</label>

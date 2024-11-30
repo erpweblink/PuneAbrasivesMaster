@@ -14,9 +14,8 @@
 </style>
 <html>
 <head runat="server">
-
     <meta charset="utf-8" />
-    <title>ERP Web Link Services PVT. LTD.</title>
+    <title>ERP Pune Abrasives PVT. LTD.</title>
     <link href="../Content/css/pagination.css" rel="stylesheet" />
     <%-- <link rel="icon" type="image/x-icon" href="Content/Img/W-logo.png">--%>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
@@ -186,7 +185,7 @@
                                     <a class="nav-link" href="../Admin/InventoryList.aspx"><i class="fa fa-plus"></i>&nbsp;Inventory</a>
                                 </nav>
                                 <nav id="EnwardEntryID" runat="server" class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../Admin/InwardEntry.aspx"><i class="fa fa-cart-arrow-down"></i>&nbsp;Inward Entry</a>
+                                    <a class="nav-link" href="../Admin/InwardEntryList.aspx"><i class="fa fa-cart-arrow-down"></i>&nbsp;Inward Entry</a>
                                 </nav>
                                 <nav id="OutwardEntryID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Admin/OutwardEntryList.aspx"><i class="fa fa-truck"></i>&nbsp;Outward Entry</a>

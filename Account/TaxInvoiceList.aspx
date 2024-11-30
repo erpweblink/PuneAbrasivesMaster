@@ -171,8 +171,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="table ">
-                            <asp:GridView ID="GvInvoiceList" runat="server" CellPadding="4" DataKeyNames="Id" PageSize="15" AllowPaging="true" Width="100%" OnRowCommand="GvInvoiceList_RowCommand" OnRowDataBound="GvInvoiceList_RowDataBound"
+                        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
+                            <asp:GridView ID="GvInvoiceList" runat="server" CellPadding="4" DataKeyNames="Id" Width="100%" OnRowCommand="GvInvoiceList_RowCommand" OnRowDataBound="GvInvoiceList_RowDataBound"
                                 CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr.No." HeaderStyle-Width="50px" HeaderStyle-CssClass="gvhead" ItemStyle-HorizontalAlign="Center">

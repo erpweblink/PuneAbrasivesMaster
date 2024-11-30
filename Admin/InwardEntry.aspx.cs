@@ -34,6 +34,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
                 InwardNo(); FillddlComponent();
                 Fillddltransport();
                 txtinvoicedate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                txtcreateddate.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 txtchallandate.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 txtmaterialrecivedby.Text = Session["Username"].ToString();
 
@@ -100,6 +101,8 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
             txtinvoiceno.Text = Dt.Rows[0]["InvoiceNo"].ToString();
             DateTime ffff = Convert.ToDateTime(Dt.Rows[0]["InvoiceDate"].ToString());
             txtinvoicedate.Text = ffff.ToString("yyyy-MM-dd");
+            DateTime ffff4 = Convert.ToDateTime(Dt.Rows[0]["CreatedOn"].ToString());
+            txtcreateddate.Text = ffff4.ToString("yyyy-MM-dd");
             txtsupliername.Text = Dt.Rows[0]["Suppliername"].ToString();
             txtmobileno.Text = Dt.Rows[0]["MobileNo"].ToString();
             txtchallanno.Text = Dt.Rows[0]["ChallanNo"].ToString();
@@ -173,7 +176,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@OrderNo", txtorderno.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@InvoiceNo", txtinvoiceno.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Batch", txtBatch.Text);
-                    cmd.Parameters.AddWithValue("@InvoiceDate", txtinvoicedate.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@InvoiceDate", txtinvoicedate.Text.ToUpper());                
                     cmd.Parameters.AddWithValue("@Suppliername", txtsupliername.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Address", txtSuplieraddress.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Panno", txtPanno.Text.ToUpper());
@@ -194,7 +197,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@Totalinword", lblCOMP_total_amt_Value.Text);
                     cmd.Parameters.AddWithValue("@IsDeleted", '0');
                     cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
-                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@CreatedOn", txtcreateddate.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Action", "Save");
                     cmd.ExecuteNonQuery();
                     Cls_Main.Conn_Close();
@@ -263,8 +266,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@OrderNo", txtorderno.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@InvoiceNo", txtinvoiceno.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Batch", txtBatch.Text);
-                    cmd.Parameters.AddWithValue("@InvoiceDate", txtinvoicedate.Text.ToUpper());
-                    cmd.Parameters.AddWithValue("@Suppliername", txtsupliername.Text.ToUpper());
+                    cmd.Parameters.AddWithValue("@InvoiceDate", txtinvoicedate.Text.ToUpper());              cmd.Parameters.AddWithValue("@Suppliername", txtsupliername.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Address", txtSuplieraddress.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Panno", txtPanno.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@GST", txtGSTNO.Text.ToUpper());
@@ -285,6 +287,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@IsDeleted", '0');
                     cmd.Parameters.AddWithValue("@UpdatedBy", Session["UserCode"].ToString());
                     cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@CreatedOn", txtcreateddate.Text.ToUpper());
                     cmd.Parameters.AddWithValue("@Action", "Update");
                     cmd.ExecuteNonQuery();
                     Cls_Main.Conn_Close();
@@ -933,7 +936,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
         {
 
             txtComHSN.Text = Dt.Rows[0]["HSN"].ToString();
-           // txtComRate.Text = Dt.Rows[0]["Price"].ToString();
+            txtComDiscription.Text = Dt.Rows[0]["Grade"].ToString();
             txtComUnit.Text = Dt.Rows[0]["Unit"].ToString();
             string gstNumber = txtGSTNO.Text.Trim();
             if (gstNumber != null && gstNumber != "")
@@ -1214,7 +1217,7 @@ public partial class Admin_InwardEntry : System.Web.UI.Page
     {
         if (txtComQuantity.Text == "" || txtComRate.Text == "" || txtComGrandTotal.Text == "" || txtBatch.Text == "")
         {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill Quantity and Price !!!');", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill Quantity, Price,Batch No !!!');", true);
             txtComQuantity.Focus();
         }
         else

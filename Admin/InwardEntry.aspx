@@ -23,7 +23,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            $("[id*=ddlProduct]").select2();
+            $("[id*=ddlcomponent]").select2();
 
         });
     </script>
@@ -212,8 +212,8 @@
                             <h4 class="mt-4">&nbsp <b>INWARD ENTRY</b></h4>
                         </div>
                         <div class="col-md-2 mt-4">
-                               <asp:Button ID="Button1" CausesValidation="false" CssClass="form-control btn btn-warning" Font-Bold="true" runat="server" Text="LIST" OnClick="Button1_Click" />
-                        
+                            <asp:Button ID="Button1" CausesValidation="false" CssClass="form-control btn btn-warning" Font-Bold="true" runat="server" Text="LIST" OnClick="Button1_Click" />
+
                         </div>
                     </div>
                     <hr />
@@ -225,17 +225,22 @@
                                     <asp:Label ID="Label1" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Order No. : </asp:Label>
 
                                     <asp:TextBox ID="txtorderno" ReadOnly="true" CssClass=" uppercase  form-control" Width="100%" runat="server" onkeypress="return isNumberKey(event)"></asp:TextBox>
-                              
+
 
                                 </div>
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="Label17" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Created Date.: </asp:Label>
 
+                                    <asp:TextBox ID="txtcreateddate" CssClass="form-control" TextMode="Date" runat="server" Width="100%"></asp:TextBox>
+
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label2" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Invoice No. :</asp:Label>
 
                                     <asp:TextBox ID="txtinvoiceno" AutoComplete="off" CssClass=" uppercase  form-control" runat="server"></asp:TextBox>
-                                  
+
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label3" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Invoice Date.: </asp:Label>
@@ -249,16 +254,16 @@
                                     <asp:Label ID="Label4" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Supplier Name : </asp:Label>
 
                                     <asp:TextBox ID="txtsupliername" CssClass=" uppercase  form-control" AutoPostBack="true" OnTextChanged="txtsupliername_TextChanged" runat="server"></asp:TextBox>
-                                       <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
+                                    <asp:AutoCompleteExtender ID="AutoCompleteExtender2" CompletionListCssClass="completionList"
                                         CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
                                         CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetSupplierList" TargetControlID="txtsupliername" runat="server">
                                     </asp:AutoCompleteExtender>
-                                
+
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label5" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Mobile No. : </asp:Label>
                                     <asp:TextBox ID="txtmobileno" CssClass="form-control" runat="server" MaxLength="12" onkeypress="return isNumberKey(event)"></asp:TextBox>
-                              
+
                                 </div>
                             </div>
                             <div class="row">
@@ -266,13 +271,13 @@
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label6" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Address : </asp:Label>
 
-                                    <asp:TextBox ID="txtSuplieraddress" CssClass="form-control" runat="server"  TextMode="MultiLine" Width="100%"></asp:TextBox>
+                                    <asp:TextBox ID="txtSuplieraddress" CssClass="form-control" runat="server" TextMode="MultiLine" Width="100%"></asp:TextBox>
 
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label7" runat="server" Font-Bold="true" CssClass="form-label LblStyle">State : </asp:Label>
                                     <asp:TextBox ID="txtState" AutoComplete="off" CssClass=" uppercase  form-control" runat="server"></asp:TextBox>
-                               
+
                                 </div>
                             </div>
                             <div class="row">
@@ -280,12 +285,12 @@
                                     <asp:Label ID="Label8" runat="server" Font-Bold="true" CssClass="form-label LblStyle"> GST No.  : </asp:Label>
 
                                     <asp:TextBox ID="txtGSTNO" AutoComplete="off" CssClass=" uppercase  form-control" runat="server"></asp:TextBox>
-                                 
+
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label9" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Pan No  : </asp:Label>
 
-                                    <asp:TextBox ID="txtPanno" CssClass="form-control" runat="server" ></asp:TextBox>
+                                    <asp:TextBox ID="txtPanno" CssClass="form-control" runat="server"></asp:TextBox>
 
                                 </div>
                             </div>
@@ -294,7 +299,7 @@
                                     <asp:Label ID="Label10" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Challan No.: </asp:Label>
 
                                     <asp:TextBox ID="txtchallanno" AutoComplete="off" CssClass=" uppercase  form-control" runat="server"></asp:TextBox>
-                                
+
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label11" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Challan Date : </asp:Label>
@@ -314,7 +319,7 @@
                                     <asp:TextBox ID="txtinwardtime" CssClass="form-control" Width="100%" runat="server"></asp:TextBox>
                                     <asp:MaskedEditExtender ID="MaskedEditExtender1" TargetControlID="txtinwardtime" Mask="99:99" MaskType="Time" AcceptAMPM="true" MessageValidatorTip="true" runat="server">
                                     </asp:MaskedEditExtender>
-                              
+
                                 </div>
                             </div>
                             <div class="row">
@@ -322,13 +327,13 @@
                                     <asp:Label ID="Label14" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Material Receive By : </asp:Label>
 
                                     <asp:TextBox ID="txtmaterialrecivedby" CssClass=" uppercase  form-control" ReadOnly="true" Width="100%" runat="server"></asp:TextBox>
-                               
+
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label15" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Vehicle No: </asp:Label>
 
                                     <asp:TextBox ID="txtvehicleno" CssClass=" uppercase  form-control" runat="server"></asp:TextBox>
-                           
+
                                 </div>
                             </div>
                             <div class="row">
@@ -374,7 +379,7 @@
                                                             <asp:TextBox ID="txtBatch" Width="230px" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComDiscription" Width="230px" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComDiscription" Width="230px" ReadOnly="true" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
                                                             <asp:TextBox ID="txtComHSN" Width="190px" CssClass="form-control" runat="server"></asp:TextBox>
@@ -398,19 +403,19 @@
 
 
                                                         <td>
-                                                            <asp:TextBox ID="txtComUnit" Width="190px" Text="0"  CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComUnit" Width="190px" Text="0" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComRate" Width="190px" Text="0"  AutoPostBack="true" OnTextChanged="txtComRate_TextChanged" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComRate" Width="190px" Text="0" AutoPostBack="true" OnTextChanged="txtComRate_TextChanged" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComTotal" Width="100" Text="0"  CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComTotal" Width="100" Text="0" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComCGST" placeholder="%" Text="0"  Width="100px" OnTextChanged="txtComCGST_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComCGST" placeholder="%" Text="0" Width="100px" OnTextChanged="txtComCGST_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComCGSTAMT" Width="100px" Text="0"  ReadOnly="true" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComCGSTAMT" Width="100px" Text="0" ReadOnly="true" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -428,21 +433,21 @@
 
 
                                                         <td>
-                                                            <asp:TextBox ID="txtComSGST" placeholder="%" Width="100px" Text="0"  OnTextChanged="txtComSGST_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComSGST" placeholder="%" Width="100px" Text="0" OnTextChanged="txtComSGST_TextChanged" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComSGSTAMT" Width="100px" ReadOnly="true" Text="0"  CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComSGSTAMT" Width="100px" ReadOnly="true" Text="0" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
 
                                                         <td>
-                                                            <asp:TextBox ID="txtComIGST" OnTextChanged="txtComIGST_TextChanged" Text="0"  AutoPostBack="true" placeholder="%" Width="100px" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComIGST" OnTextChanged="txtComIGST_TextChanged" Text="0" AutoPostBack="true" placeholder="%" Width="100px" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComIGSTAMT" Width="100px" CssClass="form-control" Text="0"  runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComIGSTAMT" Width="100px" CssClass="form-control" Text="0" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtComDiscount" OnTextChanged="txtComDiscount_TextChanged" Text="0"  Width="80px" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
-                                                            <asp:TextBox ID="txtComDiscountAMT" Visible="false" Width="80px" Text="0"  AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComDiscount" OnTextChanged="txtComDiscount_TextChanged" Text="0" Width="80px" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComDiscountAMT" Visible="false" Width="80px" Text="0" AutoPostBack="true" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
 
                                                     </tr>
@@ -457,7 +462,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <asp:TextBox ID="txtComGrandTotal" Width="150px" CssClass="form-control" Text="0"  runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtComGrandTotal" Width="150px" CssClass="form-control" Text="0" runat="server"></asp:TextBox>
                                                         </td>
 
                                                         <td>
@@ -646,11 +651,11 @@
                                             <br />
 
                                             <center>
-                                        <div class="col-md-12">
-                                            <asp:Label ID="lblCOMP_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
-                                            <asp:Label ID="lblCOMP_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
-                                             <asp:HiddenField ID="hfCOMPTotal" runat="server" />
-                                        </div>
+                                                <div class="col-md-12">
+                                                    <asp:Label ID="lblCOMP_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
+                                                    <asp:Label ID="lblCOMP_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
+                                                    <asp:HiddenField ID="hfCOMPTotal" runat="server" />
+                                                </div>
                                             </center>
                                         </div>
                                         <div class="col-md-6" style="text-align: right">

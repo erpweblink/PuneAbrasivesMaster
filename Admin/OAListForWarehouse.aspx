@@ -165,7 +165,7 @@
                     <div class="col-9 col-md-10">
                         <h4 class="mt-4 "><b>ORDER ACCEPTANCE LIST</b></h4>
                     </div>
-                  <%--  <div class="col-3 col-md-2 mt-4">
+                    <%--  <div class="col-3 col-md-2 mt-4">
                         <asp:Button ID="btnCreate" CssClass="form-control btn btn-warning" OnClick="btnCreate_Click" runat="server" Text="Create" />
                     </div>--%>
                 </div>
@@ -199,7 +199,7 @@
                         <div class="col-md-3">
                             <asp:Label ID="Label3" runat="server" Font-Bold="true" Text="GST No. :"></asp:Label>
                             <div style="margin-top: 14px;">
-                                <asp:TextBox ID="txtGST" CssClass="form-control" placeholder="Search GSt No. " runat="server" OnTextChanged="txtGST_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
+                                <asp:TextBox ID="txtGST" CssClass="form-control" placeholder="Search GST No. " runat="server" OnTextChanged="txtGST_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" Display="Dynamic" ErrorMessage="Please Enter GST No."
                                     ControlToValidate="txtGST" ValidationGroup="form1" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 <asp:AutoCompleteExtender ID="AutoCompleteExtender3" runat="server" CompletionListCssClass="completionList"
@@ -228,9 +228,21 @@
                             <asp:LinkButton ID="btnrefresh" runat="server" OnClick="btnrefresh_Click" Width="100%" CssClass="btn btn-warning"><i style="color:white" class="fa">&#xf021;</i> &nbsp;</asp:LinkButton>
                         </div>
                         <%--<div class="table-responsive text-center">--%>
-                        <div class="table ">
-                            <asp:GridView ID="GVPurchase" runat="server" CellPadding="4" DataKeyNames="id" PageSize="10" AllowPaging="true" Width="100%" OnRowDataBound="GVPurchase_RowDataBound"
-                                OnRowCommand="GVPurchase_RowCommand" OnPageIndexChanging="GVPurchase_PageIndexChanging" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
+                  <%--      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="flex-grow: 1;">
+                                <!-- Left empty for future content if needed -->
+                            </div>
+                            <div class="col-md-3" style="text-align: right;">
+                                <asp:DropDownList ID="ddlPageSize" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                                    <asp:ListItem Text="10" Value="10" />
+                                    <asp:ListItem Text="50" Value="50" />
+                                    <asp:ListItem Text="All" Value="All" />
+                                </asp:DropDownList>
+                            </div>
+                        </div>--%>
+                        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
+                            <asp:GridView ID="GVPurchase" runat="server" CellPadding="4" DataKeyNames="id" Width="100%" OnRowDataBound="GVPurchase_RowDataBound"
+                                OnRowCommand="GVPurchase_RowCommand" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr.No." ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
@@ -267,6 +279,11 @@
                                             <asp:Label ID="Total_Price" runat="server" Text='<%#Eval("Total_Price")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Remark" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Remark" runat="server" Text='<%#Eval("Remarks")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="User Name" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="username" runat="server" Text='<%#Eval("Username1")%>'></asp:Label>
@@ -280,10 +297,11 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="ACTION" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                         <%--   <asp:LinkButton ID="btnEdit" runat="server" Height="27px" ToolTip="Edit" CausesValidation="false" CommandName="RowEdit" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
+                                            <%--   <asp:LinkButton ID="btnEdit" runat="server" Height="27px" ToolTip="Edit" CausesValidation="false" CommandName="RowEdit" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
 
                                             <asp:LinkButton ID="btnDelete" runat="server" Height="27px" ToolTip="Delete" CausesValidation="false" CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-trash' style='font-size:24px;color: red;'></i></asp:LinkButton>
-                                          --%>  <asp:LinkButton runat="server" ID="btnpdfview" ToolTip="View Order Acceptance PDF" CommandName="RowView" CommandArgument='<%# Eval("Pono") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
+                                            --%>
+                                            <asp:LinkButton runat="server" ID="btnpdfview" ToolTip="View Order Acceptance PDF" CommandName="RowView" CommandArgument='<%# Eval("Pono") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:red; "></i></i></asp:LinkButton>
 
                                             <asp:LinkButton runat="server" ID="btnInvoice" ToolTip="Create Tax Invoice" CommandName="AddInvoice" CommandArgument='<%# Eval("ID") %>'><i class="fa fa-arrow-circle-right"  style="font-size: 26px; color:green; "></i></i></asp:LinkButton>
 

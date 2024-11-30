@@ -114,7 +114,7 @@ public partial class Admin_InwardEntryList : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@DeletedOn", DateTime.Now);
             Cmd.ExecuteNonQuery();
             Cls_Main.Conn_Close();
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Enward Entry Deleted Successfully..!!')", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "HideLabel('Enward Entry Deleted Successfully..!!')", true);
             FillGrid();
         }
        
@@ -230,7 +230,7 @@ public partial class Admin_InwardEntryList : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "SELECT [ID],[OrderNo] FROM [tbl_InwardEntryHdr] where " + "OrderNo like '%'+ @Search + '%' and IsDeleted=0";
+                com.CommandText = "SELECT [ID],[InvoiceNo] FROM [tbl_InwardEntryHdr] where " + "InvoiceNo like '%'+ @Search + '%' and IsDeleted=0";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -240,7 +240,7 @@ public partial class Admin_InwardEntryList : System.Web.UI.Page
                 {
                     while (sdr.Read())
                     {
-                        countryNames.Add(sdr["OrderNo"].ToString());
+                        countryNames.Add(sdr["InvoiceNo"].ToString());
                     }
                 }
                 con.Close();
@@ -254,7 +254,7 @@ public partial class Admin_InwardEntryList : System.Web.UI.Page
         string OrderNo = txtOrderno.Text;
 
         DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_InwardEntryHdr] where OrderNo = '" + OrderNo + "' AND IsDeleted = 0", Cls_Main.Conn);
+        SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_InwardEntryHdr] where InvoiceNo = '" + OrderNo + "' AND IsDeleted = 0", Cls_Main.Conn);
         sad.Fill(dt);
         GVInward.EmptyDataText = "Not Records Found";
         GVInward.DataSource = dt;

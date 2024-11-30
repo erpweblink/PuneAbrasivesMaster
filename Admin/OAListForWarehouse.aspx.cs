@@ -43,7 +43,7 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
     private void FillGrid()
     {
        
-            DataTable Dt = Cls_Main.Read_Table("SELECT * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName WHERE CP.IsDeleted = 0 ORDER BY CP.ID DESC");
+            DataTable Dt = Cls_Main.Read_Table("SELECT TOP 50 * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName WHERE CP.IsDeleted = 0 ORDER BY CP.ID DESC");
             GVPurchase.DataSource = Dt;
             GVPurchase.DataBind();
       
@@ -422,6 +422,11 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
             }
         }
     }
+
+    //protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    FillGrid();
+    //}
 }
 
 

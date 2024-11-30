@@ -49,7 +49,7 @@ public partial class Admin_ComponentMaster : System.Web.UI.Page
             {
                 btnsave.Text = "Update";
 
-                //  txtPrice.Text = Dt.Rows[0]["Price"].ToString();
+                txtGarde.Text = Dt.Rows[0]["Grade"].ToString();
                 txtComponentname.Text = Dt.Rows[0]["ComponentName"].ToString();
                 txtComponentcode.Text = Dt.Rows[0]["ComponentCode"].ToString();
                 txtHSN.Text = Dt.Rows[0]["HSN"].ToString();
@@ -118,7 +118,7 @@ public partial class Admin_ComponentMaster : System.Web.UI.Page
                     Cmd.Parameters.AddWithValue("@Unit", ddlUnit.SelectedValue);
                     //Cmd.Parameters.AddWithValue("@Price", txtPrice.Text.Trim());                 
                     Cmd.Parameters.AddWithValue("@LessQtyLimit", txtQtylimit.Text.Trim());
-                    // Cmd.Parameters.AddWithValue("@Description", txtDescription.Text.Trim());
+                    Cmd.Parameters.AddWithValue("@Grade", txtGarde.Text.Trim());
                     Cmd.Parameters.AddWithValue("@HSN", txtHSN.Text.Trim());
                     Cmd.Parameters.AddWithValue("@Componentname", txtComponentname.Text.Trim());
                     Cmd.Parameters.AddWithValue("@Componentcode", txtComponentcode.Text.Trim());
@@ -156,7 +156,7 @@ public partial class Admin_ComponentMaster : System.Web.UI.Page
                         Cmd.Parameters.AddWithValue("@LessQtyLimit", txtQtylimit.Text.Trim());
                         //Cmd.Parameters.AddWithValue("@Price", txtPrice.Text.Trim());
                         //Cmd.Parameters.AddWithValue("@Tax", txtTax.Text.Trim());
-                        // Cmd.Parameters.AddWithValue("@Description", txtDescription.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Grade", txtGarde.Text.Trim());
                         Cmd.Parameters.AddWithValue("@HSN", txtHSN.Text.Trim());
                         Cmd.Parameters.AddWithValue("@Componentname", "C-" + txtComponentname.Text.Trim());
                         Cmd.Parameters.AddWithValue("@Componentcode", txtComponentcode.Text.Trim());

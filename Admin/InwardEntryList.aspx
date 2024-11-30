@@ -179,9 +179,9 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <asp:Label ID="Label2" runat="server" Font-Bold="true" Text="Inward No.:"></asp:Label>
+                        <asp:Label ID="Label2" runat="server" Font-Bold="true" Text="Invoice No.:"></asp:Label>
                         <div style="margin-top: 14px;">
-                         <asp:TextBox ID="txtOrderno" CssClass="form-control" placeholder="Search Order No" runat="server" OnTextChanged="txtOrderno_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
+                            <asp:TextBox ID="txtOrderno" CssClass="form-control" placeholder="Search Invoice No" runat="server" OnTextChanged="txtOrderno_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ErrorMessage="Please Enter Order No"
                                 ControlToValidate="txtOrderno" ValidationGroup="form1" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                             <asp:AutoCompleteExtender ID="AutoCompleteExtender2" runat="server" CompletionListCssClass="completionList"
@@ -232,9 +232,9 @@
                 <div>
                     <div class="row">
                         <%--<div class="table-responsive text-center">--%>
-                        <div class="table ">
-                            <asp:GridView ID="GVInward" runat="server" CellPadding="4" DataKeyNames="ID" PageSize="10" AllowPaging="true" Width="100%"
-                                OnRowCommand="GVInward_RowCommand" OnPageIndexChanging="GVInward_PageIndexChanging" OnRowDataBound="GVInward_RowDataBound" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
+                        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
+                            <asp:GridView ID="GVInward" runat="server" CellPadding="4" DataKeyNames="ID" Width="100%"
+                                OnRowCommand="GVInward_RowCommand" OnRowDataBound="GVInward_RowDataBound" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
                                 <Columns>
                                     <asp:TemplateField HeaderText="Sr.No." ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
@@ -246,7 +246,7 @@
                                             <asp:Label ID="Inwardno" runat="server" Text='<%#Eval("OrderNo")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Batch No." HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Batch No." HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="Batch" runat="server" Text='<%#Eval("Batch")%>'></asp:Label>
                                         </ItemTemplate>

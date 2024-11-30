@@ -193,7 +193,12 @@
                                             <asp:Label ID="ComponentName" runat="server" Text='<%#Eval("ComponentName")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                   <%-- <asp:TemplateField HeaderText="Price" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Grade" runat="server" Text='<%#Eval("Grade")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <%-- <asp:TemplateField HeaderText="Price" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="Price" runat="server" Text='<%#Eval("Price")%>'></asp:Label>
                                         </ItemTemplate>
