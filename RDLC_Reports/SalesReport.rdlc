@@ -9,16 +9,19 @@
               <Width>1.81771cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.35135cm</Width>
+              <Width>4.53114cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.19621cm</Width>
+              <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.16277cm</Width>
+              <Width>2.03746cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.78258cm</Width>
+              <Width>2.03048cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2.49154cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.20917cm</Width>
@@ -27,19 +30,19 @@
               <Width>1.71803cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.21837cm</Width>
+              <Width>1.90087cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.7941cm</Width>
+              <Width>1.60889cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.7941cm</Width>
+              <Width>1.68827cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.63105cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.72014cm</Width>
+              <Width>2.50847cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -103,6 +106,40 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>companyname</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox5">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Sales Person</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox5</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>Solid</Style>
@@ -526,6 +563,37 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
+                    <Textbox Name="UserName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!UserName.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>UserName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
                     <Textbox Name="invoiceno1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -883,9 +951,10 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>3</ColSpan>
+                    <ColSpan>4</ColSpan>
                   </CellContents>
                 </TablixCell>
+                <TablixCell />
                 <TablixCell />
                 <TablixCell />
                 <TablixCell>
@@ -1202,6 +1271,7 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -1218,8 +1288,8 @@
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
         <Top>0.03528cm</Top>
-        <Height>2.56969cm</Height>
-        <Width>27.39557cm</Width>
+        <Height>2.5697cm</Height>
+        <Width>27.67308cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1234,7 +1304,7 @@
       </Border>
     </Style>
   </Body>
-  <Width>10.78566in</Width>
+  <Width>10.89491in</Width>
   <Page>
     <PageHeader>
       <Height>1.50812cm</Height>
@@ -1402,10 +1472,14 @@
           <DataField>companygstno</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="UserName">
+          <DataField>UserName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>DataSet</rd:DataSetName>
-        <rd:SchemaPath>E:\New_CRM\RDLC_Reports\DataSet.xsd</rd:SchemaPath>
+        <rd:SchemaPath>E:\Shubham_Pawar\Application\PuneAbrasives\RDLC_Reports\DataSet.xsd</rd:SchemaPath>
         <rd:TableName>Getdataforreport</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />

@@ -216,91 +216,87 @@
             </div>
             <div class="container-fluid">
                 <div class="col-md-12" style="padding: 0px; margin-top: 5px;">
-                    <div id="DivRoot1" align="left" runat="server">
-                        <div style="overflow: hidden;" id="DivHeaderRow1">
-                        </div>
-                        <div style="overflow: scroll;" class="dt-responsive table-responsive" onscroll="OnScrollDiv(this)" id="DivMainContent1">
 
-                            <asp:GridView ID="GVfollowup" runat="server" CellPadding="4" Font-Names="Verdana" ShowFooter="true"
-                                Font-Size="12pt" Width="100%"
-                                GridLines="Both" PageSize="100000" AllowPaging="true" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false"
-                                OnRowDataBound="GVfollowup_RowDataBound">
-                                <Columns>
-                                    <asp:TemplateField HeaderText="Sr. No." HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Container.DataItemIndex + 1 %>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:Label runat="server" />
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Type" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblType" runat="server" Text='<%#Eval("Type")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Doc No." HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblDocNo" runat="server" Text='<%#Eval("DocNo")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Date" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblDate" runat="server" Text='<%#Eval("CDate")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
+                    <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
 
-                                    <asp:TemplateField HeaderText="Particulers" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblParticulers" runat="server" Text='<%#Eval("Particulars")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:Label runat="server" Text="Total:" />
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Debit" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblDebit" runat="server" Text='<%#Eval("Debit")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:Label ID="lblTotalDebit" runat="server" />
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Credit" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblCredit" runat="server" Text='<%#Eval("Credit")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:Label ID="lblTotalCredit" runat="server" />
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Balance" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblBalance" runat="server" Text='<%#Eval("Balance")%>'></asp:Label>
-                                        </ItemTemplate>
-                                        <FooterTemplate>
-                                            <asp:Label ID="lblTotalBalance" runat="server" />
-                                        </FooterTemplate>
-                                    </asp:TemplateField>
+                        <asp:GridView ID="GVfollowup" runat="server" CellPadding="4" Font-Names="Verdana" ShowFooter="true"
+                            Font-Size="12pt" Width="100%"
+                            GridLines="Both" PageSize="100000" AllowPaging="true" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false"
+                            OnRowDataBound="GVfollowup_RowDataBound">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Sr. No." HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblSrNo" runat="server" Text='<%# Container.DataItemIndex + 1 %>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        <asp:Label runat="server" />
+                                    </FooterTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Type" HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblType" runat="server" Text='<%#Eval("Type")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                    </FooterTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Doc No." HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblDocNo" runat="server" Text='<%#Eval("DocNo")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                    </FooterTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Date" HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblDate" runat="server" Text='<%#Eval("CDate")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                    </FooterTemplate>
+                                </asp:TemplateField>
 
-                                </Columns>
-                                <FooterStyle Font-Bold="True" ForeColor="Yellow" HorizontalAlign="Center" />
+                                <asp:TemplateField HeaderText="Particulers" HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblParticulers" runat="server" Text='<%#Eval("Particulars")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        <asp:Label runat="server" Text="Total:" />
+                                    </FooterTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Debit" HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblDebit" runat="server" Text='<%#Eval("Debit")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        <asp:Label ID="lblTotalDebit" runat="server" />
+                                    </FooterTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Credit" HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCredit" runat="server" Text='<%#Eval("Credit")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        <asp:Label ID="lblTotalCredit" runat="server" />
+                                    </FooterTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Balance" HeaderStyle-CssClass="gvhead">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblBalance" runat="server" Text='<%#Eval("Balance")%>'></asp:Label>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        <asp:Label ID="lblTotalBalance" runat="server" />
+                                    </FooterTemplate>
+                                </asp:TemplateField>
 
-                            </asp:GridView>
-                        </div>
+                            </Columns>
+                            <FooterStyle Font-Bold="True" ForeColor="Yellow" HorizontalAlign="Center" />
+
+                        </asp:GridView>
                     </div>
                 </div>
-
-            </div>
-            <div class="col-md-12" style="padding: 20px; margin-top: 5px;">
-                <iframe id="ifrRight6" runat="server" enableviewstate="false" style="width: 100%; -ms-zoom: 0.75; height: 685px;"></iframe>
-            </div>
+        </div>
+        <div class="col-md-12" style="padding: 20px; margin-top: 5px;">
+            <iframe id="ifrRight6" runat="server" enableviewstate="false" style="width: 100%; -ms-zoom: 0.75; height: 685px;"></iframe>
+        </div>
         </div>
     </div>
     <%-- <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>--%>

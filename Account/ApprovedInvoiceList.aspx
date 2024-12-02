@@ -4,8 +4,6 @@
 <%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link href="../Content/css/Griddiv.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css' />
     <style>
         .spancls {
             color: #5d5656 !important;
@@ -72,27 +70,7 @@
             padding-top: 10px;
         }
     </style>
-    <script>
-        function HideLabelerror(msg) {
-            Swal.fire({
-                icon: 'error',
-                text: msg,
 
-            })
-        };
-        function HideLabel(msg) {
-
-            Swal.fire({
-                icon: 'success',
-                text: msg,
-                timer: 5000,
-                showCancelButton: false,
-                showConfirmButton: false
-            }).then(function () {
-                window.location.href = "ProductMaster.aspx";
-            })
-        };
-    </script>
     <style>
         .gvhead {
             text-align: center;
@@ -218,12 +196,23 @@
             </div>
             <div class="container py-3">
                 <div class="row">
-                    <div class="table ">
-                        <asp:Label ID="lblsno" Font-Bold="true" runat="server"><span style="color:red">Note:</span> Pink color rows show invoice payment term not match on that customer payment term.
+                    <asp:Label ID="lblsno" Font-Bold="true" runat="server"><span style="color:red">Note:</span> Pink color rows show invoice payment term not match on that customer payment term.
                             <br />
                             <span style="color:red">Note:</span> LightBlue color rows show E-invoice Cancelled.
-                        </asp:Label>
-
+                    </asp:Label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="flex-grow: 1;">
+                            <!-- Left empty for future content if needed -->
+                        </div>
+                        <div class="col-md-1" style="text-align: right;">
+                            <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                                <asp:ListItem Text="10" Value="10" />
+                                <asp:ListItem Text="50" Value="50" />
+                                <asp:ListItem Text="All" Value="100000" />
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
                         <asp:GridView ID="GVInvoice" runat="server" CellPadding="4" DataKeyNames="Id" Width="100%" OnRowDataBound="GVInvoice_RowDataBound"
                             CssClass="grivdiv pagination-ys" OnRowCommand="GVInvoice_RowCommand" AutoGenerateColumns="false" OnPageIndexChanging="GVInvoice_PageIndexChanging">
                             <Columns>

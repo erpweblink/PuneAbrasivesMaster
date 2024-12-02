@@ -37,31 +37,40 @@ public partial class Account_TaxInvoiceList : System.Web.UI.Page
     {
         try
         {
-            if (Session["Role"].ToString() == "Admin" || Session["Designation"].ToString() == "Sales Engineer ")
+            SqlCommand cmd = new SqlCommand("SP_GetTableDetails", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "GetTaxInvoiceList");
+            if (Session["Designation"].ToString() == "Sales Manager")
             {
-                DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select  Case when TH.Status=1 then 'Pending' when TH.Status=2 then 'Approved' else 'Dispatched' END AS Show,* from tblTaxInvoiceHdr AS TH INNER JOIN tbl_CustomerPurchaseOrderHdr AS CH ON CH.Pono=TH.AgainstNumber LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CH.UserName where TH.isdeleted='0' order by TH.CreatedOn DESC", con);
-                sad.Fill(dt);
-                GvInvoiceList.DataSource = dt;
-                GvInvoiceList.DataBind();
-                GvInvoiceList.EmptyDataText = "Record Not Found";
+                cmd.Parameters.AddWithValue("@UserName", Session["UserCode"].ToString());
             }
             else
             {
-                DataTable dt = new DataTable();
-                SqlDataAdapter sad = new SqlDataAdapter("select  Case when TH.Status=1 then 'Pending' when TH.Status=2 then 'Approved' else 'Dispatched' END AS Show,* from tblTaxInvoiceHdr AS TH INNER JOIN tbl_CustomerPurchaseOrderHdr AS CH ON CH.Pono=TH.AgainstNumber LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CH.UserName where CH.UserName='" + Session["UserCode"].ToString() + "'  AND TH.isdeleted='0' order by TH.CreatedOn DESC", con);
-                sad.Fill(dt);
+                cmd.Parameters.AddWithValue("@UserName", DBNull.Value);
+            }
+            cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);          
+            cmd.Parameters.AddWithValue("@PageSize", Convert.ToInt32(ddlPageSize.SelectedValue));   
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            if (dt.Columns.Count > 0)
+            {
                 GvInvoiceList.DataSource = dt;
                 GvInvoiceList.DataBind();
-                GvInvoiceList.EmptyDataText = "Record Not Found";       
             }
 
-            ScriptManager.RegisterStartupScript(Page, this.GetType(), "Key", "<script>MakeStaticHeader('" + GvInvoiceList.ClientID + "', 400, 1020 , 40 ,true); </script>", false);
+
         }
         catch (Exception ex)
         {
-            throw;
+            //throw ex;
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
         }
+
+  
+
     }
 
     [System.Web.Script.Services.ScriptMethod()]
@@ -101,20 +110,7 @@ public partial class Account_TaxInvoiceList : System.Web.UI.Page
 
     protected void txtCustomerName_TextChanged(object sender, EventArgs e)
     {
-        try
-        {
-            DataTable dtt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("select Case when Status=1 then 'Pending' when Status=2 then 'Approved' else 'Dispatched' END AS Show,* from tblTaxInvoiceHdr where BillingCustomer='" + txtCustomerName.Text + "' AND isdeleted='0' order by CreatedOn DESC", con);
-            sad.Fill(dtt);
-            GvInvoiceList.DataSource = dtt;
-            GvInvoiceList.DataBind();
-            GvInvoiceList.EmptyDataText = "Record Not Found";
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
+        GVBinddata();
     }
 
     protected void btnresetfilter_Click(object sender, EventArgs e)
@@ -358,5 +354,10 @@ public partial class Account_TaxInvoiceList : System.Web.UI.Page
         {
             throw (ex);
         }
+    }
+
+    protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        GVBinddata();
     }
 }

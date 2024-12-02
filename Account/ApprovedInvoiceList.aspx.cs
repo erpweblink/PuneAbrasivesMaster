@@ -46,6 +46,7 @@ public partial class Account_ApprovedInvoiceList : System.Web.UI.Page
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@Action", "GetInvoiceListForAccount");
             cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@PageSize", Convert.ToInt32(ddlPageSize.SelectedValue));
             cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
             cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -687,5 +688,10 @@ public partial class Account_ApprovedInvoiceList : System.Web.UI.Page
     protected void btnresetfilter_Click(object sender, EventArgs e)
     {
         Response.Redirect(Request.RawUrl);
+    }
+
+    protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillGrid();
     }
 }

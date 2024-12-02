@@ -329,7 +329,7 @@
                         <h4 class="mt-4 "><b>OUTWARD ENTRY LIST</b></h4>
                     </div>
                     <br />
-               
+
                 </div>
                 <hr />
                 <div class="row">
@@ -387,7 +387,7 @@
                 <div>
                     <div class="row">
                         <%--<div class="table-responsive text-center">--%>
-                        <div class="table ">
+                        <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
                             <asp:GridView ID="GVOutward" runat="server" CellPadding="4" DataKeyNames="ID" PageSize="10" AllowPaging="true" Width="100%"
                                 OnRowCommand="GVOutward_RowCommand" OnPageIndexChanging="GVOutward_PageIndexChanging" OnRowDataBound="GVOutward_RowDataBound" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
                                 <Columns>
@@ -426,7 +426,7 @@
                                             <asp:LinkButton ID="btnlrletter" runat="server" Height="27px" ToolTip="Show LR Letter" Visible='<%# Eval("LRLetterPath").ToString() == "" ? false : true %>' CausesValidation="false" CommandName="Letter" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-file-pdf' style='font-size:24px;color: red;'></i></asp:LinkButton>
                                             &nbsp;
                                             <asp:LinkButton ID="btnshow" runat="server" Height="27px" ToolTip="Upload Letter" Visible='<%# Eval("LRLetterPath").ToString() == "" ? true : false %>' CausesValidation="false" CommandName="show" CommandArgument='<%#Eval("ID")%>'><i class='fa fa-upload' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
-                                           &nbsp;
+                                            &nbsp;
                                             <asp:LinkButton ID="btnDelete" runat="server" Height="27px" ToolTip="Delete" CausesValidation="false" CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-trash' style='font-size:24px;color: red;'></i></asp:LinkButton>
                                             &nbsp;                                        
                                         </ItemTemplate>

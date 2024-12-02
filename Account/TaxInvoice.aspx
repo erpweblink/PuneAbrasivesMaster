@@ -213,6 +213,7 @@
                                                 <div class="col-md-12">
                                                     <asp:HiddenField ID="hiddeninvoiceno" runat="server" />
                                                     <asp:HiddenField ID="hidden1" runat="server" />
+                                                     <asp:HiddenField ID="hdnUsername" runat="server" />
                                                     <div class="row">
                                                         <div class="col-md-2 spancls">Invoice No.<i class="reqcls">&nbsp;*</i> :</div>
                                                         <div class="col-md-4">

@@ -82,6 +82,8 @@ public partial class Account_TaxInvoice : System.Web.UI.Page
         DataTable Dt = Cls_Main.Read_Table("SELECT * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName where CP.IsDeleted=0 AND CP.ID ='" + ID + "' ");
         if (Dt.Rows.Count > 0)
         {
+            hdnUsername.Value = null;
+            hdnUsername.Value= Dt.Rows[0]["Username"].ToString();
             txtbillingcustomer.Text = Dt.Rows[0]["CustomerName"].ToString();
             txtshippingcustomer.Text = Dt.Rows[0]["CustomerName"].ToString();
             txtShippingaddress.Text = Dt.Rows[0]["ShippingAddress"].ToString();
@@ -1186,10 +1188,8 @@ public partial class Account_TaxInvoice : System.Web.UI.Page
                         cmd.Parameters.AddWithValue("@ShippingCustomer", txtshippingcustomer.Text);
                         cmd.Parameters.AddWithValue("@ShortBAddress", txtshortBillingaddress.Text);
                         cmd.Parameters.AddWithValue("@ShortSAddress", txtshortShippingaddress.Text);
-
                         cmd.Parameters.AddWithValue("@ShippingAddress", txtShippingaddress.Text);
                         cmd.Parameters.AddWithValue("@InvoiceType", ddlInvoiceType.SelectedItem.Text);
-
                         cmd.Parameters.AddWithValue("@ContactNo", txtContactNo.Text);
                         cmd.Parameters.AddWithValue("@Email", txtemail.Text);
                         cmd.Parameters.AddWithValue("@ChallanNo", txtchallanNo.Text);
@@ -1204,6 +1204,7 @@ public partial class Account_TaxInvoice : System.Web.UI.Page
                         cmd.Parameters.AddWithValue("@CustomerPONo", txtcustomerPoNo.Text);
                         cmd.Parameters.AddWithValue("@TransportMode", txttransportMode.Text);
                         cmd.Parameters.AddWithValue("@BatchNo", DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Username", hdnUsername.Value);
                         string TransportDeatils = "";
                         if (txttransportMode.Text == "By Road" || txttransportMode.Text == "By Courier")
                         {

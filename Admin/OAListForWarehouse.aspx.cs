@@ -42,12 +42,37 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
     //Fill GridView
     private void FillGrid()
     {
-       
-            DataTable Dt = Cls_Main.Read_Table("SELECT TOP 50 * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName WHERE CP.IsDeleted = 0 ORDER BY CP.ID DESC");
-            GVPurchase.DataSource = Dt;
-            GVPurchase.DataBind();
-      
+        try
+        {
+            SqlCommand cmd = new SqlCommand("SP_GetTableDetails", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "GetOAList");
+            cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@PONO", txtCpono.Text);
+            cmd.Parameters.AddWithValue("@GST", txtGST.Text);
+            cmd.Parameters.AddWithValue("@PageSize", Convert.ToInt32(ddlPageSize.SelectedValue));
+            cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
+            cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            if (dt.Columns.Count > 0)
+            {
+                GVPurchase.DataSource = dt;
+                GVPurchase.DataBind();
+            }
 
+
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "HideLabel('" + errorMsg + "') ", true);
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+        }
+      
+      
     }
 
 
@@ -149,7 +174,7 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "SELECT DISTINCT [ID],[Companyname] FROM [tbl_CompanyMaster] where " + "Companyname like @Search + '%' and IsDeleted=0";
+                com.CommandText = "SELECT DISTINCT CustomerName FROM [tbl_CustomerPurchaseOrderHdr] where " + "CustomerName like '%'+ @Search + '%' and IsDeleted=0";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -159,7 +184,7 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
                 {
                     while (sdr.Read())
                     {
-                        countryNames.Add(sdr["Companyname"].ToString());
+                        countryNames.Add(sdr["CustomerName"].ToString());
                     }
                 }
                 con.Close();
@@ -170,22 +195,12 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
 
     protected void txtCustomerName_TextChanged(object sender, EventArgs e)
     {
-        if (txtCustomerName.Text != "" || txtCustomerName.Text != null)
-        {
-            string company = txtCustomerName.Text;
-
-            DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName WHERE CP.IsDeleted = 0 AND CustomerName='" + txtCustomerName.Text + "' ORDER BY CP.ID DESC", Cls_Main.Conn);
-            sad.Fill(dt);
-            GVPurchase.EmptyDataText = "Not Records Found";
-            GVPurchase.DataSource = dt;
-            GVPurchase.DataBind();
-        }
+        FillGrid();
     }
 
     protected void btnrefresh_Click(object sender, EventArgs e)
     {
-        Response.Redirect("CustomerPurchaseOrderList.aspx");
+        Response.Redirect("OAListForWarehouse.aspx");
     }
 
     //Search Customer P.O.  Search methods
@@ -204,7 +219,7 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "SELECT * FROM [tbl_CustomerPurchaseOrderHdr] where " + "SerialNo like @Search + '%' and IsDeleted=0";
+                com.CommandText = "SELECT DISTINCT SerialNo FROM [tbl_CustomerPurchaseOrderHdr] where " + "SerialNo like '%'+ @Search + '%' and IsDeleted=0";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -224,17 +239,7 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
     }
     protected void txtCpono_TextChanged(object sender, EventArgs e)
     {
-        if (txtCpono.Text != "" || txtCpono.Text != null)
-        {
-            string Cpono = txtCpono.Text;
-
-            DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName AND SerialNo='" + Cpono + "' ORDER BY CP.ID DESC", Cls_Main.Conn);
-            sad.Fill(dt);
-            GVPurchase.EmptyDataText = "Not Records Found";
-            GVPurchase.DataSource = dt;
-            GVPurchase.DataBind();
-        }
+        FillGrid();
     }
 
     protected void btnSearch_Click(object sender, EventArgs e)
@@ -350,7 +355,7 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "SELECT DISTINCT GSTNo FROM [tbl_CustomerPurchaseOrderHdr] where " + "GSTNo like @Search + '%' and IsDeleted=0";
+                com.CommandText = "SELECT DISTINCT GSTNo FROM [tbl_CustomerPurchaseOrderHdr] where " + "GSTNo like '%'+ @Search + '%' and IsDeleted=0";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -371,17 +376,8 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
 
     protected void txtGST_TextChanged(object sender, EventArgs e)
     {
-        if (txtGST.Text != "" || txtGST.Text != null)
-        {
-            string GST = txtGST.Text;
+        FillGrid();
 
-            DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("SELECT * FROM [tbl_CustomerPurchaseOrderHdr] AS CP LEFT JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName where GSTNo = '" + GST + "' AND CP.IsDeleted = 0", Cls_Main.Conn);
-            sad.Fill(dt);
-            GVPurchase.EmptyDataText = "Not Records Found";
-            GVPurchase.DataSource = dt;
-            GVPurchase.DataBind();
-        }
     }
 
     protected void ImageButtonfile5_Click(object sender, ImageClickEventArgs e)
@@ -427,6 +423,11 @@ public partial class Admin_OAListForWarehouse : System.Web.UI.Page
     //{
     //    FillGrid();
     //}
+
+    protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        FillGrid();
+    }
 }
 
 

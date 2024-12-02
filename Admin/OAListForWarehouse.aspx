@@ -3,31 +3,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link href="../Content/css/Griddiv.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css' />
-    <script>
-        function HideLabelerror(msg) {
-            Swal.fire({
-                icon: 'error',
-                text: msg,
 
-            })
-        };
-        function HideLabel(msg) {
-
-            Swal.fire({
-                icon: 'success',
-                text: msg,
-                timer: 5000,
-                showCancelButton: false,
-                showConfirmButton: false
-            }).then(function () {
-                window.location.href = "ProductMaster.aspx";
-            })
-        };
-    </script>
-    <script src="../JS/jquery.min.js"></script>
-    <link href="../Content/css/Griddiv.css" rel="stylesheet" />
     <style>
         .spancls {
             color: #5d5656 !important;
@@ -227,20 +203,20 @@
                         <div class="col-md-1" style="margin-top: 36px">
                             <asp:LinkButton ID="btnrefresh" runat="server" OnClick="btnrefresh_Click" Width="100%" CssClass="btn btn-warning"><i style="color:white" class="fa">&#xf021;</i> &nbsp;</asp:LinkButton>
                         </div>
-                        <%--<div class="table-responsive text-center">--%>
-                  <%--      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <div style="flex-grow: 1;">
                                 <!-- Left empty for future content if needed -->
                             </div>
-                            <div class="col-md-3" style="text-align: right;">
-                                <asp:DropDownList ID="ddlPageSize" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                            <div class="col-md-1" style="text-align: right;">
+                                <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
                                     <asp:ListItem Text="10" Value="10" />
                                     <asp:ListItem Text="50" Value="50" />
-                                    <asp:ListItem Text="All" Value="All" />
+                                    <asp:ListItem Text="All" Value="100000" />
                                 </asp:DropDownList>
                             </div>
-                        </div>--%>
+                        </div>
                         <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
+
                             <asp:GridView ID="GVPurchase" runat="server" CellPadding="4" DataKeyNames="id" Width="100%" OnRowDataBound="GVPurchase_RowDataBound"
                                 OnRowCommand="GVPurchase_RowCommand" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
                                 <Columns>

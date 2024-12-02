@@ -3,6 +3,7 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+  
     <style>
         .spancls {
             color: #5d5656 !important;
@@ -152,11 +153,8 @@
                             <div class="col-10 col-md-10">
                                 <h5>Tax Invoice List</h5>
                             </div>
-                            <%--  <div class="col-2 col-md-2">
-                                <asp:Button ID="Button1" CssClass="form-control btn btn-warning" Font-Bold="true" runat="server" Text="Add Tax Invoice" OnClick="Button1_Click" />
-                            </div>--%>
                         </div>
-                    </div>
+                    </div>                  
                     <div class="row">
                         <div class="col-xl-3 col-md-3">
                             <asp:TextBox ID="txtCustomerName" runat="server" CssClass="form-control" placeholder="Customer Name" Width="100%" AutoPostBack="true" OnTextChanged="txtCustomerName_TextChanged"></asp:TextBox>
@@ -169,8 +167,20 @@
                         <div class="col-xl-1 col-md-1">
                             <asp:Button ID="btnresetfilter" CssClass="btn btn-danger" runat="server" Text="Reset" Style="padding: 8px;" OnClick="btnresetfilter_Click" />
                         </div>
-                    </div>
+                    </div>               
                     <div class="row">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="flex-grow: 1;">
+                                <!-- Left empty for future content if needed -->
+                            </div>
+                            <div class="col-md-1" style="text-align: right;">
+                                <asp:DropDownList ID="ddlPageSize" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged">
+                                    <asp:ListItem Text="10" Value="10" />
+                                    <asp:ListItem Text="50" Value="50" />
+                                    <asp:ListItem Text="All" Value="100000" />
+                                </asp:DropDownList>
+                            </div>
+                        </div>
                         <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
                             <asp:GridView ID="GvInvoiceList" runat="server" CellPadding="4" DataKeyNames="Id" Width="100%" OnRowCommand="GvInvoiceList_RowCommand" OnRowDataBound="GvInvoiceList_RowDataBound"
                                 CssClass="grivdiv pagination-ys" AutoGenerateColumns="false">
