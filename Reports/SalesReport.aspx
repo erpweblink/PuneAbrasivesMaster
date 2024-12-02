@@ -197,8 +197,6 @@
                 <br />
             </div>
             <div class="container-fluid">
-
-
                 <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
                     <asp:GridView ID="GVfollowup" runat="server" CellPadding="4" Font-Names="Verdana" ShowFooter="true"
                         Font-Size="12pt" Width="100%"

@@ -249,7 +249,7 @@
                 </div>
 
             </div>
-            <br />
+          
             <div class="row">
                 <asp:Repeater runat="server" ID="rptsales">
                     <ItemTemplate>
@@ -277,10 +277,10 @@
                 </asp:Repeater>
             </div>
             <div class="container-fluid">
-                <div class="col-md-12">
+                <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
                     <asp:GridView ID="GVfollowup" runat="server" CellPadding="4" Font-Names="Verdana" ShowFooter="true"
                         Font-Size="12pt" Width="100%"
-                        GridLines="Both"  CssClass="grivdiv pagination-ys" AutoGenerateColumns="false"
+                        GridLines="Both" CssClass="grivdiv pagination-ys" AutoGenerateColumns="false"
                         OnRowDataBound="GVfollowup_RowDataBound">
                         <Columns>
                             <asp:TemplateField HeaderText="Sr. No." HeaderStyle-CssClass="gvhead">
