@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using System.Web.Security;
+using AjaxControlToolkit.HTMLEditor.ToolbarButton;
+
 public partial class Login : System.Web.UI.Page
 {
     SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["constr"].ConnectionString);
@@ -23,7 +25,6 @@ public partial class Login : System.Web.UI.Page
 
     protected void btnsave_Click(object sender, EventArgs e)
     {
-         
         Cls_Main.Conn_Open();
         SqlCommand cmd = new SqlCommand("SELECT * FROM tbl_UserMaster WHERE EmailID='" + txtUsername.Text + "' AND Password='" + txtPassword.Text + "'", con);
         cmd.CommandType = CommandType.Text;
@@ -41,6 +42,26 @@ public partial class Login : System.Web.UI.Page
                 string status = dr["Status"].ToString();
                 if (status == "True")
                 {
+                    FormsAuthentication.SetAuthCookie(txtUsername.Text.Trim(), chkremember.Checked);
+
+                    if (chkremember.Checked)
+                    {
+                        HttpCookie cookie = new HttpCookie("RememberMe");
+                        cookie["Username"] = txtUsername.Text.Trim();
+                        cookie["Password"] = txtPassword.Text.Trim(); // Avoid storing plain text passwords (use encrypted values instead)
+                        cookie.Expires = DateTime.Now.AddDays(7); // Set expiry date
+                        Response.Cookies.Add(cookie);
+                    }
+                    else
+                    {
+                        // Remove the cookie if "Remember Me" is not checked
+                        if (Request.Cookies["RememberMe"] != null)
+                        {
+                            HttpCookie cookie = new HttpCookie("RememberMe");
+                            cookie.Expires = DateTime.Now.AddDays(-1);
+                            Response.Cookies.Add(cookie);
+                        }
+                    }
                     if (!string.IsNullOrEmpty(Username))
                     {
                         Session["ID"] = dr["ID"].ToString();
