@@ -649,13 +649,18 @@ public partial class Admin_QuatationMaster : System.Web.UI.Page
                         Attachment aa = new Attachment(stream, lblfile1.Text);
                         mm.Attachments.Add(aa);
                     }
-                    mm.Body = strMessage;
-                    mm.IsBodyHtml = true;
-                    //mm.From = new MailAddress("girish.kulkarni@puneabrasives.com", fromMailID);
-                    mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
+                    StreamReader reader = new StreamReader(Server.MapPath("~/Templates/CommentPage_templet.html"));
+                    string readFile = reader.ReadToEnd();
+                    string myString = "";
+                    myString = readFile;
 
-                    // Set the "Reply-To" header to indicate the desired display address
-                    mm.ReplyToList.Add(new MailAddress(fromMailID));                   
+                    string multilineText = strMessage;
+                    string formattedText = multilineText.Replace("\n", "<br />");
+                    mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
+                    myString = myString.Replace("$Comment$", formattedText);
+                    mm.ReplyToList.Add(new MailAddress(fromMailID));
+                    mm.Body = myString.ToString();
+                    mm.IsBodyHtml = true;                                 
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
                     smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);

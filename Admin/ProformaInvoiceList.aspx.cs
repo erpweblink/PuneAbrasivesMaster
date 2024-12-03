@@ -449,7 +449,7 @@ public partial class Admin_ProformaInvoiceList : System.Web.UI.Page
             mm.Body = myString.ToString();
             mm.IsBodyHtml = true;
             //mm.From = new MailAddress("girish.kulkarni@puneabrasives.com", fromMailID);
-            mm.From = new MailAddress("enquiry@weblinkservices.net", fromMailID);
+            mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
 
             // Set the "Reply-To" header to indicate the desired display address
             mm.ReplyToList.Add(new MailAddress(fromMailID));

@@ -410,7 +410,7 @@ public partial class Admin_OutwardEntryList : System.Web.UI.Page
 
             string multilineText = strMessage;
             string formattedText = multilineText.Replace("\n", "<br />");
-            mm.From = new MailAddress("enquiry@weblinkservices.net", fromMailID);
+            mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
             myString = myString.Replace("$Comment$", formattedText);
             mm.ReplyToList.Add(new MailAddress(fromMailID));
             mm.Body = myString.ToString();
