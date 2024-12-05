@@ -1275,11 +1275,11 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
         // mm.From = new MailAddress(fromMailID);
         string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
         mm.Subject = "Purchase Order Invoice";
-        mm.To.Add("shubhpawar59@gmail.com");
-        // mm.To.Add(lblEmailID.Text);
-        //mm.CC.Add("girish.kulkarni@puneabrasives.com");
-        //mm.CC.Add("virendra.sud@puneabrasives.com");
-        //mm.CC.Add("accounts@puneabrasives.com");
+        //mm.To.Add("shubhpawar59@gmail.com");
+        mm.To.Add(lblEmailID.Text);
+        mm.CC.Add("girish.kulkarni@puneabrasives.com");
+        mm.CC.Add("virendra.sud@puneabrasives.com");
+        mm.CC.Add("accounts@puneabrasives.com");
         mm.CC.Add(Session["EmailID"].ToString().Trim().ToLower());
         Report(Id);
         if (bytePdf != null)

@@ -160,12 +160,70 @@
             window.scrollTo(0, target);
         }
     </script>
+
+    <style>
+        /* Loader CSS */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Ensure it appears above other content */
+            display: none;
+            /* Hidden by default */
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            /* Light grey */
+            border-top: 8px solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script type="text/javascript">
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        document.onreadystatechange = function () {
+            if (document.readyState === "complete") {
+                hideLoader();
+            }
+        };
+    </script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
     <asp:UpdatePanel ID="updatepnl" runat="server">
         <ContentTemplate>
+            <div id="loader" class="loader-wrapper">
+                <div class="loader"></div>
+            </div>
             <div class="page-wrapper">
                 <div class="page-body">
                     <div class="col-md-12 card-header">
@@ -654,7 +712,7 @@
                             <div class="row">
                                 <div class="col-md-4"></div>
                                 <div class="col-md-2">
-                                    <asp:Button ID="btnadd" runat="server" ValidationGroup="form1" CssClass="btn btn-primary" Width="100%" Text="Add PO" OnClick="btnadd_Click" />
+                                    <asp:Button ID="btnadd" runat="server" OnClientClick="showLoader();" ValidationGroup="form1" CssClass="btn btn-primary" Width="100%" Text="Add PO" OnClick="btnadd_Click" />
                                 </div>
                                 <div class="col-md-2">
                                     <asp:Button ID="btnreset" runat="server" CssClass="btn btn-danger" Width="100%" Text="Reset" OnClick="btnreset_Click" />
