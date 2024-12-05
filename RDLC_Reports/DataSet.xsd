@@ -339,6 +339,21 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="Stock">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="InvoiceNo" type="xs:string" minOccurs="0" />
+              <xs:element name="InvoiceDate" type="xs:string" minOccurs="0" />
+              <xs:element name="ComponentName" type="xs:string" minOccurs="0" />
+              <xs:element name="Batch" type="xs:string" minOccurs="0" />
+              <xs:element name="InwardQty" type="xs:string" minOccurs="0" />
+              <xs:element name="OutwardQty" type="xs:string" minOccurs="0" />
+              <xs:element name="BalanceQty" type="xs:string" minOccurs="0" />
+              <xs:element name="Rate" type="xs:string" minOccurs="0" />
+              <xs:element name="DataColumn9" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
         <xs:element name="Inventory">
           <xs:complexType>
             <xs:sequence>
@@ -358,18 +373,55 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Stock">
+        <xs:element name="Purchasedetails">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="InvoiceNo" type="xs:string" minOccurs="0" />
-              <xs:element name="InvoiceDate" type="xs:string" minOccurs="0" />
-              <xs:element name="ComponentName" type="xs:string" minOccurs="0" />
-              <xs:element name="Batch" type="xs:string" minOccurs="0" />
-              <xs:element name="InwardQty" type="xs:string" minOccurs="0" />
-              <xs:element name="OutwardQty" type="xs:string" minOccurs="0" />
-              <xs:element name="BalanceQty" type="xs:string" minOccurs="0" />
+              <xs:element name="HeaderID" msdata:Caption="BillingCustomer" type="xs:string" minOccurs="0" />
+              <xs:element name="Particulars" msdata:Caption="ShippingAddress" type="xs:string" minOccurs="0" />
+              <xs:element name="Description" msdata:Caption="TotalDebit" type="xs:string" minOccurs="0" />
+              <xs:element name="HSN" msdata:Caption="ClosingBalance" type="xs:string" minOccurs="0" />
+              <xs:element name="Quantity" msdata:Caption="TotalReceivable" type="xs:string" minOccurs="0" />
+              <xs:element name="UOM" msdata:Caption="TotalCredit" type="xs:string" minOccurs="0" />
+              <xs:element name="Rate" msdata:Caption="Totalbalance" type="xs:string" minOccurs="0" />
+              <xs:element name="CGSTPer" type="xs:string" minOccurs="0" />
+              <xs:element name="CGSTAmt" type="xs:string" minOccurs="0" />
+              <xs:element name="SGSTPer" type="xs:string" minOccurs="0" />
+              <xs:element name="SGSTAmt" type="xs:string" minOccurs="0" />
+              <xs:element name="IGSTPer" type="xs:string" minOccurs="0" />
+              <xs:element name="IGSTAmt" type="xs:string" minOccurs="0" />
+              <xs:element name="Amount" msdata:Caption="Total" type="xs:string" minOccurs="0" />
+              <xs:element name="GrandTotal" msdata:Caption="Alltotal" type="xs:string" minOccurs="0" />
+              <xs:element name="Discount" msdata:Caption="DiscountAmount" type="xs:string" minOccurs="0" />
+              <xs:element name="Discountpercentage" type="xs:string" minOccurs="0" />
+              <xs:element name="GST" type="xs:string" minOccurs="0" />
+              <xs:element name="GSTPercent" type="xs:string" minOccurs="0" />
+              <xs:element name="GSTAmt" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Purchaseorderhdr">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SupplierName" msdata:Caption="BillingCustomer" type="xs:string" minOccurs="0" />
+              <xs:element name="PODate" msdata:Caption="podate" type="xs:string" minOccurs="0" />
+              <xs:element name="PONO" msdata:Caption="pono" type="xs:string" minOccurs="0" />
+              <xs:element name="DeliveryDate" msdata:Caption="invoiceno" type="xs:string" minOccurs="0" />
+              <xs:element name="Address" msdata:Caption="invoicedate" type="xs:string" minOccurs="0" />
+              <xs:element name="GST" msdata:Caption="Total" type="xs:string" minOccurs="0" />
+              <xs:element name="ContactPerson" msdata:Caption="TotalamtCGSTamt" type="xs:string" minOccurs="0" />
+              <xs:element name="ContactNo" msdata:Caption="TotalamtSGSTamt" type="xs:string" minOccurs="0" />
+              <xs:element name="Payment" msdata:Caption="TotalamtIGSTamt" type="xs:string" minOccurs="0" />
+              <xs:element name="Transport" msdata:Caption="TotalamtGrandTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="DeliveryTime" msdata:Caption="TotalamtTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="Packing" msdata:Caption="CGST" type="xs:string" minOccurs="0" />
+              <xs:element name="Taxs" msdata:Caption="SGST" type="xs:string" minOccurs="0" />
+              <xs:element name="IGST" type="xs:string" minOccurs="0" />
+              <xs:element name="ALLTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="Quantity" type="xs:string" minOccurs="0" />
               <xs:element name="Rate" type="xs:string" minOccurs="0" />
-              <xs:element name="DataColumn9" type="xs:string" minOccurs="0" />
+              <xs:element name="companygstno" type="xs:string" minOccurs="0" />
+              <xs:element name="UserName" type="xs:string" minOccurs="0" />
+              <xs:element name="State" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

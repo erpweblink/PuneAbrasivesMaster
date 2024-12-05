@@ -216,7 +216,11 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
             txtTIGSTamt.Text = dt.Rows[0]["TIGSTAmt"].ToString();
             txtTCost.Text = dt.Rows[0]["TotalCost"].ToString();
             getParticularsdts(id);
-
+            txtPayment.Text = dt.Rows[0]["Payment"].ToString();
+            txtTransport.Text = dt.Rows[0]["Transport"].ToString();
+            txtDeliveryTime.Text = dt.Rows[0]["DeliveryTime"].ToString();
+            txtPacking.Text = dt.Rows[0]["Packing"].ToString();
+            txtTaxs.Text = dt.Rows[0]["Taxs"].ToString();
             btnadd.Text = "Update PO";
         }
     }
@@ -403,6 +407,11 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text.Trim());
                     cmd.Parameters.AddWithValue("@OrderCloseMode", ddlOrderCloseMode.Text.Trim());
                     cmd.Parameters.AddWithValue("@KindAtt", ddlKindAtt.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Payment", txtPayment.Text);
+                    cmd.Parameters.AddWithValue("@Transport", txtTransport.Text);
+                    cmd.Parameters.AddWithValue("@DeliveryTime", txtDeliveryTime.Text);
+                    cmd.Parameters.AddWithValue("@Packing", txtPacking.Text);
+                    cmd.Parameters.AddWithValue("@Taxs", txtTaxs.Text);
                     //cmd.Parameters.AddWithValue("@RefDocuments", bytes);
                     //cmd.Parameters.AddWithValue("@PaymentTerm", ddlPaymentTerm.Text.Trim());
                     //cmd.Parameters.AddWithValue("@PackingAndForwarding", ddlPackingAndForwarding.Text.Trim());
@@ -540,6 +549,11 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
                 cmd.Parameters.AddWithValue("@Remarks", txtRemarks.Text.Trim());
                 cmd.Parameters.AddWithValue("@OrderCloseMode", ddlOrderCloseMode.Text.Trim());
                 cmd.Parameters.AddWithValue("@KindAtt", ddlKindAtt.Text.Trim());
+                cmd.Parameters.AddWithValue("@Payment", txtPayment.Text);
+                cmd.Parameters.AddWithValue("@Transport", txtTransport.Text);
+                cmd.Parameters.AddWithValue("@DeliveryTime", txtDeliveryTime.Text);
+                cmd.Parameters.AddWithValue("@Packing", txtPacking.Text);
+                cmd.Parameters.AddWithValue("@Taxs", txtTaxs.Text);
                 //if (hdnfileData.Value == "")
                 //{
 

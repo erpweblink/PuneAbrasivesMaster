@@ -147,13 +147,13 @@ public partial class Admin_PurchaseOrderPDF : System.Web.UI.Page
         // Header 
         cbbb.BeginText();
         cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
-        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "GSTIN : 27ABCCS7002A1ZW", 48, 720, 0);
+        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "GSTIN:27ABCCS7002A1ZW", 20, 720, 0);
         cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
-        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PAN NO: ABCCS7002A", 170, 720, 0);
+        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "PANNO:ABCCS7002A", 135, 720, 0);
         cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
-        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "EMAIL :  girish.kulkarni@puneabrasives.com", 280, 720, 0);
+        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "EMAIL:girish.kulkarni@puneabrasives.com", 230, 720, 0);
         cbbb.SetFontAndSize(BaseFont.CreateFont(@"C:\Windows\Fonts\Calibrib.ttf", "Identity-H", BaseFont.EMBEDDED), 10);
-        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "CONTACT : +91 9860441689, 9511712429 ", 455, 720, 0);
+        cbbb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "CONTACT:+91 9860441689,9511712429 ", 410, 720, 0);
         cbbb.EndText();
 
         PdfContentByte cd1 = writer.DirectContent;
@@ -221,7 +221,7 @@ public partial class Admin_PurchaseOrderPDF : System.Web.UI.Page
             }
 
             Paragraph paragraphTable1 = new Paragraph();
-            paragraphTable1.SpacingBefore = 120f;
+            paragraphTable1.SpacingBefore = 86f;
             paragraphTable1.SpacingAfter = 0f;
 
             PdfPTable table = new PdfPTable(4);
@@ -990,6 +990,7 @@ public partial class Admin_PurchaseOrderPDF : System.Web.UI.Page
                 }
                 FileBuffer = stream.ToArray();
             }
+            // Define fonts
 
 
             //string empFilename = QuatationNumber + " " + PartyName + ".pdf";
