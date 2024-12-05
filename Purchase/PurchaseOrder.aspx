@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Debug="true" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.master" AutoEventWireup="true" CodeFile="PurchaseOrder.aspx.cs" Inherits="Purchase_PurchaseOrder" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
-
+<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link href="../Content/css/Griddiv.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
@@ -153,7 +153,7 @@
                 }
     </style>
 
-    
+
     <script type='text/javascript'>
         function scrollToElement() {
             var target = document.getElementById("divdtls").offsetTop;
@@ -231,7 +231,7 @@
                                                     <div class="col-md-2 spancls"><b>Delivery Date :</b><i class="reqcls">*&nbsp;</i>:</div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtDeliverydate" CssClass="form-control" TextMode="Date" runat="server" Width="100%" AutoComplete="off" OnTextChanged="txtDeliverydate_TextChanged" AutoPostBack="true"></asp:TextBox>
-                                                       
+
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ErrorMessage="Please Select Delivery Date"
                                                             ControlToValidate="txtDeliverydate" ValidationGroup="form1" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                                     </div>
@@ -264,6 +264,46 @@
                                                                 <asp:Label runat="server" Font-Bold="true" ID="lblEmailID"></asp:Label>
                                                             </div>
                                                         </div>
+                                                    </div>
+
+                                                    <div class="col-md-12 mb-3">
+                                                        <hr />
+                                                        <b style="color: red">*TERMS AND CONDITIONS</b>
+                                                        <hr />
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-12 mb-3">
+                                                            <asp:Label ID="lblDeliveryTime" runat="server" Font-Bold="true" CssClass="form-label">Delivery Time :</asp:Label>
+
+                                                            <asp:TextBox ID="txtDeliveryTime" CssClass="form-control" Text="Door Delivery" placeholder="Enter Delivery Time" runat="server"></asp:TextBox>
+                                                        </div>
+
+                                                        <div class="col-md-6 col-12 mb-3">
+                                                            <asp:Label ID="lblTransport" runat="server" Font-Bold="true" CssClass="form-label">Transport :</asp:Label>
+
+                                                            <asp:TextBox ID="txtTransport" CssClass="form-control" Text="Our End" placeholder="Enter Transport" runat="server"></asp:TextBox>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-12 mb-3">
+
+                                                            <asp:Label ID="lblPayment" runat="server" Font-Bold="true" CssClass="form-label">Payment Term :</asp:Label>
+
+                                                            <asp:TextBox ID="txtPayment" CssClass="form-control" placeholder="Enter Payment " Text="30 Days Credit" runat="server"></asp:TextBox>
+                                                        </div>
+                                                        <div class="col-md-6 col-12 mb-3">
+                                                            <asp:Label ID="lblPacking" runat="server" Font-Bold="true" CssClass="form-label">Packing :</asp:Label>
+
+                                                            <asp:TextBox ID="txtPacking" CssClass="form-control" Text="As per our Standard - 25 Kg" placeholder="Enter Packing" runat="server"></asp:TextBox>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-12 mb-3">
+                                                            <asp:Label ID="lblTaxs" runat="server" Font-Bold="true" CssClass="form-label">Taxes :</asp:Label>
+
+                                                            <asp:TextBox ID="txtTaxs" CssClass="form-control" Text="Applicable as above" placeholder="Enter Taxes" runat="server"></asp:TextBox>
+                                                        </div>
+
                                                     </div>
                                                 </div>
 
@@ -602,7 +642,7 @@
                                                         </tr>
                                                     </table>
                                                 </div>
-                                               
+
                                             </div>
                                         </div>
                                     </div>
@@ -625,6 +665,7 @@
                     </div>
                 </div>
             </div>
+            <rsweb:ReportViewer ID="ReportViewer1" runat="server" Visible="false"></rsweb:ReportViewer>
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="btnadd" />

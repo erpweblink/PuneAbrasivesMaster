@@ -272,14 +272,14 @@
                                             <asp:Label runat="server" />
                                         </FooterTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Size" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="lblComponentName" runat="server" Text='<%#Eval("ComponentName")%>'></asp:Label>
                                         </ItemTemplate>
                                         <FooterTemplate>
                                         </FooterTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Size" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="lblDescription" runat="server" Text='<%#Eval("Description")%>'></asp:Label>
                                         </ItemTemplate>
