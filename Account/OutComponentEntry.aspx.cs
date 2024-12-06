@@ -399,7 +399,33 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                                             cmdd.Parameters.AddWithValue("@Batch", lblbatch);
                                             cmdd.ExecuteNonQuery();
                                             Cls_Main.Conn_Close();
+                                            Cls_Main.Conn_Open();
 
+                                            SqlCommand cmdd1 = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+                                            cmdd1.Parameters.AddWithValue("@OrderNo", txtAgainstnumber.Text);
+                                            cmdd1.Parameters.AddWithValue("@Particular", Product);
+                                            cmdd1.Parameters.AddWithValue("@ComponentName", lblCompo);
+                                            cmdd1.Parameters.AddWithValue("@Description", lblDescription);
+                                            cmdd1.Parameters.AddWithValue("@HSN", lblhsn);
+                                            cmdd1.Parameters.AddWithValue("@Quantity", lblQuantity);
+                                            cmdd1.Parameters.AddWithValue("@Units", lblUnit);
+                                            cmdd1.Parameters.AddWithValue("@Rate", lblRate);
+                                            cmdd1.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+                                            cmdd1.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+                                            cmdd1.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+                                            cmdd1.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+                                            cmdd1.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+                                            cmdd1.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+                                            cmdd1.Parameters.AddWithValue("@Total", lblTotal);
+                                            cmdd1.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+                                            cmdd1.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+                                            cmdd1.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+                                            cmdd1.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                                            cmdd1.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                                            cmdd1.Parameters.AddWithValue("@Batch", lblbatch);
+                                            cmdd1.ExecuteNonQuery();
+                                            Cls_Main.Conn_Close();
                                         }
                                     }
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Outward Entry Save Successfully..!!');window.location='WarehouseInvoiceList.aspx'; ", true);
@@ -575,12 +601,45 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                                             cmdd.Parameters.AddWithValue("@Total", lblTotal);
                                             cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
                                             cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
-
                                             cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
                                             cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
                                             cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                                             cmdd.Parameters.AddWithValue("@Batch", lblbatch);
                                             cmdd.ExecuteNonQuery();
+                                            Cls_Main.Conn_Close();
+
+                                            SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + txtAgainstnumber.Text.Trim() + "' ", con);
+                                            con.Open();
+                                            cmddelete2.ExecuteNonQuery();
+                                            con.Close();
+                                           
+
+                                            Cls_Main.Conn_Open();
+
+                                            SqlCommand cmdd1 = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+                                            cmdd1.Parameters.AddWithValue("@OrderNo", txtAgainstnumber.Text);
+                                            cmdd1.Parameters.AddWithValue("@Particular", Product);
+                                            cmdd1.Parameters.AddWithValue("@ComponentName", lblCompo);
+                                            cmdd1.Parameters.AddWithValue("@Description", lblDescription);
+                                            cmdd1.Parameters.AddWithValue("@HSN", lblhsn);
+                                            cmdd1.Parameters.AddWithValue("@Quantity", lblQuantity);
+                                            cmdd1.Parameters.AddWithValue("@Units", lblUnit);
+                                            cmdd1.Parameters.AddWithValue("@Rate", lblRate);
+                                            cmdd1.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+                                            cmdd1.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+                                            cmdd1.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+                                            cmdd1.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+                                            cmdd1.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+                                            cmdd1.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+                                            cmdd1.Parameters.AddWithValue("@Total", lblTotal);
+                                            cmdd1.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+                                            cmdd1.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+                                            cmdd1.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+                                            cmdd1.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                                            cmdd1.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                                            cmdd1.Parameters.AddWithValue("@Batch", lblbatch);
+                                            cmdd1.ExecuteNonQuery();
                                             Cls_Main.Conn_Close();
 
                                         }
@@ -1098,7 +1157,7 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
 
     }
 
-
+  
 }
 
 

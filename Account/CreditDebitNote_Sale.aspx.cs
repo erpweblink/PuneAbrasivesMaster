@@ -17,6 +17,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
     SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["constr"].ConnectionString);
     DataTable dt = new DataTable();
     CommonCls objcls = new CommonCls();
+    DataTable Dt_Product = new DataTable();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["Username"] == null)
@@ -32,6 +33,9 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 DivManual.Visible = true;
                 txtDocdate.Text = DateTime.Today.ToString("dd-MM-yyyy");
                 //fillddlCategory();
+                ViewState["RowNo"] = 0;
+                Dt_Product.Columns.AddRange(new DataColumn[5] { new DataColumn("id"), new DataColumn("Particular"), new DataColumn("ComponentName"), new DataColumn("Batch"), new DataColumn("Quantity") });
+                ViewState["gvcomponent"] = Dt_Product;
                 UpdateHistorymsg = string.Empty; regdate = string.Empty;
                 if (Request.QueryString["ID"] != null)
                 {
@@ -61,6 +65,8 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     ViewState["ParticularDetails"] = dt;
                     //txtDocNo.Text = GenerateComCode();
                 }
+
+             
             }
         }
     }
@@ -118,7 +124,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 //  fillddlCategory();
                 BindBillNO();
 
-                ddlProcess.Text = dt.Rows[0]["Process"].ToString();
+                // ddlProcess.Text = dt.Rows[0]["Process"].ToString();
                 ddlNoteType.Text = dt.Rows[0]["NoteType"].ToString();
                 txtcategory.Text = dt.Rows[0]["CategoryName"].ToString();
                 txtDocdate.Text = dt.Rows[0]["DocDate"].ToString();
@@ -210,6 +216,17 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             }
             dgvParticularsDetails.DataSource = dt;
             dgvParticularsDetails.DataBind();
+
+            //changes on 6/12/2024
+            DataTable dtt = new DataTable();
+            SqlDataAdapter sad3 = new SqlDataAdapter("select ID,Particular,ComponentName,Batch,Quantity from tbl_CrditDebitSaleComponents where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "'", con);
+            sad3.Fill(dtt);
+            if (dtt.Rows.Count > 0)
+            {
+                ViewState["gvcomponent"] = dtt;
+                gvcomponent.DataSource = dtt;
+                gvcomponent.DataBind();
+            }
         }
         catch (Exception)
         {
@@ -327,38 +344,24 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
         #region Insert
         if (btnadd.Text == "Submit")
         {
-
-            if (ddlProcess.Text == "Manual")
+            if (dgvAutomatic.Rows.Count > 0)
             {
-                if (dgvParticularsDetails.Rows.Count > 0)
+                foreach (GridViewRow g2 in dgvAutomatic.Rows)
                 {
-                    flgs = true;
-                }
-                else
-                {
-                    flgs = false;
+                    bool chk = (g2.FindControl("chkSelect") as CheckBox).Checked;
+
+                    while (chk == true)
+                    {
+                        flgs = true;
+                        break;
+                    }
                 }
             }
             else
             {
-                if (dgvAutomatic.Rows.Count > 0)
-                {
-                    foreach (GridViewRow g2 in dgvAutomatic.Rows)
-                    {
-                        bool chk = (g2.FindControl("chkSelect") as CheckBox).Checked;
-
-                        while (chk == true)
-                        {
-                            flgs = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    flgs = false;
-                }
+                flgs = false;
             }
+
 
             if (flgs == true)
             {
@@ -378,7 +381,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@DocNo", txtDocNo.Text);
                     cmd.Parameters.AddWithValue("@DocDate", txtDocdate.Text);
 
-                    cmd.Parameters.AddWithValue("@Process", ddlProcess.Text.Trim());
+                    //cmd.Parameters.AddWithValue("@Process", ddlProcess.Text.Trim());
                     cmd.Parameters.AddWithValue("@NoteType", ddlNoteType.Text.Trim());
                     cmd.Parameters.AddWithValue("@CategoryName", txtcategory.Text.Trim());
                     cmd.Parameters.AddWithValue("@BillNumber", ddlBillNumber.SelectedItem.Text == "--Select Bill Number--" ? "" : ddlBillNumber.SelectedItem.Text.Trim());
@@ -471,90 +474,176 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     //int MaxId = Convert.ToInt32(mx.ToString());
 
 
-                    if (ddlProcess.Text == "Automatic")
+                    if (dgvAutomatic.Rows.Count > 0)
                     {
-                        if (dgvAutomatic.Rows.Count > 0)
+                        foreach (GridViewRow row in dgvAutomatic.Rows)
                         {
-                            foreach (GridViewRow row in dgvAutomatic.Rows)
-                            {
-                                bool chkrow = ((CheckBox)row.FindControl("chkSelect")).Checked;
-                                string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
-                                string Particulars = ((Label)row.FindControl("txtParticulars")).Text;
-                                string Description = ((TextBox)row.FindControl("txtDescription")).Text;
-                                string HSN = ((TextBox)row.FindControl("txtHSN")).Text;
-                                string Qty = ((TextBox)row.FindControl("txtautQty")).Text;
-                                string Rate = ((TextBox)row.FindControl("txtRate")).Text;
-                                string Amount = ((Label)row.FindControl("txtAmount")).Text;
-                                string DiscPer = ((TextBox)row.FindControl("txtDiscPer")).Text;
-                                string txtUOM = ((TextBox)row.FindControl("txtUOM")).Text;
-                                string CGSTPer = ((TextBox)row.FindControl("txtCGST")).Text;
-                                string SGSTPer = ((TextBox)row.FindControl("txtSGST")).Text;
-                                string IGSTPer = ((TextBox)row.FindControl("txtIGST")).Text;
-                                string TotalAmount = ((TextBox)row.FindControl("txtGrandTotal")).Text;
-                                string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
+                            bool chkrow = ((CheckBox)row.FindControl("chkSelect")).Checked;
+                            string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
+                            string Particulars = ((Label)row.FindControl("txtParticulars")).Text;
+                            string Description = ((TextBox)row.FindControl("txtDescription")).Text;
+                            string HSN = ((TextBox)row.FindControl("txtHSN")).Text;
+                            string Qty = ((TextBox)row.FindControl("txtautQty")).Text;
+                            string Rate = ((TextBox)row.FindControl("txtRate")).Text;
+                            string Amount = ((Label)row.FindControl("txtAmount")).Text;
+                            string DiscPer = ((TextBox)row.FindControl("txtDiscPer")).Text;
+                            string txtUOM = ((TextBox)row.FindControl("txtUOM")).Text;
+                            string CGSTPer = ((TextBox)row.FindControl("txtCGST")).Text;
+                            string SGSTPer = ((TextBox)row.FindControl("txtSGST")).Text;
+                            string IGSTPer = ((TextBox)row.FindControl("txtIGST")).Text;
+                            string TotalAmount = ((TextBox)row.FindControl("txtGrandTotal")).Text;
+                            string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
 
-                                var CGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(CGSTPer.Trim())) / 100;
-                                var SGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(SGSTPer.Trim())) / 100;
-                                var IGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(IGSTPer.Trim())) / 100;
+                            var CGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(CGSTPer.Trim())) / 100;
+                            var SGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(SGSTPer.Trim())) / 100;
+                            var IGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(IGSTPer.Trim())) / 100;
 
-                                SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM],[Remarks])
+                            SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM],[Remarks])
                             VALUES(" + MaxId + ",'" + Particulars + "','" + Description + "','" + HSN + "','" + Qty + "'," +
-                                 "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
-                                 "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + DiscPer + "','" + txtUOM + "','" + Remarks + "')", con);
-                                con.Open();
-                                if (chkrow == true)
-                                {
-                                    cmdParticulardata.ExecuteNonQuery();
-
-                                }
-                                con.Close();
-                            }
-                            //DataTable dt546665 = new DataTable();
-                            //SqlDataAdapter sadparticular = new SqlDataAdapter("select * from tblSaleCreditDebitNoteDtls where HeaderID='" + MaxId + "'", con);
-                            //sadparticular.Fill(dt546665);
-                            //if (dt546665.Rows.Count > 0)
-                            //{
-
-                            //}
-                            //else
-                            //{
-                            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('At Least Select One Record.');", true);
-                            //}
-
-                        }
-                    }
-                    else
-                    {
-                        if (dgvParticularsDetails.Rows.Count > 0)
-                        {
-                            foreach (GridViewRow row in dgvParticularsDetails.Rows)
+                             "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
+                             "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + DiscPer + "','" + txtUOM + "','" + Remarks + "')", con);
+                            con.Open();
+                            if (chkrow == true)
                             {
-                                string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
-                                string Particulars = ((Label)row.FindControl("lblParticulars")).Text;
-                                string Description = ((Label)row.FindControl("lblDescription")).Text;
-                                string HSN = ((Label)row.FindControl("lblHSN")).Text;
-                                string Qty = ((Label)row.FindControl("lblQty")).Text;
-                                string Rate = ((Label)row.FindControl("lblRate")).Text;
-                                string Amount = ((Label)row.FindControl("lblAmount")).Text;
-                                string disc = ((Label)row.FindControl("lbldisc")).Text;
-                                string CGSTPer = ((Label)row.FindControl("lblCGSTPer")).Text;
-                                string CGSTAmt = ((Label)row.FindControl("lblCGSTAmt")).Text;
-                                string SGSTPer = ((Label)row.FindControl("lblSGSTPer")).Text;
-                                string SGSTAmt = ((Label)row.FindControl("lblSGSTAmt")).Text;
-                                string IGSTPer = ((Label)row.FindControl("lblIGSTPer")).Text;
-                                string IGSTAmt = ((Label)row.FindControl("lblIGSTAmt")).Text;
-                                string TotalAmount = ((Label)row.FindControl("lblTotalAmount")).Text;
-                                string txtUOM = ((TextBox)row.FindControl("txtUOM")).Text;
-                                string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
-
-                                SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM],[Remarks])
-                        VALUES(" + MaxId + ",'" + Particulars + "','" + Description + "','" + HSN + "','" + Qty + "'," +
-                                 "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
-                                 "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + disc + "','" + txtUOM + "', '" + Remarks + "')", con);
-                                con.Open();
                                 cmdParticulardata.ExecuteNonQuery();
-                                con.Close();
+
                             }
+                            con.Close();
+                        }
+                        //DataTable dt546665 = new DataTable();
+                        //SqlDataAdapter sadparticular = new SqlDataAdapter("select * from tblSaleCreditDebitNoteDtls where HeaderID='" + MaxId + "'", con);
+                        //sadparticular.Fill(dt546665);
+                        //if (dt546665.Rows.Count > 0)
+                        //{
+
+                        //}
+                        //else
+                        //{
+                        //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('At Least Select One Record.');", true);
+                        //}
+
+                    }
+                    //Save Component Details 
+                    if (gvcomponent.Rows.Count > 0)
+                    {
+                        foreach (GridViewRow grd1 in gvcomponent.Rows)
+                        {
+                            string Product = (grd1.FindControl("lblproduct") as Label).Text;
+                            string lblCompo = (grd1.FindControl("lblComComPonent") as Label).Text;
+                            string lblbatch = (grd1.FindControl("lblComBatch") as Label).Text;
+                            string lblQuantity = (grd1.FindControl("lblComQuantity") as Label).Text;
+
+                            string lblDescription = "";
+                            string lblhsn = "";
+                            string lblUnit = "";
+                            string lblRate = "";
+                            string lblTotal = "";
+                            string lblCGSTPer = "";
+                            string lblCGST = "";
+                            string lblSGSTPer = "";
+                            string lblSGST = "";
+                            string lblIGSTPer = "";
+                            string lblIGST = "";
+                            string lblDiscount = "";
+                            string lblDiscountAmount = "";
+                            string lblAlltotal = "";
+
+                            SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryComponentsDtls where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+                            DataTable Dt1 = new DataTable();
+                            sad2.Fill(Dt1);
+                            con.Close(); // Close the connection when done
+                            if (Dt1.Rows.Count > 0)
+                            {
+                                lblUnit = Dt1.Rows[0]["Units"].ToString();
+                                lblDescription = Dt1.Rows[0]["Description"].ToString();
+                                lblhsn = Dt1.Rows[0]["HSN"].ToString();
+                                lblRate = Dt1.Rows[0]["Rate"].ToString();
+                                lblCGSTPer = Dt1.Rows[0]["CGSTPer"].ToString();
+                                lblSGSTPer = Dt1.Rows[0]["SGSTPer"].ToString();
+                                lblIGSTPer = Dt1.Rows[0]["IGSTPer"].ToString();
+                            }
+                            var total = Convert.ToDecimal(lblRate) * Convert.ToDecimal(lblQuantity);
+                            lblTotal = string.Format("{0:0.00}", total);
+                            decimal tax_amt;
+                            decimal cgst_amt;
+                            decimal sgst_amt;
+                            decimal igst_amt;
+
+                            if (string.IsNullOrEmpty(lblCGSTPer))
+                            {
+                                cgst_amt = 0;
+                            }
+                            else
+                            {
+                                cgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblCGSTPer) / 100;
+                            }
+                            lblCGST = string.Format("{0:0.00}", cgst_amt);
+
+                            if (string.IsNullOrEmpty(lblSGSTPer))
+                            {
+                                sgst_amt = 0;
+                            }
+                            else
+                            {
+                                sgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblSGSTPer) / 100;
+                            }
+                            lblSGST = string.Format("{0:0.00}", sgst_amt);
+
+                            if (string.IsNullOrEmpty(lblIGSTPer))
+                            {
+                                igst_amt = 0;
+                            }
+                            else
+                            {
+                                igst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblIGSTPer) / 100;
+                            }
+                            lblIGST = string.Format("{0:0.00}", igst_amt);
+
+                            tax_amt = cgst_amt + sgst_amt + igst_amt;
+
+                            var totalWithTax = Convert.ToDecimal(total.ToString()) + Convert.ToDecimal(tax_amt.ToString());
+                            decimal disc_amt;
+                            if (string.IsNullOrEmpty(lblDiscount))
+                            {
+                                disc_amt = 0;
+                            }
+                            else
+                            {
+                                disc_amt = Convert.ToDecimal(totalWithTax.ToString()) * Convert.ToDecimal(lblDiscount) / 100;
+                                //disc_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(Disc_Per.Text) / 100;
+                            }
+
+                            var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
+                            lblAlltotal = string.Format("{0:0.00}", Grossamt);
+                            //  lblCDiscountAmount = string.Format("{0:0}", disc_amt);
+
+                            Cls_Main.Conn_Open();
+                            SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_CrditDebitSaleComponents] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+                            cmdd.Parameters.AddWithValue("@OrderNo", ddlBillNumber.SelectedItem.Text);
+                            cmdd.Parameters.AddWithValue("@Particular", Product);
+                            cmdd.Parameters.AddWithValue("@ComponentName", lblCompo);
+                            cmdd.Parameters.AddWithValue("@Description", lblDescription);
+                            cmdd.Parameters.AddWithValue("@HSN", lblhsn);
+                            cmdd.Parameters.AddWithValue("@Quantity", lblQuantity);
+                            cmdd.Parameters.AddWithValue("@Units", lblUnit);
+                            cmdd.Parameters.AddWithValue("@Rate", lblRate);
+                            cmdd.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+                            cmdd.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+                            cmdd.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+                            cmdd.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+                            cmdd.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+                            cmdd.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+                            cmdd.Parameters.AddWithValue("@Total", lblTotal);
+                            cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+                            cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+                            cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+                            cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                            cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                            cmdd.Parameters.AddWithValue("@Batch", lblbatch);
+                            cmdd.ExecuteNonQuery();
+                            Cls_Main.Conn_Close();
+                            GetInventoryCalculation(lblCompo, lblQuantity, Product);
                         }
                     }
 
@@ -600,7 +689,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@SupplierName", txtSupplierName.Text.Trim());
             cmd.Parameters.AddWithValue("@DocNo", txtDocNo.Text.Trim());
             cmd.Parameters.AddWithValue("@DocDate", txtDocdate.Text.Trim());
-            cmd.Parameters.AddWithValue("@Process", ddlProcess.Text.Trim());
+            // cmd.Parameters.AddWithValue("@Process", ddlProcess.Text.Trim());
             cmd.Parameters.AddWithValue("@NoteType", ddlNoteType.Text.Trim());
             cmd.Parameters.AddWithValue("@CategoryName", txtcategory.Text.Trim());
             cmd.Parameters.AddWithValue("@BillNumber", ddlBillNumber.SelectedItem.Text == "--Select Bill Number--" ? "" : ddlBillNumber.SelectedItem.Text.Trim());
@@ -678,111 +767,168 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             cmddelete.ExecuteNonQuery();
             con.Close();
 
-            if (ddlProcess.Text == "Automatic")
-            {
-                if (btnadd.Text == "Update")
-                {
-                    if (dgvParticularsDetails.Rows.Count > 0)
-                    {
-                        foreach (GridViewRow row in dgvParticularsDetails.Rows)
-                        {
-                            string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
-                            string Particulars = ((Label)row.FindControl("lblParticulars")).Text;
-                            string Description = ((Label)row.FindControl("lblDescription")).Text;
-                            string HSN = ((Label)row.FindControl("lblHSN")).Text;
-                            string Qty = ((Label)row.FindControl("lblQty")).Text;
-                            string Rate = ((Label)row.FindControl("lblRate")).Text;
-                            string Amount = ((Label)row.FindControl("lblAmount")).Text;
-                            string disc = ((Label)row.FindControl("lbldisc")).Text;
-                            string CGSTPer = ((Label)row.FindControl("lblCGSTPer")).Text;
-                            string CGSTAmt = ((Label)row.FindControl("lblCGSTAmt")).Text;
-                            string SGSTPer = ((Label)row.FindControl("lblSGSTPer")).Text;
-                            string SGSTAmt = ((Label)row.FindControl("lblSGSTAmt")).Text;
-                            string IGSTPer = ((Label)row.FindControl("lblIGSTPer")).Text;
-                            string IGSTAmt = ((Label)row.FindControl("lblIGSTAmt")).Text;
-                            string TotalAmount = ((Label)row.FindControl("lblTotalAmount")).Text;
-                            string txtUOM = ((Label)row.FindControl("lblUOM")).Text;
-                            string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
 
-                            SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM],[Remarks])
+            if (dgvParticularsDetails.Rows.Count > 0)
+            {
+                foreach (GridViewRow row in dgvParticularsDetails.Rows)
+                {
+                    string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
+                    string Particulars = ((Label)row.FindControl("lblParticulars")).Text;
+                    string Description = ((Label)row.FindControl("lblDescription")).Text;
+                    string HSN = ((Label)row.FindControl("lblHSN")).Text;
+                    string Qty = ((Label)row.FindControl("lblQty")).Text;
+                    string Rate = ((Label)row.FindControl("lblRate")).Text;
+                    string Amount = ((Label)row.FindControl("lblAmount")).Text;
+                    string disc = ((Label)row.FindControl("lbldisc")).Text;
+                    string CGSTPer = ((Label)row.FindControl("lblCGSTPer")).Text;
+                    string CGSTAmt = ((Label)row.FindControl("lblCGSTAmt")).Text;
+                    string SGSTPer = ((Label)row.FindControl("lblSGSTPer")).Text;
+                    string SGSTAmt = ((Label)row.FindControl("lblSGSTAmt")).Text;
+                    string IGSTPer = ((Label)row.FindControl("lblIGSTPer")).Text;
+                    string IGSTAmt = ((Label)row.FindControl("lblIGSTAmt")).Text;
+                    string TotalAmount = ((Label)row.FindControl("lblTotalAmount")).Text;
+                    string txtUOM = ((Label)row.FindControl("lblUOM")).Text;
+                    string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
+
+                    SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM],[Remarks])
                              VALUES(" + ViewState["UpdateRowId"].ToString() + ",'" + Particulars + "','" + Description + "','" + HSN + "','" + Qty + "'," +
-                             "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
-                             "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + disc + "','" + txtUOM + "', '" + Remarks + "')", con);
-                            con.Open();
-                            cmdParticulardata.ExecuteNonQuery();
-                            con.Close();
-                        }
-                    }
-                }
-                else
-                {
-                    if (dgvAutomatic.Rows.Count > 0)
-                    {
-                        foreach (GridViewRow row in dgvAutomatic.Rows)
-                        {
-                            string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
-                            string Particulars = ((Label)row.FindControl("txtParticulars")).Text;
-                            string Description = ((TextBox)row.FindControl("txtDescription")).Text;
-                            string HSN = ((TextBox)row.FindControl("txtHSN")).Text;
-                            string Qty = ((TextBox)row.FindControl("txtautQty")).Text;
-                            string Rate = ((TextBox)row.FindControl("txtRate")).Text;
-                            string Amount = ((Label)row.FindControl("txtAmount")).Text;
-                            string DiscPer = ((TextBox)row.FindControl("txtDiscPer")).Text;
-                            string CGSTPer = ((TextBox)row.FindControl("txtCGST")).Text;
-                            string SGSTPer = ((TextBox)row.FindControl("txtSGST")).Text;
-                            string IGSTPer = ((TextBox)row.FindControl("txtIGST")).Text;
-                            string TotalAmount = ((TextBox)row.FindControl("txtGrandTotal")).Text;
-                            string txtUOM = ((TextBox)row.FindControl("txtUOM")).Text;
-                            string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
-
-                            var CGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(CGSTPer.Trim())) / 100;
-                            var SGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(SGSTPer.Trim())) / 100;
-                            var IGSTAmt = Convert.ToDecimal(Amount) * (Convert.ToDecimal(IGSTPer.Trim())) / 100;
-
-                            SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM],[Remarks])
-                        VALUES(" + ViewState["UpdateRowId"].ToString() + ",'" + Particulars + "','" + Description + "','" + HSN + "','" + Qty + "'," +
-                             "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
-                             "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + DiscPer + "','" + txtUOM + "', '" + Remarks + "')", con);
-                            con.Open();
-                            cmdParticulardata.ExecuteNonQuery();
-                            con.Close();
-                        }
-                    }
+                     "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
+                     "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + disc + "','" + txtUOM + "', '" + Remarks + "')", con);
+                    con.Open();
+                    cmdParticulardata.ExecuteNonQuery();
+                    con.Close();
                 }
             }
-            else
+
+            SqlCommand cmddelete1 = new SqlCommand("delete from tbl_CrditDebitSaleComponents where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "'", con);
+            con.Open();
+            cmddelete1.ExecuteNonQuery();
+            con.Close();
+            //Save Component Details 
+            if (gvcomponent.Rows.Count > 0)
             {
-                if (dgvParticularsDetails.Rows.Count > 0)
+                foreach (GridViewRow grd1 in gvcomponent.Rows)
                 {
-                    foreach (GridViewRow row in dgvParticularsDetails.Rows)
+                    string Product = (grd1.FindControl("lblproduct") as Label).Text;
+                    string lblCompo = (grd1.FindControl("lblComComPonent") as Label).Text;
+                    string lblbatch = (grd1.FindControl("lblComBatch") as Label).Text;
+                    string lblQuantity = (grd1.FindControl("lblComQuantity") as Label).Text;
+
+                    string lblDescription = "";
+                    string lblhsn = "";
+                    string lblUnit = "";
+                    string lblRate = "";
+                    string lblTotal = "";
+                    string lblCGSTPer = "";
+                    string lblCGST = "";
+                    string lblSGSTPer = "";
+                    string lblSGST = "";
+                    string lblIGSTPer = "";
+                    string lblIGST = "";
+                    string lblDiscount = "";
+                    string lblDiscountAmount = "";
+                    string lblAlltotal = "";
+
+                    SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryComponentsDtls where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+                    DataTable Dt1 = new DataTable();
+                    sad2.Fill(Dt1);
+                    con.Close(); // Close the connection when done
+                    if (Dt1.Rows.Count > 0)
                     {
-                        string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
-                        string Particulars = ((Label)row.FindControl("lblParticulars")).Text;
-                        string Description = ((Label)row.FindControl("lblDescription")).Text;
-                        string HSN = ((Label)row.FindControl("lblHSN")).Text;
-                        string Qty = ((Label)row.FindControl("lblQty")).Text;
-                        string Rate = ((Label)row.FindControl("lblRate")).Text;
-                        string Amount = ((Label)row.FindControl("lblAmount")).Text;
-                        string disc = ((Label)row.FindControl("lbldisc")).Text;
-                        string CGSTPer = ((Label)row.FindControl("lblCGSTPer")).Text;
-                        string CGSTAmt = ((Label)row.FindControl("lblCGSTAmt")).Text;
-                        string SGSTPer = ((Label)row.FindControl("lblSGSTPer")).Text;
-                        string SGSTAmt = ((Label)row.FindControl("lblSGSTAmt")).Text;
-                        string IGSTPer = ((Label)row.FindControl("lblIGSTPer")).Text;
-                        string IGSTAmt = ((Label)row.FindControl("lblIGSTAmt")).Text;
-                        string TotalAmount = ((Label)row.FindControl("lblTotalAmount")).Text;
-                        string txtUOM = ((TextBox)row.FindControl("lblUOM")).Text;
-                        string Remarks = ((TextBox)row.FindControl("txtremarks")).Text;
-                        SqlCommand cmdParticulardata = new SqlCommand(@"INSERT INTO tblCreditDebitNoteDtls([HeaderID],[Particulars],[Description],[HSN],[Qty],[Rate],[Amount],[CGSTPer],[CGSTAmt],[SGSTPer],[SGSTAmt],[IGSTPer],[IGSTAmt],[Total],InvoiceNo,[Discount],[UOM])
-                        VALUES(" + ViewState["UpdateRowId"].ToString() + ",'" + Particulars + "','" + Description + "','" + HSN + "','" + Qty + "'," +
-                         "'" + Rate + "','" + Amount + "','" + CGSTPer + "','" + CGSTAmt + "'," +
-                         "'" + SGSTPer + "','" + SGSTAmt + "','" + IGSTPer + "','" + IGSTAmt + "','" + TotalAmount + "','" + InvoiceNo + "','" + disc + "','" + txtUOM + "','" + Remarks + "')", con);
-                        con.Open();
-                        cmdParticulardata.ExecuteNonQuery();
-                        con.Close();
+                        lblUnit = Dt1.Rows[0]["Units"].ToString();
+                        lblDescription = Dt1.Rows[0]["Description"].ToString();
+                        lblhsn = Dt1.Rows[0]["HSN"].ToString();
+                        lblRate = Dt1.Rows[0]["Rate"].ToString();
+                        lblCGSTPer = Dt1.Rows[0]["CGSTPer"].ToString();
+                        lblSGSTPer = Dt1.Rows[0]["SGSTPer"].ToString();
+                        lblIGSTPer = Dt1.Rows[0]["IGSTPer"].ToString();
                     }
+                    var total = Convert.ToDecimal(lblRate) * Convert.ToDecimal(lblQuantity);
+                    lblTotal = string.Format("{0:0.00}", total);
+                    decimal tax_amt;
+                    decimal cgst_amt;
+                    decimal sgst_amt;
+                    decimal igst_amt;
+
+                    if (string.IsNullOrEmpty(lblCGSTPer))
+                    {
+                        cgst_amt = 0;
+                    }
+                    else
+                    {
+                        cgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblCGSTPer) / 100;
+                    }
+                    lblCGST = string.Format("{0:0.00}", cgst_amt);
+
+                    if (string.IsNullOrEmpty(lblSGSTPer))
+                    {
+                        sgst_amt = 0;
+                    }
+                    else
+                    {
+                        sgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblSGSTPer) / 100;
+                    }
+                    lblSGST = string.Format("{0:0.00}", sgst_amt);
+
+                    if (string.IsNullOrEmpty(lblIGSTPer))
+                    {
+                        igst_amt = 0;
+                    }
+                    else
+                    {
+                        igst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblIGSTPer) / 100;
+                    }
+                    lblIGST = string.Format("{0:0.00}", igst_amt);
+
+                    tax_amt = cgst_amt + sgst_amt + igst_amt;
+
+                    var totalWithTax = Convert.ToDecimal(total.ToString()) + Convert.ToDecimal(tax_amt.ToString());
+                    decimal disc_amt;
+                    if (string.IsNullOrEmpty(lblDiscount))
+                    {
+                        disc_amt = 0;
+                    }
+                    else
+                    {
+                        disc_amt = Convert.ToDecimal(totalWithTax.ToString()) * Convert.ToDecimal(lblDiscount) / 100;
+                        //disc_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(Disc_Per.Text) / 100;
+                    }
+
+                    var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
+                    lblAlltotal = string.Format("{0:0.00}", Grossamt);
+                    //  lblCDiscountAmount = string.Format("{0:0}", disc_amt);
+                   
+
+                    Cls_Main.Conn_Open();
+                    SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_CrditDebitSaleComponents] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+                    cmdd.Parameters.AddWithValue("@OrderNo", ddlBillNumber.SelectedItem.Text);
+                    cmdd.Parameters.AddWithValue("@Particular", Product);
+                    cmdd.Parameters.AddWithValue("@ComponentName", lblCompo);
+                    cmdd.Parameters.AddWithValue("@Description", lblDescription);
+                    cmdd.Parameters.AddWithValue("@HSN", lblhsn);
+                    cmdd.Parameters.AddWithValue("@Quantity", lblQuantity);
+                    cmdd.Parameters.AddWithValue("@Units", lblUnit);
+                    cmdd.Parameters.AddWithValue("@Rate", lblRate);
+                    cmdd.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+                    cmdd.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+                    cmdd.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+                    cmdd.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+                    cmdd.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+                    cmdd.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+                    cmdd.Parameters.AddWithValue("@Total", lblTotal);
+                    cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+                    cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+                    cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+                    cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                    cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmdd.Parameters.AddWithValue("@Batch", lblbatch);
+                    cmdd.ExecuteNonQuery();
+                    Cls_Main.Conn_Close();
+                    GetInventoryCalculation(lblCompo, lblQuantity, Product);
                 }
             }
+
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Data Updated Sucessfully');window.location.href='CreditDebitNoteSaleList.aspx';", true);
         }
         #endregion Update
@@ -872,10 +1018,10 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             if (dt.Rows.Count > 0)
             {
                 Fillddlshippingaddress(txtSupplierName.Text);
-                txtbillingaddress.Text = dt.Rows[0]["Billingaddress"].ToString();                
-                txtbillinglocation.Text = dt.Rows[0]["Billinglocation"].ToString();                
-                txtbillingPincode.Text = dt.Rows[0]["Billingpincode"].ToString().Replace(" ", "");               
-                txtbillingstatecode.Text = dt.Rows[0]["Billing_statecode"].ToString().Replace(" ", "");               
+                txtbillingaddress.Text = dt.Rows[0]["Billingaddress"].ToString();
+                txtbillinglocation.Text = dt.Rows[0]["Billinglocation"].ToString();
+                txtbillingPincode.Text = dt.Rows[0]["Billingpincode"].ToString().Replace(" ", "");
+                txtbillingstatecode.Text = dt.Rows[0]["Billing_statecode"].ToString().Replace(" ", "");
                 txtshippingcustomer.Text = dt.Rows[0]["Companyname"].ToString();
                 txtbillingGST.Text = dt.Rows[0]["GSTno"].ToString().Replace(" ", "");
                 txtshippingGST.Text = dt.Rows[0]["GSTno"].ToString().Replace(" ", "");
@@ -1417,27 +1563,20 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
         }
 
         getOrderDatailsdts();
+
+        //changes on 6/12/2024
+        DataTable dtt = new DataTable();
+        SqlDataAdapter sad3 = new SqlDataAdapter("select ID,Particular,ComponentName,Batch,Quantity from tbl_OutwardEntryComponentsDtls where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "'", con);
+        sad3.Fill(dtt);
+        if (dtt.Rows.Count > 0)
+        {
+            ViewState["gvcomponent"] = dtt;
+            gvcomponent.DataSource = dtt;
+            gvcomponent.DataBind();
+        }
     }
 
-    protected void ddlProcess_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if (ddlProcess.Text == "Automatic")
-        {
-            DivManual.Visible = false;
-            DivAutomatic.Visible = true;
-            ddlBillNumber.Enabled = true;
-            hdnGrandtotal.Value = "";
-            txtFGrandTot.Text = "";
-        }
-        else
-        {
-            DivManual.Visible = true;
-            DivAutomatic.Visible = false;
-            ddlBillNumber.Enabled = false;
-            hdnGrandtotal.Value = "";
-            txtFGrandTot.Text = "";
-        }
-    }
+
 
     protected void getOrderDatailsdts()
     {
@@ -1456,13 +1595,13 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('PO Details Not Found !!');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Invoice Details Not Found !!');", true);
             }
         }
         catch (Exception ex)
         {
 
-            
+
         }
     }
 
@@ -1687,7 +1826,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     txt_Qty.Enabled = false;
                 }
             }
-
+            DivAutomatic.Visible = true;
             sumofAmount.Text = Totalamt.ToString();
             //Double Geandtotal = Convert.ToDouble(GrandAmount.ToString()) + Convert.ToDouble(txtTCost.Text);
             Double Geandtotal = Convert.ToDouble(GrandAmount.ToString());
@@ -1747,6 +1886,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     txt_Qty.Enabled = false;
                 }
             }
+            DivAutomatic.Visible = true;
             sumofAmount.Text = Totalamt.ToString();
             //Double Geandtotal = Convert.ToDouble(GrandAmount.ToString()) + Convert.ToDouble(txtTCost.Text);
             Double Geandtotal = Convert.ToDouble(GrandAmount.ToString());
@@ -2182,5 +2322,174 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
 
 
         }
+    }
+
+
+    //changes on 6/12/2024
+    protected void gvcomponent_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        gvcomponent.EditIndex = e.NewEditIndex;
+        gvcomponent.DataSource = (DataTable)ViewState["gvcomponent"];
+        gvcomponent.DataBind();
+    }
+
+    protected void lnkbtnCompDelete_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+        DataTable dt = ViewState["gvcomponent"] as DataTable;
+        dt.Rows.Remove(dt.Rows[row.RowIndex]);
+        ViewState["gvcomponent"] = dt;
+        gvcomponent.DataSource = (DataTable)ViewState["gvcomponent"];
+        gvcomponent.DataBind();
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Component Delete Succesfully !!!');", true);
+
+    }
+
+    protected void gv_Compupdate_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+        string Particular = ((TextBox)row.FindControl("txtCOMPParticular")).Text;
+        string Component = ((TextBox)row.FindControl("txtCOMPComponent")).Text;
+        string Batch = ((TextBox)row.FindControl("txtCOMPBatch")).Text;
+        string Quantity = ((TextBox)row.FindControl("txtCOMPQuantity")).Text;
+
+        DataTable Dt = ViewState["gvcomponent"] as DataTable;
+        Dt.Rows[row.RowIndex]["Particular"] = Particular;
+        Dt.Rows[row.RowIndex]["ComponentName"] = Component;
+        Dt.Rows[row.RowIndex]["Batch"] = Batch;
+        Dt.Rows[row.RowIndex]["Quantity"] = Quantity;
+        Dt.AcceptChanges();
+        ViewState["gvcomponent"] = Dt;
+        gvcomponent.EditIndex = -1;
+        gvcomponent.DataSource = (DataTable)ViewState["gvcomponent"];
+        gvcomponent.DataBind();
+
+
+    }
+
+    public void GetInventoryCalculation(string lblCompo, string lblnewQuantity, string Product)
+    {
+        string lblDescription = "";
+        string lblhsn = "";
+        string lblUnit = "";
+        string lblRate = "";
+        string lblQuantity = "";
+        string lblTotal = "";
+        string lblCGSTPer = "";
+        string lblCGST = "";
+        string lblSGSTPer = "";
+        string lblSGST = "";
+        string lblIGSTPer = "";
+        string lblIGST = "";
+        string lblDiscount = "";
+        string lblDiscountAmount = "";
+        string lblAlltotal = "";
+        string lblbatch = "";
+        decimal TotalQuantity = 0;
+        SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryComponentsDtls where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+        DataTable Dt1 = new DataTable();
+        sad2.Fill(Dt1);
+        con.Close(); // Close the connection when done
+        if (Dt1.Rows.Count > 0)
+        {
+            lblUnit = Dt1.Rows[0]["Units"].ToString();
+            lblDescription = Dt1.Rows[0]["Description"].ToString();
+            lblhsn = Dt1.Rows[0]["HSN"].ToString();
+            lblRate = Dt1.Rows[0]["Rate"].ToString();
+            lblCGSTPer = Dt1.Rows[0]["CGSTPer"].ToString();
+            lblSGSTPer = Dt1.Rows[0]["SGSTPer"].ToString();
+            lblIGSTPer = Dt1.Rows[0]["IGSTPer"].ToString();
+            lblQuantity = Dt1.Rows[0]["Quantity"].ToString();
+            lblbatch = Dt1.Rows[0]["Batch"].ToString();
+
+            TotalQuantity = Convert.ToDecimal(lblQuantity) - Convert.ToDecimal(lblnewQuantity);
+
+
+        }
+        var total = Convert.ToDecimal(lblRate) * Convert.ToDecimal(TotalQuantity);
+        lblTotal = string.Format("{0:0.00}", total);
+        decimal tax_amt;
+        decimal cgst_amt;
+        decimal sgst_amt;
+        decimal igst_amt;
+
+        if (string.IsNullOrEmpty(lblCGSTPer))
+        {
+            cgst_amt = 0;
+        }
+        else
+        {
+            cgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblCGSTPer) / 100;
+        }
+        lblCGST = string.Format("{0:0.00}", cgst_amt);
+
+        if (string.IsNullOrEmpty(lblSGSTPer))
+        {
+            sgst_amt = 0;
+        }
+        else
+        {
+            sgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblSGSTPer) / 100;
+        }
+        lblSGST = string.Format("{0:0.00}", sgst_amt);
+
+        if (string.IsNullOrEmpty(lblIGSTPer))
+        {
+            igst_amt = 0;
+        }
+        else
+        {
+            igst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblIGSTPer) / 100;
+        }
+        lblIGST = string.Format("{0:0.00}", igst_amt);
+
+        tax_amt = cgst_amt + sgst_amt + igst_amt;
+
+        var totalWithTax = Convert.ToDecimal(total.ToString()) + Convert.ToDecimal(tax_amt.ToString());
+        decimal disc_amt;
+        if (string.IsNullOrEmpty(lblDiscount))
+        {
+            disc_amt = 0;
+        }
+        else
+        {
+            disc_amt = Convert.ToDecimal(totalWithTax.ToString()) * Convert.ToDecimal(lblDiscount) / 100;
+            //disc_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(Disc_Per.Text) / 100;
+        }
+
+        var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
+        lblAlltotal = string.Format("{0:0.00}", Grossamt);
+
+        SqlCommand cmddelete = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+        con.Open();
+        cmddelete.ExecuteNonQuery();
+        con.Close();
+        Cls_Main.Conn_Open();
+
+        SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+        cmdd.Parameters.AddWithValue("@OrderNo", ddlBillNumber.SelectedItem.Text);
+        cmdd.Parameters.AddWithValue("@Particular", Product);
+        cmdd.Parameters.AddWithValue("@ComponentName", lblCompo);
+        cmdd.Parameters.AddWithValue("@Description", lblDescription);
+        cmdd.Parameters.AddWithValue("@HSN", lblhsn);
+        cmdd.Parameters.AddWithValue("@Quantity", TotalQuantity);
+        cmdd.Parameters.AddWithValue("@Units", lblUnit);
+        cmdd.Parameters.AddWithValue("@Rate", lblRate);
+        cmdd.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+        cmdd.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+        cmdd.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+        cmdd.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+        cmdd.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+        cmdd.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+        cmdd.Parameters.AddWithValue("@Total", lblTotal);
+        cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+        cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+        cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+        cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+        cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+        cmdd.Parameters.AddWithValue("@Batch", lblbatch);
+        cmdd.ExecuteNonQuery();
+        Cls_Main.Conn_Close();
     }
 }

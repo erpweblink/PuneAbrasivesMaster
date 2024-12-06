@@ -9,6 +9,12 @@
         }
     </style>
     <style>
+        .gvhead{
+            background-color: #7ad2d4;
+            color: #000;
+            font-weight: 600;
+            text-align: center;
+        }
         .spancls {
             color: #5d5656 !important;
             font-size: 13px !important;
@@ -145,17 +151,11 @@
                                                             <asp:ListItem Value="Credit_Sale">Credit</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
-                                                    <div class="col-md-2 spancls" style="font-weight: bold;">Process :</div>
-                                                    <div class="col-md-4">
+                                                  
                                                         <asp:HiddenField runat="server" ID="hdnfileData" />
                                                         <asp:HiddenField runat="server" ID="hdnGrandtotal" />
                                                         <asp:HiddenField runat="server" ID="hdnBasictotal" />
 
-                                                        <asp:DropDownList runat="server" ID="ddlProcess" CssClass="form-control" OnSelectedIndexChanged="ddlProcess_SelectedIndexChanged" AutoPostBack="true">
-                                                            <asp:ListItem Value="Automatic">Automatic</asp:ListItem>
-                                                            <%--<asp:ListItem Value="Manual">Manual</asp:ListItem>--%>
-                                                        </asp:DropDownList>
-                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-2 spancls" style="font-weight: bold;">Doc No : </div>
@@ -350,7 +350,7 @@
 
                                                                         <asp:DropDownList runat="server" ID="txtParticulars" OnTextChanged="txtParticulars_TextChanged" AutoPostBack="true">
                                                                             <asp:ListItem Value="0">--Select--</asp:ListItem>
-                                                                       <%--     <asp:ListItem>Enclosures for control panel</asp:ListItem>
+                                                                            <%--     <asp:ListItem>Enclosures for control panel</asp:ListItem>
                                                                             <asp:ListItem>Part of Enclosure for control panel</asp:ListItem>
                                                                             <asp:ListItem>Scrap Material</asp:ListItem>--%>
                                                                         </asp:DropDownList>
@@ -545,7 +545,7 @@
                                                                             <ItemTemplate>
                                                                                 <asp:LinkButton Text="Edit" runat="server" CommandName="Edit" ToolTip="Edit"><i class="fa fa-edit" style="font-size:28px;color:blue;"></i></asp:LinkButton>
                                                                                 | 
-                                                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("id") %>' OnClick="lnkDelete_Click" ToolTip="Delete"><i class="fa fa-trash-o" style="font-size:28px;color:red"></i></asp:LinkButton>
+                                                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandArgument='<%# Eval("id") %>' OnClick="lnkDelete_Click" ToolTip="Delete"><i class="fa fa-trash" style="font-size:28px;color:red"></i></asp:LinkButton>
                                                                             </ItemTemplate>
                                                                         </asp:TemplateField>
                                                                     </Columns>
@@ -667,48 +667,79 @@
                                                 <div class="col-md-12">
                                                     <div class="col-md-2"></div>
                                                     <center>
-                                                            <div class="col-md-8">
-                                                                <div class="col-md-4"><b>Sum of Product Amount :</b></div>
-                                                                <div class="col-md-4">
-                                                                    <asp:TextBox ID="sumofAmount" CssClass="form-control" runat="server" Width="100%" ReadOnly="true" Text="0"></asp:TextBox>
-                                                                </div>
+                                                        <div class="col-md-8">
+                                                            <div class="col-md-4"><b>Sum of Product Amount :</b></div>
+                                                            <div class="col-md-4">
+                                                                <asp:TextBox ID="sumofAmount" CssClass="form-control" runat="server" Width="100%" ReadOnly="true" Text="0"></asp:TextBox>
                                                             </div>
-                                                                </center>
+                                                        </div>
+                                                    </center>
                                                     <div class="col-md-2"></div>
                                                 </div>
                                                 <br />
+                                                <div class="table-responsive text-center">
+                                                    <div class="row">
+                                                        <div class="table-responsive text-center">
+                                                            <asp:GridView ID="gvcomponent" runat="server" CellPadding="4" DataKeyNames="id" PageSize="10" AllowPaging="true" Width="100%" CssClass="grivdiv pagination-ys" OnRowEditing="gvcomponent_RowEditing"
+                                                                AutoGenerateColumns="false">
+                                                                <Columns>
+                                                                    <asp:TemplateField HeaderText="Sr.No" ItemStyle-Width="20" HeaderStyle-CssClass="gvhead">
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblComsno" runat="server" Text='<%# Container.DataItemIndex+1 %>'></asp:Label>
+                                                                            <asp:Label ID="lblComid" runat="Server" Text='<%# Eval("id") %>' Visible="false" />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Product" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                                                        <EditItemTemplate>
+                                                                            <asp:TextBox Text='<%# Eval("Particular") %>' ReadOnly="true" CssClass="form-control" Width="230px" ID="txtCOMPParticular" runat="server"></asp:TextBox>
+                                                                        </EditItemTemplate>
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblproduct" runat="Server" Text='<%# Eval("Particular") %>' />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Component" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                                                        <EditItemTemplate>
+                                                                            <asp:TextBox Text='<%# Eval("ComponentName") %>' ReadOnly="true" CssClass="form-control" Width="230px" ID="txtCOMPComponent" runat="server"></asp:TextBox>
+                                                                        </EditItemTemplate>
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblComComPonent" runat="Server" Text='<%# Eval("ComponentName") %>' />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Batch" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                                                        <EditItemTemplate>
+                                                                            <asp:TextBox Text='<%# Eval("Batch") %>' ReadOnly="true" CssClass="form-control" Width="230px" ID="txtCOMPBatch" runat="server"></asp:TextBox>
+                                                                        </EditItemTemplate>
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblComBatch" runat="Server" Text='<%# Eval("Batch") %>' />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Quantity" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                                                        <EditItemTemplate>
+                                                                            <asp:TextBox Text='<%# Eval("Quantity") %>' CssClass="form-control" ID="txtCOMPQuantity" Width="100px" runat="server"></asp:TextBox>
+                                                                        </EditItemTemplate>
+                                                                        <ItemTemplate>
+                                                                            <asp:Label ID="lblComQuantity" runat="Server" Text='<%# Eval("Quantity") %>' />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                    <asp:TemplateField HeaderText="Action" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                                                        <ItemTemplate>
+                                                                            <%--<asp:LinkButton ID="btn_edit" runat="server" Height="27px" CausesValidation="false" CommandName="RowEdit" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>--%>
 
-                                                <%-- <div class="table-responsive">
-                                                    <table class="table" border="1" style="width: 100%; border: 1px solid #0c7d38;">
-                                                        <tr style="background-color: #7ad2d4; color: #000; font-weight: 600; text-align: center;">
-                                                            <td style="width: 15%;">Transportation Charges</td>
-                                                            <td>CGST(%)</td>
-                                                            <td>SGST(%)</td>
-                                                            <td>IGST(%)</td>
-                                                            <td>Total Cost</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <asp:TextBox ID="txtTCharge" Width="250px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTCharge_TextChanged"></asp:TextBox>
-                                                            </td>
-                                                            <td>
-                                                                <asp:TextBox ID="txtTCGSTPer" Width="50px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTCGSTPer_TextChanged"></asp:TextBox>
-                                                                <asp:TextBox ID="txtTCGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
-                                                            </td>
-                                                            <td>
-                                                                <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTSGSTPer_TextChanged"></asp:TextBox>
-                                                                <asp:TextBox ID="txtTSGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
-                                                            </td>
-                                                            <td>
-                                                                <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTIGSTPer_TextChanged"></asp:TextBox>
-                                                                <asp:TextBox ID="txtTIGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
-                                                            </td>
-                                                            <td>
-                                                                <asp:TextBox ID="txtTCost" Width="100px" runat="server" Enabled="false" Text="0"></asp:TextBox>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>--%>
+                                                                            <asp:LinkButton ID="btn_Compedit" CausesValidation="false" Text="Edit" runat="server" CommandName="Edit"><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
+
+                                                                            <asp:LinkButton runat="server" ID="lnkbtnCompDelete" OnClick="lnkbtnCompDelete_Click" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CausesValidation="false"><i class="fa fa-trash" style="font-size:24px"></i></asp:LinkButton>
+                                                                        </ItemTemplate>
+                                                                        <EditItemTemplate>
+                                                                            <asp:LinkButton ID="gv_Compupdate" OnClick="gv_Compupdate_Click" CausesValidation="false" Text="Update" CssClass="btn btn-primary btn-sm" runat="server"></asp:LinkButton>&nbsp;
+                                             
+                                                                        </EditItemTemplate>
+                                                                    </asp:TemplateField>
+                                                                </Columns>
+                                                            </asp:GridView>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
 
                                                 <%--23-12-23  New Transportation & Fright Functanility start--%>
                                                 <div class="table-responsive">
@@ -766,10 +797,14 @@
                                                 <div class="row">
                                                     <div class="col-md-2" style="margin-left: 18%;"></div>
                                                     <div class="col-md-2">
-                                                        <center> <asp:Button ID="btnadd" runat="server" ValidationGroup="form1" CssClass="btn btn-primary" Width="100%" Text="Submit" OnClick="btnadd_Click"/></center>
+                                                        <center>
+                                                            <asp:Button ID="btnadd" runat="server" ValidationGroup="form1" CssClass="btn btn-primary" Width="100%" Text="Submit" OnClick="btnadd_Click" />
+                                                        </center>
                                                     </div>
                                                     <div class="col-md-2">
-                                                        <center> <asp:Button ID="btnreset" runat="server" CssClass="btn btn-danger" Width="100%" Text="Reset" OnClick="btnreset_Click"/></center>
+                                                        <center>
+                                                            <asp:Button ID="btnreset" runat="server" CssClass="btn btn-danger" Width="100%" Text="Reset" OnClick="btnreset_Click" />
+                                                        </center>
                                                     </div>
                                                     <div class="col-md-6"></div>
                                                 </div>
