@@ -428,19 +428,19 @@ public partial class Account_AccountMasterPage : System.Web.UI.MasterPage
                         PurchaseReportID.Visible = true;
                     }
                 }
-                if (MenuName == "InventoryForAccount.aspx")
-                {
-                    string page1 = row["Pages"].ToString();
-                    string pageView = row["PagesView"].ToString();
-                    if (page1 == "False" && pageView == "False")
-                    {
-                        InventoryForAccountID.Visible = false;
-                    }
-                    else
-                    {
-                        InventoryForAccountID.Visible = true;
-                    }
-                }
+                //if (MenuName == "InventoryForAccount.aspx")
+                //{
+                //    string page1 = row["Pages"].ToString();
+                //    string pageView = row["PagesView"].ToString();
+                //    if (page1 == "False" && pageView == "False")
+                //    {
+                //        InventoryForAccountID.Visible = false;
+                //    }
+                //    else
+                //    {
+                //        InventoryForAccountID.Visible = true;
+                //    }
+                //}
                 if (MenuName == "PartyLedgerReport.aspx")
                 {
                     string page1 = row["Pages"].ToString();

@@ -290,7 +290,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                 Label lblNoteType = (e.Row.FindControl("lblNoteType") as Label);
                 Label txtbillno = (e.Row.FindControl("lblBillNumber") as Label);
                 LinkButton btnEdit = e.Row.FindControl("btnEdit") as LinkButton;
-                LinkButton btnDelete = e.Row.FindControl("btnDelete") as LinkButton;
+               // LinkButton btnDelete = e.Row.FindControl("btnDelete") as LinkButton;
                 LinkButton btnPDF = e.Row.FindControl("btnPDF") as LinkButton;
                 string empcode = Session["UserCode"].ToString();
                 DataTable Dt = new DataTable();
@@ -300,13 +300,13 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                 {
                     string id = Dt.Rows[0]["ID"].ToString();
                     DataTable Dtt = new DataTable();
-                    SqlDataAdapter Sdd = new SqlDataAdapter("Select * FROM tblUserRoleAuthorization where UserID = '" + id + "' AND PageName = 'CustomerTaxInvoiceList.aspx' AND PagesView = '1'", con);
+                    SqlDataAdapter Sdd = new SqlDataAdapter("Select * FROM tblUserRoleAuthorization where UserID = '" + id + "' AND PageName = 'CreditDebitNoteSaleList.aspx' AND PagesView = '1'", con);
                     Sdd.Fill(Dtt);
                     if (Dtt.Rows.Count > 0)
                     {
                         Button1.Visible = false;
                         btnEdit.Visible = false;
-                        btnDelete.Visible = false;
+                       // btnDelete.Visible = false;
                         btnPDF.Visible = true;
                     }
                 }
@@ -351,13 +351,13 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                 if (IsCreatedIRN == "")
                 {
                     btnEdit.Visible = true;
-                    btnDelete.Visible = true;
+                  //  btnDelete.Visible = true;
 
                 }
                 else
                 {
                     btnEdit.Visible = false;
-                    btnDelete.Visible = false;
+                   // btnDelete.Visible = false;
                 }
                 con.Close();
 
@@ -387,4 +387,133 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
         GvCreditDebit.PageIndex = e.NewPageIndex;
         Gvbind();
     }
+
+    public void GetInventoryCalculation(string lblCompo, string lblnewQuantity, string Product)
+    {
+        SqlCommand cmddelete = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + txtcnamefilter.Text.Trim() + "' ", con);
+        con.Open();
+        cmddelete.ExecuteNonQuery();
+        con.Close();
+
+        string lblDescription = "";
+        string lblhsn = "";
+        string lblUnit = "";
+        string lblRate = "";
+        string lblQuantity = "";
+        string lblTotal = "";
+        string lblCGSTPer = "";
+        string lblCGST = "";
+        string lblSGSTPer = "";
+        string lblSGST = "";
+        string lblIGSTPer = "";
+        string lblIGST = "";
+        string lblDiscount = "";
+        string lblDiscountAmount = "";
+        string lblAlltotal = "";
+        string lblbatch = "";
+        decimal TotalQuantity = 0;
+        SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryComponentsDtls where OrderNo='" + txtcnamefilter.Text.Trim() + "'", con);
+        DataTable Dt1 = new DataTable();
+        sad2.Fill(Dt1);
+        con.Close(); // Close the connection when done
+        if (Dt1.Rows.Count > 0)
+        {
+            lblUnit = Dt1.Rows[0]["Units"].ToString();
+            lblDescription = Dt1.Rows[0]["Description"].ToString();
+            lblhsn = Dt1.Rows[0]["HSN"].ToString();
+            lblRate = Dt1.Rows[0]["Rate"].ToString();
+            lblCGSTPer = Dt1.Rows[0]["CGSTPer"].ToString();
+            lblSGSTPer = Dt1.Rows[0]["SGSTPer"].ToString();
+            lblIGSTPer = Dt1.Rows[0]["IGSTPer"].ToString();
+            lblQuantity = Dt1.Rows[0]["Quantity"].ToString();
+            lblbatch = Dt1.Rows[0]["Batch"].ToString();
+
+            TotalQuantity = Convert.ToDecimal(lblQuantity) - Convert.ToDecimal(lblnewQuantity);
+
+
+        }
+        var total = Convert.ToDecimal(lblRate) * Convert.ToDecimal(TotalQuantity);
+        lblTotal = string.Format("{0:0.00}", total);
+        decimal tax_amt;
+        decimal cgst_amt;
+        decimal sgst_amt;
+        decimal igst_amt;
+
+        if (string.IsNullOrEmpty(lblCGSTPer))
+        {
+            cgst_amt = 0;
+        }
+        else
+        {
+            cgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblCGSTPer) / 100;
+        }
+        lblCGST = string.Format("{0:0.00}", cgst_amt);
+
+        if (string.IsNullOrEmpty(lblSGSTPer))
+        {
+            sgst_amt = 0;
+        }
+        else
+        {
+            sgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblSGSTPer) / 100;
+        }
+        lblSGST = string.Format("{0:0.00}", sgst_amt);
+
+        if (string.IsNullOrEmpty(lblIGSTPer))
+        {
+            igst_amt = 0;
+        }
+        else
+        {
+            igst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblIGSTPer) / 100;
+        }
+        lblIGST = string.Format("{0:0.00}", igst_amt);
+
+        tax_amt = cgst_amt + sgst_amt + igst_amt;
+
+        var totalWithTax = Convert.ToDecimal(total.ToString()) + Convert.ToDecimal(tax_amt.ToString());
+        decimal disc_amt;
+        if (string.IsNullOrEmpty(lblDiscount))
+        {
+            disc_amt = 0;
+        }
+        else
+        {
+            disc_amt = Convert.ToDecimal(totalWithTax.ToString()) * Convert.ToDecimal(lblDiscount) / 100;
+            //disc_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(Disc_Per.Text) / 100;
+        }
+
+        var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
+        lblAlltotal = string.Format("{0:0.00}", Grossamt);
+
+       
+        Cls_Main.Conn_Open();
+
+        SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+        cmdd.Parameters.AddWithValue("@OrderNo", txtcnamefilter.Text);
+        cmdd.Parameters.AddWithValue("@Particular", Product);
+        cmdd.Parameters.AddWithValue("@ComponentName", lblCompo);
+        cmdd.Parameters.AddWithValue("@Description", lblDescription);
+        cmdd.Parameters.AddWithValue("@HSN", lblhsn);
+        cmdd.Parameters.AddWithValue("@Quantity", TotalQuantity);
+        cmdd.Parameters.AddWithValue("@Units", lblUnit);
+        cmdd.Parameters.AddWithValue("@Rate", lblRate);
+        cmdd.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+        cmdd.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+        cmdd.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+        cmdd.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+        cmdd.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+        cmdd.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+        cmdd.Parameters.AddWithValue("@Total", lblTotal);
+        cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+        cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+        cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+        cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+        cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+        cmdd.Parameters.AddWithValue("@Batch", lblbatch);
+        cmdd.ExecuteNonQuery();
+        Cls_Main.Conn_Close();
+    }
+
 }

@@ -190,7 +190,6 @@
                                 <nav id="OutwardEntryID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Admin/OutwardEntryList.aspx"><i class="fa fa-truck"></i>&nbsp;Outward Entry</a>
                                 </nav>
-
                             </div>
 
                             <a id="Reports" runat="server" class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout" aria-expanded="false" aria-controls="collapseLayouts">
@@ -202,9 +201,9 @@
                                 <nav id="SalesReportID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Reports/SalesReport.aspx"><i class="fa fa-download"></i>&nbsp;Sales Report</a>
                                 </nav>
-                                <nav id="InventoryForAccountID" runat="server" class="sb-sidenav-menu-nested nav">
+                             <%--   <nav id="InventoryForAccountID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Reports/InventoryForAccount.aspx"><i class="fa fa-download"></i>&nbsp;Inventory Report</a>
-                                </nav>
+                                </nav>--%>
                                 <nav id="PurchaseReportID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Reports/PurchaseReport.aspx"><i class="fa fa-download"></i>&nbsp;Purchase Report</a>
                                 </nav>

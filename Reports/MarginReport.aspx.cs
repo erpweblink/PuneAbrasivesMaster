@@ -48,6 +48,9 @@ public partial class Reports_MarginReport : System.Web.UI.Page
                 GVfollowup.DataSource = ds.Tables[0];
                 GVfollowup.DataBind();
 
+                Gvcreditdebit.DataSource = ds.Tables[2];//added on 6/12/2024
+                Gvcreditdebit.DataBind();
+
                 GvTotalSummary.DataSource = ds.Tables[1];
                 GvTotalSummary.DataBind();
             }
@@ -118,8 +121,10 @@ public partial class Reports_MarginReport : System.Web.UI.Page
                 {
                     ReportDataSource obj1 = new ReportDataSource("DataSet1", Dtt.Tables[0]);                   
                     ReportDataSource obj2 = new ReportDataSource("DataSet2", Dtt.Tables[1]);                   
+                    ReportDataSource obj3 = new ReportDataSource("DataSet3", Dtt.Tables[2]);                   
                     ReportViewer1.LocalReport.DataSources.Add(obj1);
                     ReportViewer1.LocalReport.DataSources.Add(obj2);
+                    ReportViewer1.LocalReport.DataSources.Add(obj3);
                     ReportViewer1.LocalReport.ReportPath = "RDLC_Reports\\MarginReport.rdlc";
                     ReportViewer1.LocalReport.Refresh();
                     //-------- Print PDF directly without showing ReportViewer ----

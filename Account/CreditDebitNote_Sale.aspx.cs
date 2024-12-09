@@ -156,7 +156,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 Fillddlshippingaddress(txtSupplierName.Text);
                 //New Details for E-Invoice
                 txtshippingcustomer.Text = dt.Rows[0]["ShippingCustomer"].ToString();
-                ddlShippingaddress.SelectedItem.Text = dt.Rows[0]["ShippingAddress"].ToString();
+                ddlShippingaddress.SelectedValue = dt.Rows[0]["ShippingAddress"].ToString();
                 txtbillingGST.Text = dt.Rows[0]["BillingGST"].ToString();
                 txtshippingGST.Text = dt.Rows[0]["ShippingGST"].ToString();
                 txtbillingaddress.Text = dt.Rows[0]["BillingAddress"].ToString();

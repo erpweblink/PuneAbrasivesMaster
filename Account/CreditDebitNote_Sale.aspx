@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.master" AutoEventWireup="true" CodeFile="CreditDebitNote_Sale.aspx.cs" Inherits="Account_CreditDebitNote" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.master"  EnableEventValidation="false" AutoEventWireup="true" CodeFile="CreditDebitNote_Sale.aspx.cs" Inherits="Account_CreditDebitNote" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
