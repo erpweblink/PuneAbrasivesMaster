@@ -271,6 +271,11 @@
                                             <asp:Label ID="Productname" runat="server" Text='<%#Eval("ComponentName")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Description" runat="server" Text='<%#Eval("Description")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Batch" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="Batch" runat="server" Text='<%#Eval("Batch")%>'></asp:Label>
