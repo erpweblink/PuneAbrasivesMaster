@@ -53,7 +53,7 @@
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "Admin/AdminDashboard.aspx";
+                window.location.href = "Login.aspx";
             })
         };
     </script>

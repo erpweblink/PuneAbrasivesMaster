@@ -317,6 +317,8 @@ public partial class Account_TaxInvoiceList : System.Web.UI.Page
             {
                 if (Dtt.Tables[0].Rows.Count > 0)
                 {
+                    ReportViewer1.LocalReport.DataSources.Clear();
+                    ReportViewer1.Reset();
                     // DataTable Dt = Cls_Main.Read_Table("SELECT *,EmailID AS Email,Username AS Name FROM tbl_UserMaster  where UserCode='" + Session["UserCode"] + "'");
                     ReportDataSource obj1 = new ReportDataSource("DataSet1", Dtt.Tables[0]);
                     ReportDataSource obj2 = new ReportDataSource("DataSet2", Dtt.Tables[1]);
