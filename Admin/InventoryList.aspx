@@ -261,7 +261,7 @@
                                             <asp:Label ID="InvoiceNo" runat="server" Text='<%#Eval("InvoiceNo")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Invoice Date" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Inward Date" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="InvoiceDate" runat="server" Text='<%#Eval("InvoiceDate")%>'></asp:Label>
                                         </ItemTemplate>
