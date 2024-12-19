@@ -19,7 +19,12 @@ public partial class Login : System.Web.UI.Page
         {
             Session.Abandon();
             FormsAuthentication.SignOut();
-            Session["UserCode"] = null;
+            if (Request.Cookies["Username"] != null)
+                txtUsername.Text = Request.Cookies["Username"].Value;
+            if (Request.Cookies["Password"] != null)
+                txtPassword.Attributes.Add("value", Request.Cookies["Password"].Value);
+            if (Request.Cookies["Username"] != null && Request.Cookies["Password"] != null)
+                chkremember.Checked = true;
         }
     }
 
@@ -46,20 +51,18 @@ public partial class Login : System.Web.UI.Page
 
                     if (chkremember.Checked)
                     {
-                        HttpCookie cookie = new HttpCookie("RememberMe");
-                        cookie["Username"] = txtUsername.Text.Trim();
-                        cookie["Password"] = txtPassword.Text.Trim(); // Avoid storing plain text passwords (use encrypted values instead)
-                        cookie.Expires = DateTime.Now.AddDays(7); // Set expiry date
-                        Response.Cookies.Add(cookie);
+                        Response.Cookies["Username"].Value = txtUsername.Text.ToLower().Trim();
+                        Response.Cookies["Password"].Value = txtPassword.Text.Trim();
+                        Response.Cookies["Username"].Expires = DateTime.Now.AddDays(30);
+                        Response.Cookies["Password"].Expires = DateTime.Now.AddDays(30);
                     }
                     else
                     {
                         // Remove the cookie if "Remember Me" is not checked
                         if (Request.Cookies["RememberMe"] != null)
                         {
-                            HttpCookie cookie = new HttpCookie("RememberMe");
-                            cookie.Expires = DateTime.Now.AddDays(-1);
-                            Response.Cookies.Add(cookie);
+                            Response.Cookies["Username"].Expires = DateTime.Now.AddDays(-1);
+                            Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
                         }
                     }
                     if (!string.IsNullOrEmpty(Username))

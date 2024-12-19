@@ -475,6 +475,11 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                                     Cls_Main.Conn_Close();
                                     Cls_Main.Conn_Dispose();
 
+                                    SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + txtAgainstnumber.Text.Trim() + "' ", con);
+                                    con.Open();
+                                    cmddelete2.ExecuteNonQuery();
+                                    con.Close();
+
                                     //Save Component Details 
                                     if (gvcomponent.Rows.Count > 0)
                                     {
@@ -608,10 +613,7 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                                             cmdd.ExecuteNonQuery();
                                             Cls_Main.Conn_Close();
 
-                                            SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + txtAgainstnumber.Text.Trim() + "' ", con);
-                                            con.Open();
-                                            cmddelete2.ExecuteNonQuery();
-                                            con.Close();
+                                          
                                            
 
                                             Cls_Main.Conn_Open();

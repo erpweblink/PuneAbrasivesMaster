@@ -66,7 +66,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     //txtDocNo.Text = GenerateComCode();
                 }
 
-             
+
             }
         }
     }
@@ -643,7 +643,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                             cmdd.Parameters.AddWithValue("@Batch", lblbatch);
                             cmdd.ExecuteNonQuery();
                             Cls_Main.Conn_Close();
-                            GetInventoryCalculation(lblCompo, lblQuantity, Product);
+                            GetInventoryCalculation(lblCompo, lblQuantity, Product, lblbatch);
                         }
                     }
 
@@ -897,7 +897,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
                     lblAlltotal = string.Format("{0:0.00}", Grossamt);
                     //  lblCDiscountAmount = string.Format("{0:0}", disc_amt);
-                   
+
 
                     Cls_Main.Conn_Open();
                     SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_CrditDebitSaleComponents] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
@@ -925,7 +925,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     cmdd.Parameters.AddWithValue("@Batch", lblbatch);
                     cmdd.ExecuteNonQuery();
                     Cls_Main.Conn_Close();
-                    GetInventoryCalculation(lblCompo, lblQuantity, Product);
+                    GetInventoryCalculation(lblCompo, lblQuantity, Product, lblbatch);
                 }
             }
 
@@ -2367,7 +2367,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
 
     }
 
-    public void GetInventoryCalculation(string lblCompo, string lblnewQuantity, string Product)
+    public void GetInventoryCalculation(string lblCompo, string lblnewQuantity, string Product, string Batch)
     {
         string lblDescription = "";
         string lblhsn = "";
@@ -2386,7 +2386,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
         string lblAlltotal = "";
         string lblbatch = "";
         decimal TotalQuantity = 0;
-        SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryComponentsDtls where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+        SqlDataAdapter sad2 = new SqlDataAdapter("select * from tbl_OutwardEntryComponentsDtls where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'AND Batch='" + Batch + "'", con);
         DataTable Dt1 = new DataTable();
         sad2.Fill(Dt1);
         con.Close(); // Close the connection when done
@@ -2406,90 +2406,103 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
 
 
         }
-        var total = Convert.ToDecimal(lblRate) * Convert.ToDecimal(TotalQuantity);
-        lblTotal = string.Format("{0:0.00}", total);
-        decimal tax_amt;
-        decimal cgst_amt;
-        decimal sgst_amt;
-        decimal igst_amt;
-
-        if (string.IsNullOrEmpty(lblCGSTPer))
+        if (TotalQuantity == 0)
         {
-            cgst_amt = 0;
+            SqlCommand cmddelete = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+            con.Open();
+            cmddelete.ExecuteNonQuery();
+            con.Close();
+            Cls_Main.Conn_Open();
         }
         else
         {
-            cgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblCGSTPer) / 100;
+
+
+            var total = Convert.ToDecimal(lblRate) * Convert.ToDecimal(TotalQuantity);
+            lblTotal = string.Format("{0:0.00}", total);
+            decimal tax_amt;
+            decimal cgst_amt;
+            decimal sgst_amt;
+            decimal igst_amt;
+
+            if (string.IsNullOrEmpty(lblCGSTPer))
+            {
+                cgst_amt = 0;
+            }
+            else
+            {
+                cgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblCGSTPer) / 100;
+            }
+            lblCGST = string.Format("{0:0.00}", cgst_amt);
+
+            if (string.IsNullOrEmpty(lblSGSTPer))
+            {
+                sgst_amt = 0;
+            }
+            else
+            {
+                sgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblSGSTPer) / 100;
+            }
+            lblSGST = string.Format("{0:0.00}", sgst_amt);
+
+            if (string.IsNullOrEmpty(lblIGSTPer))
+            {
+                igst_amt = 0;
+            }
+            else
+            {
+                igst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblIGSTPer) / 100;
+            }
+            lblIGST = string.Format("{0:0.00}", igst_amt);
+
+            tax_amt = cgst_amt + sgst_amt + igst_amt;
+
+            var totalWithTax = Convert.ToDecimal(total.ToString()) + Convert.ToDecimal(tax_amt.ToString());
+            decimal disc_amt;
+            if (string.IsNullOrEmpty(lblDiscount))
+            {
+                disc_amt = 0;
+            }
+            else
+            {
+                disc_amt = Convert.ToDecimal(totalWithTax.ToString()) * Convert.ToDecimal(lblDiscount) / 100;
+                //disc_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(Disc_Per.Text) / 100;
+            }
+
+            var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
+            lblAlltotal = string.Format("{0:0.00}", Grossamt);
+
+            SqlCommand cmddelete = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
+            con.Open();
+            cmddelete.ExecuteNonQuery();
+            con.Close();
+            Cls_Main.Conn_Open();
+
+            SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
+            cmdd.Parameters.AddWithValue("@OrderNo", ddlBillNumber.SelectedItem.Text);
+            cmdd.Parameters.AddWithValue("@Particular", Product);
+            cmdd.Parameters.AddWithValue("@ComponentName", lblCompo);
+            cmdd.Parameters.AddWithValue("@Description", lblDescription);
+            cmdd.Parameters.AddWithValue("@HSN", lblhsn);
+            cmdd.Parameters.AddWithValue("@Quantity", TotalQuantity);
+            cmdd.Parameters.AddWithValue("@Units", lblUnit);
+            cmdd.Parameters.AddWithValue("@Rate", lblRate);
+            cmdd.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
+            cmdd.Parameters.AddWithValue("@CGSTAmt", lblCGST);
+            cmdd.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
+            cmdd.Parameters.AddWithValue("@SGSTAmt", lblSGST);
+            cmdd.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
+            cmdd.Parameters.AddWithValue("@IGSTAmt", lblIGST);
+            cmdd.Parameters.AddWithValue("@Total", lblTotal);
+            cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
+            cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
+
+            cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
+            cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+            cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+            cmdd.Parameters.AddWithValue("@Batch", lblbatch);
+            cmdd.ExecuteNonQuery();
+            Cls_Main.Conn_Close();
         }
-        lblCGST = string.Format("{0:0.00}", cgst_amt);
-
-        if (string.IsNullOrEmpty(lblSGSTPer))
-        {
-            sgst_amt = 0;
-        }
-        else
-        {
-            sgst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblSGSTPer) / 100;
-        }
-        lblSGST = string.Format("{0:0.00}", sgst_amt);
-
-        if (string.IsNullOrEmpty(lblIGSTPer))
-        {
-            igst_amt = 0;
-        }
-        else
-        {
-            igst_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(lblIGSTPer) / 100;
-        }
-        lblIGST = string.Format("{0:0.00}", igst_amt);
-
-        tax_amt = cgst_amt + sgst_amt + igst_amt;
-
-        var totalWithTax = Convert.ToDecimal(total.ToString()) + Convert.ToDecimal(tax_amt.ToString());
-        decimal disc_amt;
-        if (string.IsNullOrEmpty(lblDiscount))
-        {
-            disc_amt = 0;
-        }
-        else
-        {
-            disc_amt = Convert.ToDecimal(totalWithTax.ToString()) * Convert.ToDecimal(lblDiscount) / 100;
-            //disc_amt = Convert.ToDecimal(total.ToString()) * Convert.ToDecimal(Disc_Per.Text) / 100;
-        }
-
-        var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
-        lblAlltotal = string.Format("{0:0.00}", Grossamt);
-
-        SqlCommand cmddelete = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "' AND ComponentName='" + lblCompo + "'", con);
-        con.Open();
-        cmddelete.ExecuteNonQuery();
-        con.Close();
-        Cls_Main.Conn_Open();
-
-        SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
-        cmdd.Parameters.AddWithValue("@OrderNo", ddlBillNumber.SelectedItem.Text);
-        cmdd.Parameters.AddWithValue("@Particular", Product);
-        cmdd.Parameters.AddWithValue("@ComponentName", lblCompo);
-        cmdd.Parameters.AddWithValue("@Description", lblDescription);
-        cmdd.Parameters.AddWithValue("@HSN", lblhsn);
-        cmdd.Parameters.AddWithValue("@Quantity", TotalQuantity);
-        cmdd.Parameters.AddWithValue("@Units", lblUnit);
-        cmdd.Parameters.AddWithValue("@Rate", lblRate);
-        cmdd.Parameters.AddWithValue("@CGSTPer", lblCGSTPer);
-        cmdd.Parameters.AddWithValue("@CGSTAmt", lblCGST);
-        cmdd.Parameters.AddWithValue("@SGSTPer", lblSGSTPer);
-        cmdd.Parameters.AddWithValue("@SGSTAmt", lblSGST);
-        cmdd.Parameters.AddWithValue("@IGSTPer", lblIGSTPer);
-        cmdd.Parameters.AddWithValue("@IGSTAmt", lblIGST);
-        cmdd.Parameters.AddWithValue("@Total", lblTotal);
-        cmdd.Parameters.AddWithValue("@Discountpercentage", lblDiscount);
-        cmdd.Parameters.AddWithValue("@DiscountAmount", lblDiscountAmount);
-
-        cmdd.Parameters.AddWithValue("@Alltotal", lblAlltotal);
-        cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
-        cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-        cmdd.Parameters.AddWithValue("@Batch", lblbatch);
-        cmdd.ExecuteNonQuery();
-        Cls_Main.Conn_Close();
     }
 }
