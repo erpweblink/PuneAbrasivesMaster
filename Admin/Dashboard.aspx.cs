@@ -935,7 +935,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
     public void FillTargetdata()
     {
         DataTable dt = new DataTable();
-        SqlDataAdapter sad = new SqlDataAdapter("select sum(CAST(Quantity AS float)) AS Quantity ,sum(CAST(Alltotal AS float)) AS Alltotal from tbl_OutwardEntryDtls where  MONTH(CreatedOn)='" + ddlMonth.SelectedValue + "'", Cls_Main.Conn);
+        SqlDataAdapter sad = new SqlDataAdapter("select sum(CAST(Quantity AS float)) AS Quantity ,sum(CAST(Total AS float)) AS Alltotal from tbl_OutwardEntryDtls where  MONTH(CreatedOn)='" + ddlMonth.SelectedValue + "'", Cls_Main.Conn);
         sad.Fill(dt);
         if (dt.Rows.Count > 0)
         {
