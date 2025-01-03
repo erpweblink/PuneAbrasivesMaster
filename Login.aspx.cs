@@ -76,7 +76,7 @@ public partial class Login : System.Web.UI.Page
                         Session["Designation"] = dr["Designation"].ToString();
                         txtUsername.Text = ""; txtPassword.Text = "";
                         Cls_Main.Conn_Open();
-                        SqlCommand Cmd = new SqlCommand("INSERT INTO [DB_WLSPLCRM].[tbl_LoginInfo] ([CreatedBy] ,[CreatedOn] ,[UserName]) VALUES (@CreatedBy ,@CreatedOn ,@UserName)", Cls_Main.Conn);
+                        SqlCommand Cmd = new SqlCommand("INSERT INTO DB_WLSPLCRM.[tbl_LoginInfo] ([CreatedBy] ,[CreatedOn] ,[UserName]) VALUES (@CreatedBy ,@CreatedOn ,@UserName)", Cls_Main.Conn);
                         Cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
                         Cmd.Parameters.AddWithValue("@UserName", Session["Username"].ToString());
                         Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);

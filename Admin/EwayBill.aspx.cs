@@ -504,7 +504,14 @@ public partial class Admin_AddCompany : System.Web.UI.Page
                         }
                         else
                         {
-                            postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":0,\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            if (txtDistance.Text == "")
+                            {
+                                postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":0,\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            }
+                            else
+                            {
+                                postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":" + txtDistance.Text + ",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            }
                         }
                     }
                 }
@@ -1787,7 +1794,7 @@ public partial class Admin_AddCompany : System.Web.UI.Page
                     // Save the file to the specified path
                     System.IO.File.WriteAllBytes(filePath, bytePdfRep);
                     Response.Redirect("~/PDF_Files/EInvoice.pdf");
-               
+
 
                 }
                 else
