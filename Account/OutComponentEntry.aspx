@@ -551,7 +551,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Batch" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <EditItemTemplate>
-                                            <asp:TextBox Text='<%# Eval("Batch") %>' ReadOnly="true" CssClass="form-control" Width="230px" ID="txtCOMPBatch" runat="server"></asp:TextBox>
+                                            <asp:TextBox Text='<%# Eval("Batch") %>' CssClass="form-control" Width="230px" ID="txtCOMPBatch" runat="server"></asp:TextBox>
                                         </EditItemTemplate>
                                         <ItemTemplate>
                                             <asp:Label ID="lblComBatch" runat="Server" Text='<%# Eval("Batch") %>' />

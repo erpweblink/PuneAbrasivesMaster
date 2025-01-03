@@ -379,7 +379,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
 
     protected void Button2_Click(object sender, EventArgs e)
     {
-        Response.Redirect("EInv_CrDbNote.aspx");
+        Response.Redirect("../Gov_Bills/EInv_CrDbNote.aspx");
     }
 
     protected void GvInvoiceList_PageIndexChanging(object sender, GridViewPageEventArgs e)

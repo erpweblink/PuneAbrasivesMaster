@@ -154,7 +154,7 @@
                                 <h5>Credit/Debit List</h5>
                             </div>
                             <div class="col-2 col-md-2">
-                                <asp:Button ID="Button2" Visible="false" CssClass="form-control btn btn-success" Font-Bold="true" runat="server" Text="Add E-Invoice" OnClick="Button2_Click" />
+                                <asp:Button ID="Button2"  CssClass="form-control btn btn-success" Font-Bold="true" runat="server" Text="Add E-Invoice" OnClick="Button2_Click" />
 
                             </div>
                             <div class="col-2 col-md-2">
