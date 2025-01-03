@@ -507,7 +507,7 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
             //table.AddCell(paragraphTable4);
             if (billingCustomer == ShippingCustomer)
             {
-                //table.AddCell(new Phrase(" Supplier : \n\n " + "GSTIN : 27ATFPS1959J1Z4" + "\n " + "Excel Enclosures" + " \n " + "Gat No 1567 Shelar Wasti" + "\n" + " Dehu Alandi Road, Chikhali 411062" + "  \n " + "Maharashtra", FontFactory.GetFont("Arial", 9, Font.NORMAL)));
+               
 
                 table.AddCell(new Phrase(" Recipient (Billing Address) : \n\n GSTIN :  " + GSTNo + " \n " + ShippingCustomer + "\n " + shipaddress + "  \n " + StateName + "\n\n", FontFactory.GetFont("Arial", 9, Font.NORMAL)));
                 table.AddCell(new Phrase(" Recipient (Shipping Address) : \n\n GSTIN :  " + GSTNo + " \n " + ShippingCustomer + "\n " + shipaddress + "  \n " + StateName + "\n\n", FontFactory.GetFont("Arial", 9, Font.NORMAL)));
@@ -1313,19 +1313,6 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
     {
         try
         {
-            //Sendbox testing 
-            //string E_Invoice_API_Client_ID = "e4f5b5fd-2b3f-45da-8595-713c2688d4dc";
-            //string E_Invoice_API_Secret = "ea41041f-3ab8-423d-9611-1230ed040801";
-            //string E_Invoice_API_UserName = "mastergst";
-            //string E_Invoice_API_Password = "Malli#123";
-            //string E_Invoice_API_GST = "29AABCT1332L000";
-
-            //Production Keys E-Invoice
-            string E_Invoice_API_Client_ID = "1191a89b-09c2-462d-8c04-4331f92b94e1";
-            string E_Invoice_API_Secret = "5e1b8dd1-636d-4afc-aaa3-e5d290bfcfbe";
-            string E_Invoice_API_UserName = "API_ExcelEnclosures";
-            string E_Invoice_API_Password = "ExcelEnc@Admin@123";
-            string E_Invoice_API_GST = "27ATFPS1959J1Z4";
 
             con.Open();
             DataTable dtCompany = new DataTable();
@@ -1343,7 +1330,7 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
 
                 if (Token_Expiry <= DateTime.Now)
                 {
-                    GenrateAuthKey(E_Invoice_API_UserName, E_Invoice_API_Password, E_Invoice_API_GST, out _TokenExpiry, out _Sek, out _AuthKey, out _Messeg);
+                    GenrateAuthKey(UserName, Password, GST, out _TokenExpiry, out _Sek, out _AuthKey, out _Messeg);
 
                     AuthToken = _AuthKey;
 
@@ -1373,12 +1360,12 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
                 WebRequest requestObjPost = WebRequest.Create(strUrl);
                 requestObjPost.Method = "POST";
                 requestObjPost.ContentType = "application/json";
-                requestObjPost.Headers.Add("ip_address", "103.174.254.209");
+                requestObjPost.Headers.Add("ip_address",IPAddress);
                 requestObjPost.Headers.Add("client_id", E_Invoice_API_Client_ID);
                 requestObjPost.Headers.Add("client_secret", E_Invoice_API_Secret);
-                requestObjPost.Headers.Add("username", E_Invoice_API_UserName);
+                requestObjPost.Headers.Add("username", UserName);
                 requestObjPost.Headers.Add("auth-token", AuthToken);
-                requestObjPost.Headers.Add("gstin", E_Invoice_API_GST);
+                requestObjPost.Headers.Add("gstin", GST);
 
                 ////check Values
                 con.Open();

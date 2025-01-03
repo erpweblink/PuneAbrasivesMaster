@@ -34,21 +34,19 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
     //string id;
     SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString);
 
-    //Sendbox testing Eway
-    //public string E_Invoice_Client_ID = "1ac62f83-68fe-4b0c-9755-ba74515cd657";
-    //public string E_Invoice_Secret = "aa373932-cf89-452e-bb54-91753524744b";
-    //string UserName = "05AAACH6188F1ZM";
-    //string Password = "abc123@@";
-    //string GST = "05AAACH6188F1ZM";
+    string IPAddress = ConfigurationManager.AppSettings["IPAddress"].ToString();
+    string MailID = ConfigurationManager.AppSettings["EmailID"].ToString();
+    //E-Way Bill Credentials
+    public string E_Way_Client_ID = ConfigurationManager.AppSettings["EWayBillClientID"].ToString();
+    public string E_Way_Secret = ConfigurationManager.AppSettings["EWayBillSecretCode"].ToString();
+    string UserName = ConfigurationManager.AppSettings["EUserName"].ToString();
+    string Password = ConfigurationManager.AppSettings["EPassword"].ToString();
+    string GST = ConfigurationManager.AppSettings["EGST"].ToString();
 
-    string MailID = "erp@weblinkservices.net";
+    //E-Invoice  Credentials
+    string E_Invoice_API_Client_ID = ConfigurationManager.AppSettings["EInvoiceClientID"].ToString();
+    string E_Invoice_API_Secret = ConfigurationManager.AppSettings["EInvoiceSecretCode"].ToString();
 
-    //Production Keys Eway
-    public string E_Invoice_Client_ID = "3a04fe7b-0648-49d0-a033-ed9c7eb549b8";
-    public string E_Invoice_Secret = "af1366de-24d0-41b0-9cde-766805e30ec5";
-    string UserName = "API_ExcelEnclosures";
-    string Password = "ExcelEnc@Admin@123";
-    string GST = "27ATFPS1959J1Z4";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -253,9 +251,9 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
             request.Method = "GET";
             request.Headers.Add("email", MailID);
             request.Headers.Add("ewbNo", EwbNo);
-            request.Headers.Add("ip_address", "103.174.254.209");
-            request.Headers.Add("client_id", E_Invoice_Client_ID);
-            request.Headers.Add("client_secret", E_Invoice_Secret);
+            request.Headers.Add("ip_address", IPAddress);
+            request.Headers.Add("client_id", E_Way_Client_ID);
+            request.Headers.Add("client_secret", E_Way_Secret);
             request.Headers.Add("gstin", GST);
             response = request.GetResponse();
 
@@ -928,9 +926,9 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
         request.Method = "GET";
         request.Headers.Add("email", MailID);
         request.Headers.Add("ewbNo", MailID);
-        request.Headers.Add("ip_address", "103.174.254.209");
-        request.Headers.Add("client_id", E_Invoice_Client_ID);
-        request.Headers.Add("client_secret", E_Invoice_Secret);
+        request.Headers.Add("ip_address", IPAddress);
+        request.Headers.Add("client_id", E_Way_Client_ID);
+        request.Headers.Add("client_secret", E_Way_Secret);
         request.Headers.Add("gstin", GST);
         response = request.GetResponse();
 
@@ -974,9 +972,9 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
         request.Method = "GET";
         request.Headers.Add("username", UserName);
         request.Headers.Add("password", Password);
-        request.Headers.Add("ip_address", "103.174.254.209");
-        request.Headers.Add("client_id", E_Invoice_Client_ID);
-        request.Headers.Add("client_secret", E_Invoice_Secret);
+        request.Headers.Add("ip_address", IPAddress);
+        request.Headers.Add("client_id", E_Way_Client_ID);
+        request.Headers.Add("client_secret", E_Way_Secret);
         request.Headers.Add("gstin", GST);
         response = request.GetResponse();
 
@@ -1157,9 +1155,9 @@ public partial class Admin_TaxInvoicePDF : System.Web.UI.Page
             request.Method = "GET";
             request.Headers.Add("email", MailID);
             request.Headers.Add("ewbNo", EwbNo);
-            request.Headers.Add("ip_address", "103.174.254.209");
-            request.Headers.Add("client_id", E_Invoice_Client_ID);
-            request.Headers.Add("client_secret", E_Invoice_Secret);
+            request.Headers.Add("ip_address", IPAddress);
+            request.Headers.Add("client_id", E_Way_Client_ID);
+            request.Headers.Add("client_secret", E_Way_Secret);
             request.Headers.Add("gstin", GST);
             response = request.GetResponse();
 
