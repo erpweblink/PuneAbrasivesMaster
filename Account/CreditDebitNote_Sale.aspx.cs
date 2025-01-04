@@ -762,14 +762,16 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             cmd.Connection.Close();
 
 
-            SqlCommand cmddelete = new SqlCommand("delete from tblCreditDebitNoteDtls where HeaderID='" + Convert.ToInt32(ViewState["UpdateRowId"].ToString()) + "'", con);
-            con.Open();
-            cmddelete.ExecuteNonQuery();
-            con.Close();
+          
 
 
             if (dgvParticularsDetails.Rows.Count > 0)
             {
+                SqlCommand cmddelete = new SqlCommand("delete from tblCreditDebitNoteDtls where HeaderID='" + Convert.ToInt32(ViewState["UpdateRowId"].ToString()) + "'", con);
+                con.Open();
+                cmddelete.ExecuteNonQuery();
+                con.Close();
+
                 foreach (GridViewRow row in dgvParticularsDetails.Rows)
                 {
                     string InvoiceNo = ((Label)row.FindControl("lblinvoice")).Text;
@@ -800,13 +802,14 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 }
             }
 
-            SqlCommand cmddelete1 = new SqlCommand("delete from tbl_CrditDebitSaleComponents where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "'", con);
-            con.Open();
-            cmddelete1.ExecuteNonQuery();
-            con.Close();
+           
             //Save Component Details 
             if (gvcomponent.Rows.Count > 0)
             {
+                SqlCommand cmddelete1 = new SqlCommand("delete from tbl_CrditDebitSaleComponents where OrderNo='" + ddlBillNumber.SelectedItem.Text.Trim() + "'", con);
+                con.Open();
+                cmddelete1.ExecuteNonQuery();
+                con.Close();
                 foreach (GridViewRow grd1 in gvcomponent.Rows)
                 {
                     string Product = (grd1.FindControl("lblproduct") as Label).Text;

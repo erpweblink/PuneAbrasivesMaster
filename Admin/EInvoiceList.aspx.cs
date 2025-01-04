@@ -1188,6 +1188,10 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
 
                     con.Close();
 
+                    SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + InvoiceNo + "' ", con);
+                    con.Open();
+                    cmddelete2.ExecuteNonQuery();
+                    con.Close();
 
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('E-Invoice Cancelled Successfully...!!');window.location='EInvoiceList.aspx';", true);
                     // ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('E-Invoice Cancelled Successfully...!!');", true);

@@ -1131,6 +1131,64 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                     Cmd.Parameters.AddWithValue("@e_invoice_cancel_by", Session["name"].ToString());
                     Cmd.ExecuteNonQuery();
                     con.Close();
+
+                    SqlCommand cmdDocNo = new SqlCommand("SELECT BillNumber FROM [tblCreditDebitNoteHdr]  where Id='" + ID + "'", con);
+                    Object mxDocNo = cmdDocNo.ExecuteScalar();
+                    string DocNo = mxDocNo.ToString();
+
+                    SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + DocNo + "' ", con);
+                    con.Open();
+                    cmddelete2.ExecuteNonQuery();
+                    con.Close();
+
+                    Cls_Main.Conn_Open();
+                    SqlCommand Cmd1 = new SqlCommand(@"Insert into tbl_InventoryOutwardManage([OrderNo]
+      ,[Particular]
+      ,[ComponentName]
+      ,[Description]
+      ,[HSN]
+      ,[Quantity]
+      ,[Units]
+      ,[Rate]
+      ,[CGSTPer]
+      ,[CGSTAmt]
+      ,[SGSTPer]
+      ,[SGSTAmt]
+      ,[IGSTPer]
+      ,[IGSTAmt]
+      ,[Total]
+      ,[Discountpercentage]
+      ,[DiscountAmount]
+      ,[Alltotal]    
+      ,[CreatedBy]
+      ,[CreatedOn]     
+      ,[Batch])
+select [OrderNo]
+      ,[Particular]
+      ,[ComponentName]
+      ,[Description]
+      ,[HSN]
+      ,[Quantity]
+      ,[Units]
+      ,[Rate]
+      ,[CGSTPer]
+      ,[CGSTAmt]
+      ,[SGSTPer]
+      ,[SGSTAmt]
+      ,[IGSTPer]
+      ,[IGSTAmt]
+      ,[Total]
+      ,[Discountpercentage]
+      ,[DiscountAmount]
+      ,[Alltotal]   
+      ,[CreatedBy]
+      ,GETDATE()     
+      ,[Batch] 
+from tbl_OutwardEntryComponentsDtls where OrderNo=@ID", Cls_Main.Conn);
+                    Cmd1.Parameters.AddWithValue("@ID", DocNo);
+
+                    Cmd1.ExecuteNonQuery();
+                    Cls_Main.Conn_Close();
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('E-Invoice Cancelled Successfully...!!');", true);
                 }
             }

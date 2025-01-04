@@ -195,6 +195,10 @@ public partial class Account_ApprovedInvoiceList : System.Web.UI.Page
                 Cmd4.ExecuteNonQuery();
 
                 con.Close();
+                SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + InvoiceNo + "' ", con);
+                con.Open();
+                cmddelete2.ExecuteNonQuery();
+                con.Close();
 
                 FillGrid();
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('e-invoice is canceled successfully..!!');", true);

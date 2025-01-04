@@ -34,7 +34,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
     private void Gvbind()
     {
         string query = string.Empty;
-        query = @"select * from tblCreditDebitNoteHdr where NoteFor='Sale' order by Id desc";
+        query = @"select * from tblCreditDebitNoteHdr where NoteFor='Sale' AND Isdeleted=0 order by Id desc";
         SqlDataAdapter ad = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
@@ -76,27 +76,74 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
             con.Open();
 
             //// Update ID in [tblCreditDebitNote_ID]
-            SqlCommand cmdNoteType = new SqlCommand("SELECT NoteType FROM [tblCreditDebitNoteHdr] with (nolock) where Id='" + Convert.ToInt32(e.CommandArgument.ToString()) + "'", con);
-            Object mxNoteType = cmdNoteType.ExecuteScalar();
-            string NoteType = mxNoteType.ToString();
-
-            SqlCommand cmdmaxx = new SqlCommand("SELECT ID_Max as maxid FROM [tblCreditDebitNote_ID] with (nolock) where NoteType='" + NoteType + "'", con);
-            Object mxx = cmdmaxx.ExecuteScalar();
-            int MaxIdd = Convert.ToInt32(mxx.ToString()) - 1;
-
-            SqlCommand CmdUpdtID = new SqlCommand("Update tblCreditDebitNote_ID Set ID_Max=@ID_Max where NoteType='" + NoteType + "'", con);
-            CmdUpdtID.Parameters.AddWithValue("@ID_Max", MaxIdd);
-            CmdUpdtID.ExecuteNonQuery();
-
-            SqlCommand Cmd = new SqlCommand("delete from tblCreditDebitNoteHdr WHERE Id=@Id", con);
-            Cmd.Parameters.AddWithValue("@Id", Convert.ToInt32(e.CommandArgument.ToString()));
-            Cmd.ExecuteNonQuery();
-
-            SqlCommand Cmddtl = new SqlCommand("delete from tblCreditDebitNoteDtls WHERE HeaderID=@Id", con);
-            Cmddtl.Parameters.AddWithValue("@Id", Convert.ToInt32(e.CommandArgument.ToString()));
-            Cmddtl.ExecuteNonQuery();
+            SqlCommand cmdDocNo = new SqlCommand("SELECT BillNumber FROM [tblCreditDebitNoteHdr]  where Id='" + Convert.ToInt32(e.CommandArgument.ToString()) + "'", con);
+            Object mxDocNo = cmdDocNo.ExecuteScalar();
+            string DocNo = mxDocNo.ToString();
 
             con.Close();
+            Cls_Main.Conn_Open();
+            SqlCommand Cmd = new SqlCommand("UPDATE [tblCreditDebitNoteHdr] SET IsDeleted=@IsDeleted,DeletedBy=@DeletedBy,DeletedOn=@DeletedOn WHERE Id=@ID", Cls_Main.Conn);
+            Cmd.Parameters.AddWithValue("@ID", Convert.ToInt32(e.CommandArgument.ToString()));
+            Cmd.Parameters.AddWithValue("@IsDeleted", '1');
+            Cmd.Parameters.AddWithValue("@DeletedBy", Session["UserCode"].ToString());
+            Cmd.Parameters.AddWithValue("@DeletedOn", DateTime.Now);
+            Cmd.ExecuteNonQuery();
+            Cls_Main.Conn_Close();
+
+            SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + DocNo + "' ", con);
+            con.Open();
+            cmddelete2.ExecuteNonQuery();
+            con.Close();
+
+            Cls_Main.Conn_Open();
+            SqlCommand Cmd1 = new SqlCommand(@"Insert into tbl_InventoryOutwardManage([OrderNo]
+      ,[Particular]
+      ,[ComponentName]
+      ,[Description]
+      ,[HSN]
+      ,[Quantity]
+      ,[Units]
+      ,[Rate]
+      ,[CGSTPer]
+      ,[CGSTAmt]
+      ,[SGSTPer]
+      ,[SGSTAmt]
+      ,[IGSTPer]
+      ,[IGSTAmt]
+      ,[Total]
+      ,[Discountpercentage]
+      ,[DiscountAmount]
+      ,[Alltotal]    
+      ,[CreatedBy]
+      ,[CreatedOn]     
+      ,[Batch])
+select [OrderNo]
+      ,[Particular]
+      ,[ComponentName]
+      ,[Description]
+      ,[HSN]
+      ,[Quantity]
+      ,[Units]
+      ,[Rate]
+      ,[CGSTPer]
+      ,[CGSTAmt]
+      ,[SGSTPer]
+      ,[SGSTAmt]
+      ,[IGSTPer]
+      ,[IGSTAmt]
+      ,[Total]
+      ,[Discountpercentage]
+      ,[DiscountAmount]
+      ,[Alltotal]   
+      ,[CreatedBy]
+      ,GETDATE()     
+      ,[Batch] 
+from tbl_OutwardEntryComponentsDtls where OrderNo=@ID", Cls_Main.Conn);
+            Cmd1.Parameters.AddWithValue("@ID", DocNo);
+
+            Cmd1.ExecuteNonQuery();
+            Cls_Main.Conn_Close();
+
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Data Deleted Sucessfully');window.location.href='CreditDebitNoteSaleList.aspx';", true);
 
         }
@@ -159,11 +206,11 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
         string query = string.Empty;
         if (!string.IsNullOrEmpty(txtcnamefilter.Text.Trim()))
         {
-            query = "SELECT * FROM tblCreditDebitNoteHdr where SupplierName like '" + txtcnamefilter.Text.Trim() + "%' order by Id desc";
+            query = "SELECT * FROM tblCreditDebitNoteHdr where Isdeleted=0 AND SupplierName like '" + txtcnamefilter.Text.Trim() + "%' order by Id desc";
         }
         else
         {
-            query = "SELECT * FROM tblCreditDebitNoteHdr where order by Id desc";
+            query = "SELECT * FROM tblCreditDebitNoteHdr where  Isdeleted=0  order by Id desc";
         }
 
         SqlDataAdapter ad = new SqlDataAdapter(query, con);
@@ -203,7 +250,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
             using (SqlCommand com = new SqlCommand())
             {
                 //com.CommandText = "Select DISTINCT [SupplierName] from [tblSupplierMaster] where " + "SupplierName like @Search + '%'";
-                com.CommandText = "Select DISTINCT [Companyname] from [tbl_CompanyMaster] where " + "Companyname like @Search + '%'";
+                com.CommandText = "Select DISTINCT [SupplierName] from [tblCreditDebitNoteHdr] where " + "SupplierName like + '%'+ @Search + '%'";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -213,7 +260,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                 {
                     while (sdr.Read())
                     {
-                        countryNames.Add(sdr["Companyname"].ToString());
+                        countryNames.Add(sdr["SupplierName"].ToString());
                     }
                 }
                 con.Close();
@@ -290,7 +337,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                 Label lblNoteType = (e.Row.FindControl("lblNoteType") as Label);
                 Label txtbillno = (e.Row.FindControl("lblBillNumber") as Label);
                 LinkButton btnEdit = e.Row.FindControl("btnEdit") as LinkButton;
-               // LinkButton btnDelete = e.Row.FindControl("btnDelete") as LinkButton;
+                // LinkButton btnDelete = e.Row.FindControl("btnDelete") as LinkButton;
                 LinkButton btnPDF = e.Row.FindControl("btnPDF") as LinkButton;
                 string empcode = Session["UserCode"].ToString();
                 DataTable Dt = new DataTable();
@@ -306,11 +353,11 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                     {
                         Button1.Visible = false;
                         btnEdit.Visible = false;
-                       // btnDelete.Visible = false;
+                        // btnDelete.Visible = false;
                         btnPDF.Visible = true;
                     }
                 }
-             
+
 
                 if (lblNoteType.Text == "Debit_Sale Note")
                 {
@@ -351,13 +398,13 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
                 if (IsCreatedIRN == "")
                 {
                     btnEdit.Visible = true;
-                  //  btnDelete.Visible = true;
+                    //  btnDelete.Visible = true;
 
                 }
                 else
                 {
                     btnEdit.Visible = false;
-                   // btnDelete.Visible = false;
+                    // btnDelete.Visible = false;
                 }
                 con.Close();
 
@@ -486,7 +533,7 @@ public partial class Account_CreditDebitList : System.Web.UI.Page
         var Grossamt = Convert.ToDecimal(total.ToString()) - Convert.ToDecimal(disc_amt.ToString()) + tax_amt;
         lblAlltotal = string.Format("{0:0.00}", Grossamt);
 
-       
+
         Cls_Main.Conn_Open();
 
         SqlCommand cmdd = new SqlCommand("INSERT INTO [tbl_InventoryOutwardManage] (OrderNo,Particular,ComponentName,Description,HSN,Quantity,Units,Rate,CGSTPer,CGSTAmt,SGSTPer,SGSTAmt,IGSTPer,IGSTAmt,Total,Discountpercentage,DiscountAmount,Alltotal,CreatedOn,Batch) VALUES(@OrderNo,@Particular,@ComponentName,@Description,@HSN,@Quantity,@Units,@Rate,@CGSTPer,@CGSTAmt,@SGSTPer,@SGSTAmt,@IGSTPer,@IGSTAmt,@Total,@Discountpercentage,@DiscountAmount,@Alltotal,@CreatedOn,@Batch)", Cls_Main.Conn);
