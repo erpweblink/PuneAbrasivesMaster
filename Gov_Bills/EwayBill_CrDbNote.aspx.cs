@@ -1496,7 +1496,12 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
                     //}
                 }
 
-
+                //Save JSON IN DATABASE update by pawar 28/09/2024
+                con.Open();
+                Cmd = new SqlCommand("UPDATE tblCreditDebitNoteHdr SET E_WAY_Bill_JSON=@E_WAY_Bill_JSON WHERE Id=" + lblHiddenid.Text + "", con);
+                Cmd.Parameters.AddWithValue("@E_WAY_Bill_JSON", postData);
+                Cmd.ExecuteNonQuery();
+                con.Close();
                 using (var streamwriter = new StreamWriter(requestObjPost.GetRequestStream()))
                 {
                     //streamwriter.Write(postData);
@@ -1565,19 +1570,7 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
 
     private string GenrateAuthKey(string User_Name, string Password, string Seller_GST_No, out string _TokenExpiry, out string _Sek, out string _AuthKey, out string _Messege)
     {
-        //Sendbox testing 
-        //string E_Invoice_API_Client_ID = "e4f5b5fd-2b3f-45da-8595-713c2688d4dc";
-        //string E_Invoice_API_Secret = "ea41041f-3ab8-423d-9611-1230ed040801";
-        //string E_Invoice_API_UserName = "mastergst";
-        //string E_Invoice_API_Password = "Malli#123";
-        //string E_Invoice_API_GST = "29AABCT1332L000";
-
-        //Production Keys E-Invoice
-        string E_Invoice_API_Client_ID = "1191a89b-09c2-462d-8c04-4331f92b94e1";
-        string E_Invoice_API_Secret = "5e1b8dd1-636d-4afc-aaa3-e5d290bfcfbe";
-        string E_Invoice_API_UserName = "API_ExcelEnclosures";
-        string E_Invoice_API_Password = "ExcelEnc@Admin@123";
-        string E_Invoice_API_GST = "27ATFPS1959J1Z4";
+       
 
         string uri = "https://api.mastergst.com/einvoice/authenticate?email=erp%40weblinkservices.net";
         WebResponse response;
@@ -1585,12 +1578,12 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
         con.Close();
 
         request.Method = "GET";
-        request.Headers.Add("username", E_Invoice_API_UserName);
-        request.Headers.Add("password", E_Invoice_API_Password);
-        request.Headers.Add("ip_address", "103.174.254.209");
+        request.Headers.Add("username", UserName);
+        request.Headers.Add("password", Password);
+        request.Headers.Add("ip_address", IPAddress);
         request.Headers.Add("client_id", E_Invoice_API_Client_ID);
         request.Headers.Add("client_secret", E_Invoice_API_Secret);
-        request.Headers.Add("gstin", E_Invoice_API_GST);
+        request.Headers.Add("gstin", GST);
         response = request.GetResponse();
 
         using (Stream dataStream = response.GetResponseStream())
@@ -1645,12 +1638,6 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
     {
         try
         {
-            //Production Keys E-Invoice
-            string E_Invoice_API_Client_ID = "1191a89b-09c2-462d-8c04-4331f92b94e1";
-            string E_Invoice_API_Secret = "5e1b8dd1-636d-4afc-aaa3-e5d290bfcfbe";
-            string E_Invoice_API_UserName = "API_ExcelEnclosures";
-            string E_Invoice_API_Password = "ExcelEnc@Admin@123";
-            string E_Invoice_API_GST = "27ATFPS1959J1Z4";
 
             //AuthToken
             string _TokenExpiry = "", _Sek = "", _AuthKey = "", _Messeg = "", _TradeName = "", _Messege = "", _LegalName = "", _Status = "";
@@ -1693,9 +1680,9 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
             request.Headers.Add("ip_address", "103.174.254.209");
             request.Headers.Add("client_id", E_Invoice_API_Client_ID);
             request.Headers.Add("client_secret", E_Invoice_API_Secret);
-            request.Headers.Add("username", E_Invoice_API_UserName);
+            request.Headers.Add("username", UserName);
             request.Headers.Add("auth-token", AuthToken);
-            request.Headers.Add("gstin", E_Invoice_API_GST);
+            request.Headers.Add("gstin", GST);
             response = request.GetResponse();
 
             using (Stream dataStream = response.GetResponseStream())
@@ -1811,7 +1798,7 @@ public partial class Gov_Bills_EwayBill_CrDbNote : System.Web.UI.Page
                 requestObjPost.Method = "POST";
                 requestObjPost.ContentType = "application/json";
                 requestObjPost.Headers.Add("email", MailID);
-                requestObjPost.Headers.Add("ip_address", "58.84.60.58");
+                requestObjPost.Headers.Add("ip_address", IPAddress);
                 requestObjPost.Headers.Add("client_id", E_Way_Client_ID);
                 requestObjPost.Headers.Add("client_secret", E_Way_Secret);
                 requestObjPost.Headers.Add("username", UserName);
