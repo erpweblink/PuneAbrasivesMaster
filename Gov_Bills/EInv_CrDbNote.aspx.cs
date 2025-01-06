@@ -139,7 +139,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 Session["PDFID"] = e.CommandArgument.ToString();
                 Response.Redirect("E_InvoicePDF.aspx?Idd=" + encrypt(e.CommandArgument.ToString()) + "");
                 // Response.Write("<script>window.open('PurchaseBillPDF.aspx','_blank');</script>");
-              //  Response.Write("<script>window.open ('E_InvoicePDF.aspx?Idd=" + encrypt(e.CommandArgument.ToString()) + "','_blank');</script>");
+                //  Response.Write("<script>window.open ('E_InvoicePDF.aspx?Idd=" + encrypt(e.CommandArgument.ToString()) + "','_blank');</script>");
             }
         }
         if (e.CommandName == "RowCancel")
@@ -241,9 +241,9 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 //    Invoice_No = dtCompany.Rows[0]["invoiceno"].ToString();
                 //}
 
-                 Invoice_No = dtCompany.Rows[0]["DocNo"].ToString();
-                //Invoice_No = "CRDB/3";//dtCompany.Rows[0]["DocNo"].ToString(); //For Testing
-               
+                //Invoice_No = dtCompany.Rows[0]["DocNo"].ToString();
+                Invoice_No = "CRDB/4";//dtCompany.Rows[0]["DocNo"].ToString(); //For Testing
+
                 if (string.IsNullOrWhiteSpace(Invoice_No))
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('DocNo Not Set Please Enter Invoice_NO..!');", true);
@@ -279,7 +279,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Seller_Location Not Set Please Enter Seller_Location..!');", true);
                 }
 
-                 Seller_Pin_Code = "411019";  //for Pune Abrasives
+                Seller_Pin_Code = "411019";  //for Pune Abrasives
                 //Seller_Pin_Code = "587315";  // for testing
                 if (string.IsNullOrWhiteSpace(Seller_Pin_Code))
                 {
@@ -398,7 +398,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 //Set variables
 
                 Ship_Firm_Name = dtCompany.Rows[0]["ShippingCustomer"].ToString();
-               // Ship_Firm_Name = "Web Link Services Pvt. Ltd.";
+                // Ship_Firm_Name = "Web Link Services Pvt. Ltd.";
                 if (string.IsNullOrWhiteSpace(Ship_Firm_Name))
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Ship_Firm_Name Not Set Please Enter Ship_Firm_Name..!!');", true);
@@ -406,25 +406,25 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 string Ship_Firm_Address1 = dtCompany.Rows[0]["ShippingAddress"].ToString();
                 // Ship_Firm_Address = dtCompany.Rows[0]["ShippingAddress"].ToString();
                 Ship_Firm_Address = Regex.Replace(Ship_Firm_Address1, @"\s+", " ");
-               // Ship_Firm_Address = "Pimpale Saudagar";
+                // Ship_Firm_Address = "Pimpale Saudagar";
                 if (string.IsNullOrWhiteSpace(Ship_Firm_Address))
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Ship_Firm_Address Not Set Please Enter Ship_Firm_Address..!!');", true);
                 }
                 Ship_Location = dtCompany.Rows[0]["ShippingLocation"].ToString();
-               // Ship_Location = "Pune";
+                // Ship_Location = "Pune";
                 if (string.IsNullOrWhiteSpace(Ship_Location))
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Ship_Location Not Set Please Enter Ship_Location..!!');", true);
                 }
                 Ship_Pin_Code = dtCompany.Rows[0]["ShippingPincode"].ToString();
-               // Ship_Pin_Code = "411062";
+                // Ship_Pin_Code = "411062";
                 if (string.IsNullOrWhiteSpace(Ship_Pin_Code))
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Ship_Pin_Code Not Set Please Enter Ship_Pin_Code..!!');", true);
                 }
                 Ship_Firm_State_Code = dtCompany.Rows[0]["ShippingStatecode"].ToString();
-               // Ship_Firm_State_Code = "27";
+                // Ship_Firm_State_Code = "27";
                 if (string.IsNullOrWhiteSpace(Ship_Firm_State_Code))
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Ship_Firm_State_Code Not Set Please Enter Ship_Firm_State_Code..!!');", true);
@@ -868,7 +868,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 SqlCommand cmdNoteType = new SqlCommand("select NoteType from tblcreditdebitnotehdr where Id='" + ID + "'", con);
                 Object F_cmdNoteType = cmdNoteType.ExecuteScalar();
                 string NoteType = F_cmdNoteType.ToString();
-                if (NoteType== "Credit_Sale")
+                if (NoteType == "Credit_Sale")
                 {
                     DocType = "CRN";
                 }
@@ -882,7 +882,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                     if (Invbasic == "B2B")
                     {
                         //Regular Invoice
-                        postData = "{\"Version\":\"1.1\",\"TranDtls\":{\"TaxSch\":\"GST\",\"SupTyp\":\"B2B\"},\"DocDtls\":{\"Typ\":\""+ DocType + "\",\"No\":\"" + Invoice_No + "\",\"Dt\":\"" + Date_Dt + "\"},\"SellerDtls\":{\"Gstin\":\"" + Seller_GST_No + "\",\"LglNm\":\"" + Seller_Firm_Name + "\",\"Addr1\":\"" + Seller_Address + "\",\"Loc\":\"" + Seller_location + "\",\"Pin\":" + Seller_Pin_Code + ",\"Stcd\":\"" + Seller_State_Code + "\"},\"BuyerDtls\":{\"Gstin\":\"" + Buyer_GST_No + "\",\"LglNm\":\"" + Buyer_Firm_Name + "\",\"Pos\":\"" + Buyer_State_Code + "\",\"Addr1\":\"" + Buyer_Address + "\",\"Loc\":\"" + Buyer_Location + "\",\"Pin\":" + Buyer_Pin_Code + ",\"Stcd\":\"" + Buyer_State_Code + "\"},\"ItemList\":[" + list + "],\"ValDtls\":{\"AssVal\":" + AssVal + ",\"CgstVal\":" + CgstVal + ",\"SgstVal\":" + SgstVal + ",\"IgstVal\":" + IgstVal + ",\"TotInvVal\":" + TotInvVal + "}}";
+                        postData = "{\"Version\":\"1.1\",\"TranDtls\":{\"TaxSch\":\"GST\",\"SupTyp\":\"B2B\"},\"DocDtls\":{\"Typ\":\"" + DocType + "\",\"No\":\"" + Invoice_No + "\",\"Dt\":\"" + Date_Dt + "\"},\"SellerDtls\":{\"Gstin\":\"" + Seller_GST_No + "\",\"LglNm\":\"" + Seller_Firm_Name + "\",\"Addr1\":\"" + Seller_Address + "\",\"Loc\":\"" + Seller_location + "\",\"Pin\":" + Seller_Pin_Code + ",\"Stcd\":\"" + Seller_State_Code + "\"},\"BuyerDtls\":{\"Gstin\":\"" + Buyer_GST_No + "\",\"LglNm\":\"" + Buyer_Firm_Name + "\",\"Pos\":\"" + Buyer_State_Code + "\",\"Addr1\":\"" + Buyer_Address + "\",\"Loc\":\"" + Buyer_Location + "\",\"Pin\":" + Buyer_Pin_Code + ",\"Stcd\":\"" + Buyer_State_Code + "\"},\"ItemList\":[" + list + "],\"ValDtls\":{\"AssVal\":" + AssVal + ",\"CgstVal\":" + CgstVal + ",\"SgstVal\":" + SgstVal + ",\"IgstVal\":" + IgstVal + ",\"TotInvVal\":" + TotInvVal + "}}";
                     }
                     else if (Invbasic == "SEZWOP")
                     {
@@ -917,7 +917,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 #endregion
 
                 if (postData != "")
-                { 
+                {
                     //Save JSON IN DATABASE update by pawar 03/01/2025                 
                     Cmd = new SqlCommand("UPDATE tblcreditdebitnotehdr SET E_Invoice_JSON=@E_Invoice_JSON WHERE Id=" + ID + "", con);
                     Cmd.Parameters.AddWithValue("@E_Invoice_JSON", postData);
@@ -1109,8 +1109,8 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 SqlCommand cmdGetIRN = new SqlCommand("select IRN from tblCreditDebitNoteHdr where Id='" + ID + "'", con);
                 Object F_GetIRN = cmdGetIRN.ExecuteScalar();
 
-                Cancel_EInvoice(MailID, GST, UserName, Password, F_GetIRN.ToString(), out _Status_CD, out _Messege, out _CancelDate);
-
+                 Cancel_EInvoice(MailID, GST, UserName, Password, F_GetIRN.ToString(), out _Status_CD, out _Messege, out _CancelDate);
+               
                 if (_Status_CD == "0")
                 {
                     con.Close();
@@ -1128,13 +1128,14 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                     Cmd = new SqlCommand("UPDATE tblCreditDebitNoteHdr SET e_invoice_cancel_status=@e_invoice_cancel_status,e_invoice_cancel_date=@e_invoice_cancel_date,e_invoice_cancel_by=@e_invoice_cancel_by WHERE Id=" + ID + "", con);
                     Cmd.Parameters.AddWithValue("@e_invoice_cancel_status", 1);
                     Cmd.Parameters.AddWithValue("@e_invoice_cancel_date", _CancelDate);
-                    Cmd.Parameters.AddWithValue("@e_invoice_cancel_by", Session["name"].ToString());
+                    Cmd.Parameters.AddWithValue("@e_invoice_cancel_by", Session["Username"].ToString());
                     Cmd.ExecuteNonQuery();
-                    con.Close();
+                    
 
                     SqlCommand cmdDocNo = new SqlCommand("SELECT BillNumber FROM [tblCreditDebitNoteHdr]  where Id='" + ID + "'", con);
                     Object mxDocNo = cmdDocNo.ExecuteScalar();
                     string DocNo = mxDocNo.ToString();
+                    con.Close();
 
                     SqlCommand cmddelete2 = new SqlCommand("delete from tbl_InventoryOutwardManage where OrderNo='" + DocNo + "' ", con);
                     con.Open();
@@ -1186,10 +1187,10 @@ select [OrderNo]
       ,[Batch] 
 from tbl_OutwardEntryComponentsDtls where OrderNo=@ID", Cls_Main.Conn);
                     Cmd1.Parameters.AddWithValue("@ID", DocNo);
-
                     Cmd1.ExecuteNonQuery();
                     Cls_Main.Conn_Close();
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('E-Invoice Cancelled Successfully...!!');", true);
+
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('E-Invoice Cancelled Successfully...!!');window.location='EInv_CrDbNote.aspx';", true);
                 }
             }
         }
@@ -1291,7 +1292,7 @@ from tbl_OutwardEntryComponentsDtls where OrderNo=@ID", Cls_Main.Conn);
         }
         catch (Exception ex)
         {
-           //throw ex;
+            //throw ex;
             string errorMsg = "An error occurred : " + ex.Message;
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
 
