@@ -241,8 +241,8 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 //    Invoice_No = dtCompany.Rows[0]["invoiceno"].ToString();
                 //}
 
-                //Invoice_No = dtCompany.Rows[0]["DocNo"].ToString();
-                Invoice_No = "CRDB/4";//dtCompany.Rows[0]["DocNo"].ToString(); //For Testing
+                Invoice_No = dtCompany.Rows[0]["DocNo"].ToString();
+                //Invoice_No = "CRDB/4";//dtCompany.Rows[0]["DocNo"].ToString(); //For Testing
 
                 if (string.IsNullOrWhiteSpace(Invoice_No))
                 {

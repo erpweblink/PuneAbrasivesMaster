@@ -219,7 +219,7 @@
                                 <ItemTemplate>
                                     <asp:LinkButton runat="server" ID="lnkCreateInv" CommandName="RowCreate" CommandArgument='<%# Eval("Id") %>' ToolTip="Create E-Way Bill" OnClientClick="Javascript:return confirm('Do you want to Create E-Way Bill?')"><i class="fa fa-file-text" style="font-size:24px;color:green;"></i></asp:LinkButton>
                                     &nbsp;                                                               
-                <asp:LinkButton ID="lnkPDF" Visible="false" runat="server" CommandName="DownloadPDF" CommandArgument='<%# Eval("Id") %>' ToolTip="Download"><i class="fa fa-file-pdf-o" style="font-size:24px;color:red;"></i></asp:LinkButton>
+                <asp:LinkButton ID="lnkPDF" Visible="false" runat="server" CommandName="DownloadPDF" CommandArgument='<%# Eval("Id") %>' ToolTip="Download"><i class="fa fa-file-pdf" style="font-size:24px;color:red;"></i></asp:LinkButton>
                                     &nbsp;                                                               
                 <asp:LinkButton ID="lnkCancel" Visible="false" runat="server" CommandName="RowCancel" CommandArgument='<%# Eval("Id") %>' ToolTip="Cancel E-Way Bill" OnClientClick="Javascript:return confirm('Do you want to Cancel E-Way Bill?')"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
                                     <%--<asp:LinkButton ID="lnkCancel" runat="server" CommandName="RowCancel" CommandArgument='<%# Eval("CnlId") %>' ToolTip="Cancel E-Way Bill" OnClientClick="Javascript:return confirm('Do you want to Cancel E-Way Bill?')"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>--%>

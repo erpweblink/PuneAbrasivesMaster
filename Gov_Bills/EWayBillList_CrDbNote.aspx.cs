@@ -129,7 +129,8 @@ public partial class Gov_Bills_EWayBillList_CrDbNote : System.Web.UI.Page
             if (!string.IsNullOrEmpty(e.CommandArgument.ToString()))
             {
                 Session["PDFID"] = e.CommandArgument.ToString();
-                Response.Write("<script>window.open ('E_WayBill_PDF.aspx?Idd=" + encrypt(e.CommandArgument.ToString()) + "','_blank');</script>");
+                Response.Redirect("E_WayBill_PDF.aspx?Idd=" + encrypt(e.CommandArgument.ToString()));
+                //Response.Write("<script>window.open ('E_WayBill_PDF.aspx?Idd=" + encrypt(e.CommandArgument.ToString()) + "','_blank');</script>");
             }
         }
         if (e.CommandName == "RowCancel")
