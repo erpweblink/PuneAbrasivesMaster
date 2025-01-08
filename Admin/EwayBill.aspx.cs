@@ -539,7 +539,14 @@ public partial class Admin_AddCompany : System.Web.UI.Page
                         }
                         else
                         {
-                            postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":0,\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"TransId\":\"" + txtTransporterID.Text + "\",\"TransName\":\"" + txtTransporterName.Text + "\",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            if (txtDistance.Text == "")
+                            {
+                                postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":0,\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"TransId\":\"" + txtTransporterID.Text + "\",\"TransName\":\"" + txtTransporterName.Text + "\",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            }
+                            else
+                            {
+                                postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":" + txtDistance.Text + ",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"TransId\":\"" + txtTransporterID.Text + "\",\"TransName\":\"" + txtTransporterName.Text + "\",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            }
                         }
                     }
                     else if (ddlTransportationMode.SelectedValue == "0")
@@ -561,7 +568,14 @@ public partial class Admin_AddCompany : System.Web.UI.Page
                         }
                         else
                         {
-                            postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":0,\"TransId\":\"" + txtTransporterID.Text + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"TransName\":\"" + txtTransporterName.Text + "\",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            if (txtDistance.Text == "")
+                            {
+                                postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":0,\"TransId\":\"" + txtTransporterID.Text + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"TransName\":\"" + txtTransporterName.Text + "\",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            }
+                            else
+                            {
+                                postData = "{\"Irn\":\"" + lblIrn.Text + "\",\"Distance\":" + txtDistance.Text + ",\"TransId\":\"" + txtTransporterID.Text + "\",\"VehType\":\"" + ddlVehicleType.SelectedValue + "\",\"TransMode\":\"" + ddlTransportationMode.SelectedValue + "\",\"VehNo\":\"" + txtVehicleNumber.Text + "\",\"TransName\":\"" + txtTransporterName.Text + "\",\"supplyType\":\"O\",\"subSupplyType\":" + ddlSubType.SelectedValue + ",\"TransDocDt\":\"" + TransactionDoc_Date + "\",\"fromGstin\":\"" + GST + "\",\"fromPincode\":411019,\"fromStateCode\":27,\"actualFromStateCode\":27,\"toGstin\":\"" + ShippingGST + "\",\"toPincode\":" + ShippingPincode + ",\"toStateCode\":" + ShippingStatecode + ",\"actualToStateCode\":" + ShippingStatecode + ",\"totInvValue\":" + TotInvVal + "}";
+                            }
                         }
                     }
                 }
