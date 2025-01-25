@@ -134,7 +134,14 @@ public partial class Admin_OutComponentEntry : System.Web.UI.Page
                     txtaddress.Text = Dt.Rows[0]["BillingAddress"].ToString();
                     txtvehicleno.Text = Dt.Rows[0]["VehicalNo"].ToString();
                     txtpartygstno.Text = Dt.Rows[0]["BillingGST"].ToString();
-                    txtpartypanno.Text = txtpartygstno.Text.Substring(2, 10);
+                    if(txtpartygstno.Text!= "URP")
+                    {
+                        txtpartypanno.Text = txtpartygstno.Text.Substring(2, 10);
+                    }
+                    else
+                    {
+                        txtpartypanno.Text = "URP";
+                    }                
                     txtewaybillno.Text = Dt.Rows[0]["E_BillNo"].ToString();
                     txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
                     txtShiftTo.Text = Dt.Rows[0]["ShippingCustomer"].ToString();
