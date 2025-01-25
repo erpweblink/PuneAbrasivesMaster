@@ -113,9 +113,18 @@ public partial class Admin_InwardEntryList : System.Web.UI.Page
             Cmd.Parameters.AddWithValue("@DeletedBy", Session["UserCode"].ToString());
             Cmd.Parameters.AddWithValue("@DeletedOn", DateTime.Now);
             Cmd.ExecuteNonQuery();
-            Cls_Main.Conn_Close();
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "HideLabel('Enward Entry Deleted Successfully..!!')", true);
+            Cls_Main.Conn_Close();            
             FillGrid();
+
+            con.Open();
+            SqlCommand cmd1 = new SqlCommand("select OrderNo from tbl_InwardEntryHdr where Id = " + Convert.ToInt32(e.CommandArgument.ToString()) + "", con);
+            Object OrderNo = cmd1.ExecuteScalar();
+
+            SqlCommand Cmd4 = new SqlCommand("delete tbl_InwardComponentsdtls where OrderNo=@OrderNo", con);
+            Cmd4.Parameters.AddWithValue("@OrderNo", OrderNo);
+            Cmd4.ExecuteNonQuery();
+            con.Close();
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "HideLabel('Enward Entry Deleted Successfully..!!')", true);
         }
        
     }
