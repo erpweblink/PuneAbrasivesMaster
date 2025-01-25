@@ -826,12 +826,12 @@ public partial class Admin_Dashboard : System.Web.UI.Page
             DataTable dt = new DataTable();
             if (Session["Role"].ToString() == "Admin")
             {
-                SqlDataAdapter cmd = new SqlDataAdapter("select * from tbl_CallandMeetingDetails where Updatefor='Meeting' AND  CONVERT(VARCHAR(10), CONVERT(DATE, followupdate, 100), 23)=CONVERT(VARCHAR(10), CONVERT(DATE, GETDATE(), 100), 23)", Cls_Main.Conn);
+                SqlDataAdapter cmd = new SqlDataAdapter("select * from tbl_CallandMeetingDetails where Updatefor='Meeting' AND CONVERT(VARCHAR(10), CAST(followupdate AS DATETIME), 23) = CONVERT(VARCHAR(10), GETDATE(), 23)", Cls_Main.Conn);
                 cmd.Fill(dt);
             }
             else
             {
-                SqlDataAdapter cmd = new SqlDataAdapter("select * from tbl_CallandMeetingDetails where Updatefor='Meeting' AND  CreatedBy='PAPL/UID-7' AND CONVERT(VARCHAR(10), followupdate, 23) = CONVERT(VARCHAR(10), GETDATE(), 23);", Cls_Main.Conn);
+                SqlDataAdapter cmd = new SqlDataAdapter("select * from tbl_CallandMeetingDetails where Updatefor='Meeting' AND  CreatedBy='" + Session["UserCode"].ToString() + "' AND CONVERT(VARCHAR(10), CAST(followupdate AS DATETIME), 23) = CONVERT(VARCHAR(10), GETDATE(), 23);", Cls_Main.Conn);
                 cmd.Fill(dt);
             }
             if (dt.Rows.Count > 0)
@@ -1018,7 +1018,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
         try
         {
             DataTable dt = new DataTable();
-            SqlDataAdapter cmd = new SqlDataAdapter("select Pono,PoDate,CustomerName,UM.Username from tbl_CustomerPurchaseOrderHdr AS CP INNER JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName WHERE PoDate BETWEEN CAST(DATEADD(DAY, -3, GETDATE()) AS DATE) AND CAST(GETDATE() AS DATE) AND Pono NOT IN (SELECT AgainstNumber FROM tblTaxInvoiceHdr) ORDER BY CP.CreatedOn DESC", Cls_Main.Conn);
+            SqlDataAdapter cmd = new SqlDataAdapter("select Pono,PoDate,CustomerName,UM.Username from tbl_CustomerPurchaseOrderHdr AS CP INNER JOIN tbl_UserMaster AS UM ON UM.UserCode=CP.UserName WHERE PoDate BETWEEN CAST(DATEADD(DAY, -3, GETDATE()) AS DATE) AND CAST(GETDATE() AS DATE) AND Pono NOT IN (SELECT AgainstNumber FROM tblTaxInvoiceHdr where isdeleted=0) and CP.IsDeleted=0  ORDER BY CP.CreatedOn DESC", Cls_Main.Conn);
             cmd.Fill(dt);
             if (dt.Rows.Count > 0)
             {
