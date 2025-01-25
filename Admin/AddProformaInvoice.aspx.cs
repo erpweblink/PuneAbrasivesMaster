@@ -18,6 +18,7 @@ using System.Web.UI.WebControls;
 
 public partial class Admin_AddProformaInvoice : System.Web.UI.Page
 {
+    SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["constr"].ConnectionString);
     DataTable Dt_Product = new DataTable();
     CommonCls objcls = new CommonCls();
     DataTable Dt_Component = new DataTable();
@@ -67,21 +68,53 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
     }
     protected void TaxInvoiceNo()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT max([ID]) as maxid FROM [tbl_ProformaTaxInvoiceHdr]", Cls_Main.Conn);
-        DataTable dt = new DataTable();
-        ad.Fill(dt);
-        if (dt.Rows.Count > 0)
+
+        string FinYear = null;
+        string FinFullYear = null;
+        if (DateTime.Today.Month > 3)
         {
-            int currentYear = DateTime.Now.Year;
-            int nextYear = currentYear + 1;
-            int maxid = dt.Rows[0]["maxid"].ToString() == "" ? 0 : Convert.ToInt32(dt.Rows[0]["maxid"].ToString());
-            // txtInvoiceno.Text = "WLSPL/TI-" + (maxid + 1).ToString();
-            txtInvoiceno.Text = currentYear.ToString() + "-" + nextYear.ToString().Substring(2) + "/" + (maxid + 1).ToString("D4");
+            FinYear = DateTime.Today.AddYears(1).ToString("yy");
+            FinFullYear = DateTime.Today.AddYears(1).ToString("yy");
         }
         else
         {
-            txtInvoiceno.Text = string.Empty;
+            var finYear = DateTime.Today.AddYears(1).ToString("yy");
+            FinYear = (Convert.ToInt32(finYear) - 1).ToString();
+
+            var finfYear = DateTime.Today.AddYears(1).ToString("yy");
+            FinFullYear = (Convert.ToInt32(finfYear) - 1).ToString();
         }
+        string previousyear = (Convert.ToDecimal(FinFullYear) - 1).ToString();
+        string strInvoiceNumber = "";
+        string fY = previousyear.ToString() + "-" + FinYear;
+        string strSelect = @"select     CONCAT(
+        '2024-25/', 
+        RIGHT('0000' + CAST(CAST(SUBSTRING(MAX(InvoiceNo), 10, 4) AS INT)  AS VARCHAR), 4)
+    ) AS maxno from tbl_ProformaTaxInvoiceHdr where InvoiceNo like '%" + fY + "%' AND IsDeleted=0";
+        // string strSelect = @"SELECT TOP 1 MAX(ID) FROM tblTaxInvoiceHdr where InvoiceNo like '%" + fY + "%' ";
+
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.CommandType = CommandType.Text;
+        cmd.CommandText = strSelect;
+        con.Open();
+        string result;
+
+        result = cmd.ExecuteScalar().ToString();
+
+
+        con.Close();
+        if (result != "")
+        {
+            int numbervalue = Convert.ToInt32(result.Substring(result.LastIndexOf("/") + 1));
+            numbervalue = numbervalue + 1;
+            strInvoiceNumber =  previousyear.ToString() + "-" + FinYear+"/00" + numbervalue;
+        }
+        else
+        {
+            strInvoiceNumber = previousyear.ToString() + "-" + FinYear + "/" + "01";
+        }
+        txtInvoiceno.Text = strInvoiceNumber;
     }
     //Bind Product Type
     private void Fillddlagainstnumber()
@@ -1804,7 +1837,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
 
                 "Kind Regards," + "<br/>" +
                 "<strong>Pune Abrasives Pvt. Ltd.<strong>";
-                    string fileName = txtInvoiceno.Text + "-" + "QuotationInvoice.pdf";
+                    string fileName = txtInvoiceno.Text + "-" + "ProformaInvoice.pdf";
                     string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
                     string mailTo = ((Label)g2.FindControl("lblEmailID")).Text.Trim();
                     MailMessage mm = new MailMessage();
