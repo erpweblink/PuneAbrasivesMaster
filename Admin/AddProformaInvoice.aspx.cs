@@ -74,14 +74,14 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         if (DateTime.Today.Month > 3)
         {
             FinYear = DateTime.Today.AddYears(1).ToString("yy");
-            FinFullYear = DateTime.Today.AddYears(1).ToString("yy");
+            FinFullYear = DateTime.Today.AddYears(1).ToString("yyyy");
         }
         else
         {
             var finYear = DateTime.Today.AddYears(1).ToString("yy");
             FinYear = (Convert.ToInt32(finYear) - 1).ToString();
 
-            var finfYear = DateTime.Today.AddYears(1).ToString("yy");
+            var finfYear = DateTime.Today.AddYears(1).ToString("yyyy");
             FinFullYear = (Convert.ToInt32(finfYear) - 1).ToString();
         }
         string previousyear = (Convert.ToDecimal(FinFullYear) - 1).ToString();
@@ -90,7 +90,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         string strSelect = @"select     CONCAT(
         '2024-25/', 
         RIGHT('0000' + CAST(CAST(SUBSTRING(MAX(InvoiceNo), 10, 4) AS INT)  AS VARCHAR), 4)
-    ) AS maxno from tbl_ProformaTaxInvoiceHdr where InvoiceNo like '%" + fY + "%' AND IsDeleted=0";
+    ) AS maxno from tbl_ProformaTaxInvoiceHdr where InvoiceNo like '%" + fY + "%' ";
         // string strSelect = @"SELECT TOP 1 MAX(ID) FROM tblTaxInvoiceHdr where InvoiceNo like '%" + fY + "%' ";
 
         SqlCommand cmd = new SqlCommand();
@@ -108,7 +108,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         {
             int numbervalue = Convert.ToInt32(result.Substring(result.LastIndexOf("/") + 1));
             numbervalue = numbervalue + 1;
-            strInvoiceNumber =  previousyear.ToString() + "-" + FinYear+"/00" + numbervalue;
+            strInvoiceNumber = previousyear.ToString() + "-" + FinYear + "/00" + numbervalue;
         }
         else
         {
@@ -617,7 +617,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
                                 Cls_Main.Conn_Close();
                             }
 
-                           
+
                             //Save Tax Invoice Details End
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Proforma Invoice Updated Successfully..!!');window.location='ProformaInvoiceList.aspx'; ", true);
                         }
@@ -796,44 +796,34 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         int value;
         if (int.TryParse(txtquantity.Text, out value))
         {
-            // Check if the value is a multiple of 25
-            if (value % 25 == 0)
+
+            var TotalAmt = Convert.ToDecimal(txtquantity.Text.Trim()) * Convert.ToDecimal(txtrate.Text.Trim());
+            txttotal.Text = Convert.ToString(TotalAmt);
+            decimal total;
+            decimal Percentage;
+            if (txtIGST.Text == null || txtIGST.Text == "")
             {
-                var TotalAmt = Convert.ToDecimal(txtquantity.Text.Trim()) * Convert.ToDecimal(txtrate.Text.Trim());
-                txttotal.Text = Convert.ToString(TotalAmt);
-                decimal total;
-                decimal Percentage;
-                if (txtIGST.Text == null || txtIGST.Text == "")
-                {
-                    Percentage = Convert.ToDecimal(txtCGST.Text);
-                    total = (TotalAmt * Percentage / 100);
+                Percentage = Convert.ToDecimal(txtCGST.Text);
+                total = (TotalAmt * Percentage / 100);
 
-                    txtCGSTamt.Text = total.ToString();
+                txtCGSTamt.Text = total.ToString();
 
-                    txtSGSTamt.Text = txtCGSTamt.Text;
+                txtSGSTamt.Text = txtCGSTamt.Text;
 
-                    txtSGST.Text = txtCGST.Text;
-                    var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtCGSTamt.Text.Trim()) + Convert.ToDecimal(txtSGSTamt.Text.Trim());
-                    txtgrandtotal.Text = GrandTotal.ToString();
-                }
-                else
-                {
-                    Percentage = Convert.ToDecimal(txtIGST.Text);
-                    total = (TotalAmt * Percentage / 100);
-
-                    txtIGSTamt.Text = total.ToString();
-                    var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtIGSTamt.Text.Trim());
-                    txtgrandtotal.Text = GrandTotal.ToString();
-                }
+                txtSGST.Text = txtCGST.Text;
+                var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtCGSTamt.Text.Trim()) + Convert.ToDecimal(txtSGSTamt.Text.Trim());
+                txtgrandtotal.Text = GrandTotal.ToString();
             }
             else
             {
-                txtquantity.Text = "";
-                txtgrandtotal.Text = "";
-                txttotal.Text = "";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please enter a Quantity that is a multiple of 25...!!')", true);
+                Percentage = Convert.ToDecimal(txtIGST.Text);
+                total = (TotalAmt * Percentage / 100);
 
+                txtIGSTamt.Text = total.ToString();
+                var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtIGSTamt.Text.Trim());
+                txtgrandtotal.Text = GrandTotal.ToString();
             }
+
         }
     }
 
@@ -1844,8 +1834,8 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
                     // mm.From = new MailAddress(fromMailID);
 
                     mm.Subject = txtbillingcustomer.Text + "_ProformaInvoice.pdf";
-                     mm.To.Add(mailTo);
-                   // mm.To.Add("shubhpawar59@gmail.com");
+                    mm.To.Add(mailTo);
+                    // mm.To.Add("shubhpawar59@gmail.com");
 
                     mm.CC.Add("girish.kulkarni@puneabrasives.com");
                     //mm.CC.Add("b.tikhe@puneabrasives.com");
@@ -1873,7 +1863,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
 
                     // Set the "Reply-To" header to indicate the desired display address
                     mm.ReplyToList.Add(new MailAddress(fromMailID));
-                   
+
                     SmtpClient smtp = new SmtpClient();
                     smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
                     smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);

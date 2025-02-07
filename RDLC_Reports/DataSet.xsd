@@ -63,6 +63,12 @@
               <xs:element name="Rate" type="xs:string" minOccurs="0" />
               <xs:element name="companygstno" type="xs:string" minOccurs="0" />
               <xs:element name="UserName" type="xs:string" minOccurs="0" />
+              <xs:element name="OTTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="OTCGST" type="xs:string" minOccurs="0" />
+              <xs:element name="OTSGST" type="xs:string" minOccurs="0" />
+              <xs:element name="OTIGST" type="xs:string" minOccurs="0" />
+              <xs:element name="OTALLTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="GrandTotal" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

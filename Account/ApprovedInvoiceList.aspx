@@ -177,6 +177,18 @@
                     </div>
                     <div class="col-md-3">
 
+                        <asp:Label ID="Label1" Font-Bold="true" runat="server" Text="Invoice No. :"></asp:Label>
+                        <asp:TextBox ID="txtInvoiceNo" CssClass="form-control" placeholder="Search Invoice No. " runat="server" OnTextChanged="txtCustomerName_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
+                        <asp:AutoCompleteExtender ID="AutoCompleteExtender2" runat="server" CompletionListCssClass="completionList"
+                            CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                            CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetInvoicenowiseList"
+                            TargetControlID="txtInvoiceNo">
+                        </asp:AutoCompleteExtender>
+
+
+                    </div>
+                    <div class="col-md-3">
+
                         <asp:Label ID="lblfromdate" runat="server" Font-Bold="true" Text="From Date :"></asp:Label>
                         <asp:TextBox ID="txtfromdate" CssClass="form-control" runat="server" TextMode="Date" Width="100%"></asp:TextBox>
 

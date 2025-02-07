@@ -46,6 +46,7 @@ public partial class Account_ApprovedInvoiceList : System.Web.UI.Page
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@Action", "GetInvoiceListForAccount");
             cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@Invoiceno", txtInvoiceNo.Text);
             cmd.Parameters.AddWithValue("@PageSize", Convert.ToInt32(ddlPageSize.SelectedValue));
             cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
             cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
@@ -697,5 +698,40 @@ public partial class Account_ApprovedInvoiceList : System.Web.UI.Page
     protected void ddlPageSize_SelectedIndexChanged(object sender, EventArgs e)
     {
         FillGrid();
+    }
+
+
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetInvoicenowiseList(string prefixText, int count)
+    {
+        return AutoFillInvoiceNo(prefixText);
+    }
+
+    public static List<string> AutoFillInvoiceNo(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "select DISTINCT InvoiceNo from tblTaxInvoiceHdr where  " + "InvoiceNo like '%'+ @Search + '%' and IsDeleted=0";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["InvoiceNo"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
     }
 }

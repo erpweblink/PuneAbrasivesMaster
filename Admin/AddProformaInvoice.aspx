@@ -634,7 +634,7 @@
                                                             <asp:TextBox ID="txthsnsac" Width="190px" CssClass="form-control" runat="server"></asp:TextBox>
                                                         </td>
                                                         <td>
-                                                            <asp:TextBox ID="txtquantity" Width="190px" CssClass="form-control" OnTextChanged="txtquantity_TextChanged" AutoPostBack="true" runat="server"></asp:TextBox>
+                                                            <asp:TextBox ID="txtquantity" Width="190px" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtquantity_TextChanged" runat="server"></asp:TextBox>
                                                         </td>
 
                                                     </tr>

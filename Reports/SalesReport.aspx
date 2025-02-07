@@ -184,7 +184,7 @@
                     <div class="col-xl-4 col-md-4" style="text-align: left">
                         <br />
                         <asp:Button ID="btnDownload" OnClick="btnDownload_Click" CssClass="btn btn-success" runat="server" Text="Excel" Style="padding: 8px;" />
-                        <asp:Button ID="btnPDF" OnClick="btnPDF_Click" CssClass="btn btn-success" runat="server" Text="PDF" Style="padding: 8px;" />
+                        <asp:Button ID="btnPDF" OnClick="btnPDF_Click" Visible="false" CssClass="btn btn-success" runat="server" Text="PDF" Style="padding: 8px;" />
                     </div>
                     <div class="col-xl-4 col-md-4" style="text-align: center">
                         <br />
@@ -305,6 +305,54 @@
                                 </FooterTemplate>
                             </asp:TemplateField>
 
+                            <asp:TemplateField HeaderText="Other Basic" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblOTTotal" runat="server" Text='<%#Eval("OTTotal")%>'></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="lblOTTotalBasic"   runat="server" />
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Other CGST" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblOTCGST" runat="server" Text='<%#Eval("OTCGST")%>'></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="lblOTTotalCGST"   runat="server" />
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Other SGST" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblOTSGST" runat="server" Text='<%#Eval("OTSGST")%>'></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="lblOTTotalSGST"   runat="server" />
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Other IGST" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblOTIGST" runat="server" Text='<%#Eval("OTIGST")%>'></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="lblOTTotalIGST"  runat="server" />
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Other Total" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblOTALLTotal" runat="server" Text='<%#Eval("OTALLTotal")%>'></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="lblOTTotal" runat="server" />
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Grand Total" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblTotalgrandTOTAL" runat="server" Text='<%#Eval("GrandTotal")%>'></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="lblallGrandTotal" runat="server" />
+                                </FooterTemplate>
+                            </asp:TemplateField>
                         </Columns>
                         <FooterStyle Font-Bold="True" ForeColor="Yellow" HorizontalAlign="Center" />
 

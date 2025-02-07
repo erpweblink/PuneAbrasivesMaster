@@ -403,7 +403,7 @@ from tbl_OutwardEntryComponentsDtls where OrderNo=@ID", Cls_Main.Conn);
                 }
                 else
                 {
-                    btnEdit.Visible = false;
+                   // btnEdit.Visible = false;
                     // btnDelete.Visible = false;
                 }
                 con.Close();

@@ -204,7 +204,12 @@ public partial class Reports_SalesReport : System.Web.UI.Page
             decimal grandTotal = 0;
             int TotalQuantity = 0;
 
-
+            decimal totalBasic1 = 0;
+            decimal totalCGST1 = 0;
+            decimal totalSGST1 = 0;
+            decimal totalIGST1 = 0;
+            decimal grandTotal1 = 0;
+            decimal TotalQuantity1 = 0;
 
             // Loop through the data rows to calculate the totals
             foreach (GridViewRow row in GVfollowup.Rows)
@@ -218,6 +223,13 @@ public partial class Reports_SalesReport : System.Web.UI.Page
                     totalIGST += Convert.ToDecimal((row.FindControl("lblIGSTAmt") as Label).Text);
                     grandTotal += Convert.ToDecimal((row.FindControl("lblTOTAL") as Label).Text);
                     TotalQuantity += Convert.ToInt32((row.FindControl("lblQuantity") as Label).Text);
+
+                    totalBasic1 += Convert.ToDecimal((row.FindControl("lblOTTotal") as Label).Text);
+                    totalCGST1 += Convert.ToDecimal((row.FindControl("lblOTCGST") as Label).Text);
+                    totalSGST1 += Convert.ToDecimal((row.FindControl("lblOTSGST") as Label).Text);
+                    totalIGST1 += Convert.ToDecimal((row.FindControl("lblOTIGST") as Label).Text);
+                    grandTotal1 += Convert.ToDecimal((row.FindControl("lblOTALLTotal") as Label).Text);
+                    TotalQuantity1 += Convert.ToDecimal((row.FindControl("lblTotalgrandTOTAL") as Label).Text);
                 }
             }
 
@@ -228,6 +240,13 @@ public partial class Reports_SalesReport : System.Web.UI.Page
             (e.Row.FindControl("lblTotalIGST") as Label).Text = totalIGST.ToString();
             (e.Row.FindControl("lblGrandTotal") as Label).Text = grandTotal.ToString();
             (e.Row.FindControl("lblTotalQuantity") as Label).Text = TotalQuantity.ToString();
+
+            (e.Row.FindControl("lblOTTotalBasic") as Label).Text = totalBasic1.ToString();
+            (e.Row.FindControl("lblOTTotalCGST") as Label).Text = totalCGST1.ToString();
+            (e.Row.FindControl("lblOTTotalSGST") as Label).Text = totalSGST1.ToString();
+            (e.Row.FindControl("lblOTTotalIGST") as Label).Text = totalIGST1.ToString();
+            (e.Row.FindControl("lblOTTotal") as Label).Text = grandTotal1.ToString();
+            (e.Row.FindControl("lblallGrandTotal") as Label).Text = TotalQuantity1.ToString();
         }
     }
 
