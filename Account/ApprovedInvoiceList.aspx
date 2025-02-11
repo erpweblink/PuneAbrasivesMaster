@@ -295,7 +295,7 @@
                                         <asp:LinkButton ID="lblEinvoicepdf" runat="server" Height="27px" CausesValidation="false" CommandName="RowViewEInvoice" Visible='<%# Eval("e_invoice_status").ToString() == "True" ? true : false %>' ToolTip="View E-Invoice PDF" CommandArgument='<%# Eval("Id") %>'><i class="fas fa-file-pdf"  style="font-size: 26px; color:green;  "></i></asp:LinkButton>
                                         &nbsp;         
                                             
-                                                                <asp:LinkButton ID="lnkCancel" runat="server" CommandName="RowCancel" CommandArgument='<%# Eval("Id") %>' ToolTip="Cancel E-Invoice Manually.....!" OnClientClick="Javascript:return confirm('Do you want to  Manually cancel E-Invoice?')"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
+                                                                <asp:LinkButton ID="lnkCancel" runat="server" CommandName="RowCancel" Visible="false" CommandArgument='<%# Eval("Id") %>' ToolTip="Cancel E-Invoice Manually.....!" OnClientClick="Javascript:return confirm('Do you want to  Manually cancel E-Invoice?')"><i class="fa fa-close" style="font-size:24px;color:red;"></i></asp:LinkButton>
 
                                     </ItemTemplate>
                                 </asp:TemplateField>

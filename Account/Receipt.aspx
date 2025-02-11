@@ -12,6 +12,7 @@
             text-align: left;
         }
 
+
         .starcls {
             color: red;
             font-size: 18px;
@@ -245,7 +246,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="row">
-                                                    <div class="col-md-2 spancls">Party Name<i class="reqcls">*&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Party Name</b><i class="reqcls">*&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtPartyName" CssClass="form-control" OnTextChanged="txtPartyName_TextChanged" runat="server" Width="100%" AutoPostBack="true"></asp:TextBox>
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ErrorMessage="Please Enter Party Name"
@@ -256,7 +257,7 @@
                                                             TargetControlID="txtPartyName">
                                                         </asp:AutoCompleteExtender>
                                                     </div>
-                                                    <div class="col-md-2 spancls">Payment Date<i class="reqcls">*&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Payment Date</b><i class="reqcls">*&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtdate" CssClass="form-control" runat="server" Width="100%" AutoComplete="off"></asp:TextBox>
                                                         <asp:CalendarExtender ID="CalendarExtender1" TargetControlID="txtdate" Format="dd-MM-yyyy" CssClass="cal_Theme1" runat="server"></asp:CalendarExtender>
@@ -265,7 +266,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-2 spancls">To Account Name<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>To Account Name</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:DropDownList ID="ddltoaccountName" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddltoaccountName_SelectedIndexChanged">
                                                             <asp:ListItem Value="" Text="Select"></asp:ListItem>
@@ -276,7 +277,7 @@
                                                         </asp:DropDownList>
 
                                                     </div>
-                                                    <div class="col-md-2 spancls">Bank Name<i class="reqcls">*&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Bank Name</b><i class="reqcls">*&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtbankname" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>
                                                         <asp:AutoCompleteExtender ID="AutoCompleteExtender2" runat="server" CompletionListCssClass="completionList"
@@ -290,7 +291,7 @@
 
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-2 spancls">Transaction Mode<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Transaction Mode</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:DropDownList ID="ddltransactionmode" runat="server" CssClass="form-control">
                                                             <asp:ListItem Value="" Text="Select"></asp:ListItem>
@@ -305,13 +306,13 @@
 
                                                         </asp:DropDownList>
                                                     </div>
-                                                    <div class="col-md-2 spancls">Mode Description<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Mode Description</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtmodedescription" CssClass="form-control" TextMode="MultiLine" runat="server" Width="100%"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-2 spancls">Against<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Against</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:DropDownList ID="ddlAgainst" runat="server" CssClass="form-control" OnTextChanged="ddlAgainst_TextChanged" AutoPostBack="true">
                                                             <asp:ListItem Value="" Text="Select"></asp:ListItem>
@@ -323,7 +324,7 @@
                                                         <asp:DropDownList ID="ddlInvoiceNo" runat="server" CssClass="form-control" OnTextChanged="ddlInvoiceNo_TextChanged" AutoPostBack="true">
                                                         </asp:DropDownList>
                                                     </div>--%>
-                                                    <div class="col-md-2 spancls">Amount<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Amount</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtamount" onkeypress="return isNumberKey(event)" CssClass="form-control" runat="server" Width="100%" OnTextChanged="txtamount_TextChanged" AutoPostBack="true"></asp:TextBox>
                                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ErrorMessage="Please Enter Amount"
@@ -331,15 +332,54 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-2 spancls">Transaction Remark<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Transaction Remark</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtremark" CssClass="form-control" TextMode="MultiLine" runat="server" Width="100%"></asp:TextBox>
                                                     </div>
-                                                    <div class="col-md-2 spancls">Against Ref. No.<i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-2 spancls"><b>Against Ref. No.</b><i class="reqcls">&nbsp;</i> : </div>
                                                     <div class="col-md-4">
 
                                                         <asp:TextBox ID="txtagainstpi" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>
                                                         <asp:Label ID="lblpendingAdvance" runat="server" Style="color: Red; font-weight: bolder!important; font-size: large;"></asp:Label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-2 spancls"><b>TDS</b><i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-4">
+                                                        <asp:DropDownList ID="txttds" CssClass="form-control" runat="server" Width="100%" OnSelectedIndexChanged="txttds_SelectedIndexChanged" AutoPostBack="true">
+                                                            <asp:ListItem Value="0">--Select--</asp:ListItem>
+                                                            <asp:ListItem Value="0.0085">0.0085</asp:ListItem>
+                                                            <asp:ListItem Value="0.01">0.01</asp:ListItem>
+                                                            <asp:ListItem Value="0.1">0.1</asp:ListItem>
+                                                            <asp:ListItem Value="0.75">0.75</asp:ListItem>
+                                                            <asp:ListItem Value="0.76">0.76</asp:ListItem>
+                                                            <asp:ListItem Value="0.9">0.9</asp:ListItem>
+                                                            <asp:ListItem Value="1">1</asp:ListItem>
+                                                            <asp:ListItem Value="1">1</asp:ListItem>
+                                                            <asp:ListItem Value="1.01">1.01</asp:ListItem>
+                                                            <asp:ListItem Value="1.04">1.04</asp:ListItem>
+                                                            <asp:ListItem Value="1.5">1.5</asp:ListItem>
+                                                            <asp:ListItem Value="1.6">1.6</asp:ListItem>
+                                                            <asp:ListItem Value="1.7">1.7</asp:ListItem>
+                                                            <asp:ListItem Value="1.9">1.9</asp:ListItem>
+                                                            <asp:ListItem Value="2">2</asp:ListItem>
+                                                            <asp:ListItem Value="3">3</asp:ListItem>
+                                                            <asp:ListItem Value="3.161">3.161</asp:ListItem>
+                                                            <asp:ListItem Value="4">4</asp:ListItem>
+                                                            <asp:ListItem Value="5">5</asp:ListItem>
+                                                            <asp:ListItem Value="5.5">5.5</asp:ListItem>
+                                                            <asp:ListItem Value="6">6</asp:ListItem>
+                                                            <asp:ListItem Value="6.5">6.5</asp:ListItem>
+                                                            <asp:ListItem Value="7">7</asp:ListItem>
+                                                            <asp:ListItem Value="7.5">7.5</asp:ListItem>
+                                                            <asp:ListItem Value="8">8</asp:ListItem>
+                                                            <asp:ListItem Value="9">9</asp:ListItem>
+                                                            <asp:ListItem Value="10">10</asp:ListItem>
+                                                        </asp:DropDownList>
+                                                    </div>
+                                                    <div class="col-md-2 spancls"><b>On</b><i class="reqcls">&nbsp;</i> : </div>
+                                                    <div class="col-md-4">
+                                                        <asp:TextBox ID="txtbasic" CssClass="form-control" runat="server" Width="100%" ReadOnly="true" Text="Basic"></asp:TextBox>
                                                     </div>
                                                 </div>
                                                 <br />
@@ -381,7 +421,7 @@
                                                                     <asp:Label ID="footerpayble" runat="server"></asp:Label>
                                                                 </FooterTemplate>
                                                             </asp:TemplateField>
-                                                               <asp:TemplateField HeaderText="Recvd" ItemStyle-HorizontalAlign="Center">
+                                                            <asp:TemplateField HeaderText="Recvd" ItemStyle-HorizontalAlign="Center">
                                                                 <ItemTemplate>
                                                                     <asp:TextBox ID="lblratee" runat="server" Enabled="false" CssClass="gvtxtwidth" Text="0"></asp:TextBox>
                                                                 </ItemTemplate>
@@ -400,23 +440,23 @@
                                                                     <asp:Label ID="footerpaid" runat="server" Visible="true"></asp:Label>
                                                                 </FooterTemplate>
                                                             </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="TDS" ItemStyle-HorizontalAlign="Center" Visible="false">
+                                                            <asp:TemplateField HeaderText="TDS" ItemStyle-HorizontalAlign="Center">
                                                                 <ItemTemplate>
-                                                                    <asp:TextBox ID="txtgvTDS" onkeypress="return isNumberKey(event)" runat="server" CssClass="gvtxtwidth" Enabled="false" OnTextChanged="txtgvTDS_TextChanged" AutoPostBack="true" Text="0"></asp:TextBox>
+                                                                    <asp:TextBox ID="txtgvTDS" onkeypress="return isNumberKey(event)" ReadOnly="true" runat="server" CssClass="gvtxtwidth" Text="0"></asp:TextBox>
                                                                 </ItemTemplate>
                                                                 <FooterTemplate>
                                                                     <asp:Label ID="footertds" runat="server" Visible="false"></asp:Label>
                                                                 </FooterTemplate>
                                                             </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Adjust" ItemStyle-HorizontalAlign="Center" Visible="false">
+                                                            <asp:TemplateField HeaderText="Adjust" ItemStyle-HorizontalAlign="Center" Visible="false" >
                                                                 <ItemTemplate>
                                                                     <asp:TextBox ID="txtgvadjust" onkeypress="return isNumberKey(event)" runat="server" CssClass="gvtxtwidth" Enabled="false" OnTextChanged="txtgvadjust_TextChanged" AutoPostBack="true" Text="0"></asp:TextBox>
                                                                 </ItemTemplate>
                                                                 <FooterTemplate>
-                                                                    <asp:Label ID="footeradjust" runat="server" Visible="false"></asp:Label>
+                                                                    <asp:Label ID="footeradjust" runat="server" Visible="false" ></asp:Label>
                                                                 </FooterTemplate>
                                                             </asp:TemplateField>
-                                                            <asp:TemplateField HeaderText="Excess" ItemStyle-HorizontalAlign="Center" Visible="false">
+                                                            <asp:TemplateField HeaderText="Excess" ItemStyle-HorizontalAlign="Center" Visible="false" >
                                                                 <ItemTemplate>
                                                                     <asp:TextBox ID="txtgvExcess" onkeypress="return isNumberKey(event)" runat="server" OnTextChanged="txtgvExcess_TextChanged" CssClass="gvtxtwidth" Enabled="false" Text="0" AutoPostBack="true"></asp:TextBox>
                                                                 </ItemTemplate>

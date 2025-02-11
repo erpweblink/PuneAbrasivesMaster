@@ -549,6 +549,8 @@ public partial class Account_Receipt : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@Modedescription", txtmodedescription.Text);
             cmd.Parameters.AddWithValue("@postDate", txtdate.Text);
             cmd.Parameters.AddWithValue("@Against", ddlAgainst.Text);
+            cmd.Parameters.AddWithValue("@TDS", txttds.Text);
+            cmd.Parameters.AddWithValue("@TDSAgainst", txtbasic.Text);
             cmd.Parameters.AddWithValue("@Amount", txtamount.Text);
             cmd.Parameters.AddWithValue("@TransactionRemark", txtremark.Text);
             cmd.Parameters.AddWithValue("@AgainstRefNo", txtagainstpi.Text);
@@ -719,6 +721,7 @@ public partial class Account_Receipt : System.Web.UI.Page
 
             if (chk != null & chk.Checked)
             {
+               
                 var paidval = Convert.ToDouble(payable.Text) - Convert.ToDouble(Reced.Text == "" ? "0" : Reced.Text);
 
                 var pendingval = Convert.ToDouble(payable.Text) - Convert.ToDouble(Reced.Text == "" ? "0" : Reced.Text) - Convert.ToDouble(paidval.ToString());
@@ -744,7 +747,7 @@ public partial class Account_Receipt : System.Web.UI.Page
                 Totalamount.Text = payable.Text;
                 Pending.Text = pendingval.ToString();
                 SumOfTotalFooter += Convert.ToDouble(paidval.ToString());
-            
+                getTDScalculations();
 
             }
             else
@@ -1364,7 +1367,6 @@ public partial class Account_Receipt : System.Web.UI.Page
         }
     }
 
-
     protected void txtPartyName_TextChanged(object sender, EventArgs e)
     {
         //con.Open();
@@ -1382,11 +1384,105 @@ public partial class Account_Receipt : System.Web.UI.Page
         //txtPartyName.Text = dt.Rows[0]["Partyname"].ToString();
     }
 
-
-
-
     protected void Button1_Click(object sender, EventArgs e)
     {
         Response.Redirect("ReceiptList.aspx");
+    }
+
+    Double SumOfPaidFooter;
+    protected void txttds_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        getTDScalculations();
+    }
+
+    public void getTDScalculations()
+    {
+        try
+        {
+
+            foreach (GridViewRow row in Gvreceipt.Rows)
+            {
+                Label FinalBasic = (Label)row.FindControl("lblfinalbasic");
+                TextBox TDS = (TextBox)row.FindControl("txtgvTDS");
+                TextBox txtgvpaid = (TextBox)row.FindControl("txtgvpaid");
+                Label lbltotal = (Label)row.FindControl("lbltotal");
+
+                CheckBox Chkrow = (CheckBox)row.FindControl("chkRow");
+                if (Chkrow.Checked)
+                {
+                    Double TDSs = Convert.ToDouble(FinalBasic.Text) * Convert.ToDouble(txttds.Text) / 100;
+                    TDS.Text = TDSs.ToString("#.00");
+
+                    var tot = Convert.ToDecimal(txtgvpaid.Text) - Convert.ToDecimal(TDS.Text);
+
+                    txtgvpaid.Text = tot.ToString();
+                    lbltotal.Text = tot.ToString();
+
+                }
+
+                TextBox paid = (TextBox)row.FindControl("txtgvpaid");
+                // TextBox TDS = (TextBox)row.FindControl("txtgvTDS");
+                TextBox Adjust = (TextBox)row.FindControl("txtgvadjust");
+                TextBox Excess = (TextBox)row.FindControl("txtgvExcess");
+                TextBox Pending = (TextBox)row.FindControl("txtgvpending");
+                TextBox Note = (TextBox)row.FindControl("txtgvNote");
+                Label payable = (Label)row.FindControl("lblpayable");
+                Label Totalamount = (Label)row.FindControl("lbltotal");
+                Label totalfooter = (Label)Gvreceipt.FooterRow.FindControl("footertotal");
+                Label footerpaid = (Label)Gvreceipt.FooterRow.FindControl("footerpaid");
+                CheckBox chk = (CheckBox)row.FindControl("chkRow");
+
+                TextBox Reced = (TextBox)row.FindControl("lblratee");
+
+                Label lblfooterpaid = (Label)Gvreceipt.FooterRow.FindControl("footerpaid");
+
+                var tdsval = TDS.Text == "" ? "0" : TDS.Text;
+
+                var paidval = Convert.ToDouble(payable.Text) - Convert.ToDouble(Reced.Text) - Convert.ToDouble(tdsval);
+
+                if (chk != null & chk.Checked)
+                {
+
+                    paid.Enabled = true;
+                    TDS.Enabled = true;
+                    Adjust.Enabled = true;
+                    Excess.Enabled = true;
+                    Pending.Enabled = true;
+                    Note.Enabled = true;
+                    paid.Text = paidval.ToString();
+                    Totalamount.Text = (Convert.ToDecimal(payable.Text) - Convert.ToDecimal(TDS.Text == "" ? "0" : TDS.Text)).ToString();
+                    Calculation(row);
+                    //Pending.Text = finalpend.ToString();
+                    SumOfTotalFooter += Convert.ToDouble(Totalamount.Text);
+                    SumOfPaidFooter += Convert.ToDouble(paid.Text);
+
+                }
+                else
+                {
+                    paid.Enabled = false;
+                    TDS.Enabled = false;
+                    Adjust.Enabled = false;
+                    Excess.Enabled = false;
+                    Pending.Enabled = false;
+                    Note.Enabled = false;
+                    paid.Text = "0";
+                    TDS.Text = "0";
+                    Adjust.Text = "0";
+                    Excess.Text = "0";
+                    Pending.Text = "0";
+                    Note.Text = string.Empty;
+                    Totalamount.Text = "0";
+                }
+                totalfooter.Text = Math.Round(SumOfTotalFooter).ToString();
+                footerpaid.Text = Math.Round(SumOfPaidFooter).ToString();
+            }
+            //GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+            //Calculation(row);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 }

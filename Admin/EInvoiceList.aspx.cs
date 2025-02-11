@@ -1166,7 +1166,7 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
 
                     Cmd = new SqlCommand("UPDATE tblTaxInvoiceHdr SET e_invoice_cancel_status=@e_invoice_cancel_status,e_invoice_cancel_date=@e_invoice_cancel_date,e_invoice_cancel_by=@e_invoice_cancel_by WHERE Id=" + ID + "", con);
                     Cmd.Parameters.AddWithValue("@e_invoice_cancel_status", 1);
-                    Cmd.Parameters.AddWithValue("@e_invoice_cancel_date", _CancelDate);
+                    Cmd.Parameters.AddWithValue("@e_invoice_cancel_date", DateTime.Now);
                     Cmd.Parameters.AddWithValue("@e_invoice_cancel_by", Session["Username"].ToString());
                     Cmd.ExecuteNonQuery();
 

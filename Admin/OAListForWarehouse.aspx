@@ -245,7 +245,7 @@
                                             <asp:Label ID="gstno" runat="server" Text='<%#Eval("GSTNo")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="OA Date" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="PO Date" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:Label ID="PoDate" runat="server" Text='<%# Eval("PoDate", "{0:dd-MM-yyyy}") %>'></asp:Label>
                                         </ItemTemplate>

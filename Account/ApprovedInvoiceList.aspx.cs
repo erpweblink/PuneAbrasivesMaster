@@ -172,8 +172,9 @@ public partial class Account_ApprovedInvoiceList : System.Web.UI.Page
             if (e.CommandName == "RowCancel")
             {
                 Cls_Main.Conn_Open();
-                SqlCommand Cmd = new SqlCommand("UPDATE [tblTaxInvoiceHdr] SET e_invoice_cancel_status=@Status WHERE ID=@ID", Cls_Main.Conn);
+                SqlCommand Cmd = new SqlCommand("UPDATE [tblTaxInvoiceHdr] SET e_invoice_cancel_status=@Status,e_invoice_cancel_date=@Date WHERE ID=@ID", Cls_Main.Conn);
                 Cmd.Parameters.AddWithValue("@ID", Convert.ToInt32(e.CommandArgument.ToString()));
+                Cmd.Parameters.AddWithValue("@Date", DateTime.Now);
                 Cmd.Parameters.AddWithValue("@Status", 1);
                 Cmd.ExecuteNonQuery();
                 Cls_Main.Conn_Close();
