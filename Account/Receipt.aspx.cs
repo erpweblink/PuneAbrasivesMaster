@@ -56,6 +56,7 @@ public partial class Account_Receipt : System.Web.UI.Page
         {
             txtPartyName.Text = dt.Rows[0]["Partyname"].ToString();
             ddlAgainst.Text = dt.Rows[0]["Against"].ToString();
+            txttds.Text = dt.Rows[0]["TDS"].ToString();
 
             Session["AgainstVal"] = dt.Rows[0]["Against"].ToString();
 
@@ -318,6 +319,8 @@ public partial class Account_Receipt : System.Web.UI.Page
                         cmd.Parameters.AddWithValue("@TransactionMode", ddltransactionmode.Text);
                         cmd.Parameters.AddWithValue("@Modedescription", txtmodedescription.Text);
                         cmd.Parameters.AddWithValue("@postDate", txtdate.Text);
+                        cmd.Parameters.AddWithValue("@TDS", txttds.Text);
+                        cmd.Parameters.AddWithValue("@TDSAgainst", txtbasic.Text);
                         cmd.Parameters.AddWithValue("@Against", ddlAgainst.Text);
                         cmd.Parameters.AddWithValue("@Amount", txtamount.Text);
                         cmd.Parameters.AddWithValue("@TransactionRemark", txtremark.Text);
@@ -427,6 +430,8 @@ public partial class Account_Receipt : System.Web.UI.Page
                     cmd.Parameters.AddWithValue("@TransactionMode", ddltransactionmode.Text);
                     cmd.Parameters.AddWithValue("@Modedescription", txtmodedescription.Text);
                     cmd.Parameters.AddWithValue("@postDate", txtdate.Text);
+                    cmd.Parameters.AddWithValue("@TDS", txttds.Text);
+                    cmd.Parameters.AddWithValue("@TDSAgainst", txtbasic.Text);
                     cmd.Parameters.AddWithValue("@Against", ddlAgainst.Text);
                     cmd.Parameters.AddWithValue("@Amount", txtamount.Text);
                     cmd.Parameters.AddWithValue("@TransactionRemark", txtremark.Text);
