@@ -431,6 +431,20 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="GetHSNSummary">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HSN" type="xs:string" minOccurs="0" />
+              <xs:element name="Units" type="xs:string" minOccurs="0" />
+              <xs:element name="Quantity" type="xs:string" minOccurs="0" />
+              <xs:element name="Total" type="xs:string" minOccurs="0" />
+              <xs:element name="CGST" type="xs:string" minOccurs="0" />
+              <xs:element name="SGST" type="xs:string" minOccurs="0" />
+              <xs:element name="IGST" type="xs:string" minOccurs="0" />
+              <xs:element name="ALLTotal" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
   </xs:element>

@@ -26,7 +26,7 @@ public partial class Reports_SalesReport : System.Web.UI.Page
             {
 
                 GridView();
-                GetTotalSumary();
+              
             }
         }
     }
@@ -42,12 +42,16 @@ public partial class Reports_SalesReport : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
             cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            DataSet dt = new DataSet();
             sda.Fill(dt);
-            if (dt.Columns.Count > 0)
+            if (dt.Tables.Count > 0)
             {
-                GVfollowup.DataSource = dt;
+                GVfollowup.DataSource = dt.Tables[0];
                 GVfollowup.DataBind();
+
+                GvTotalSummary.DataSource = dt.Tables[1];
+                GvTotalSummary.DataBind();
+
             }
 
 
@@ -70,42 +74,6 @@ public partial class Reports_SalesReport : System.Web.UI.Page
     protected void btnresetfilter_Click(object sender, EventArgs e)
     {
         Response.Redirect(Request.RawUrl);
-    }
-
-    public void GetTotalSumary()
-    {
-        try
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                using (SqlCommand cmd = new SqlCommand("[SP_Reports]", connection))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@Action", "GetSummary"));
-                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                    DataTable Dt = new DataTable();
-                    adapter.Fill(Dt);
-                    if (Dt.Rows.Count > 0)
-                    {
-                        GvTotalSummary.DataSource = Dt;
-                        GvTotalSummary.DataBind();
-
-                    }
-
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-
-            //throw;
-            string errorMsg = "An error occurred : " + ex.Message;
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
-        }
     }
 
     protected void btnDownload_Click(object sender, EventArgs e)
@@ -151,7 +119,9 @@ public partial class Reports_SalesReport : System.Web.UI.Page
                 if (Dtt.Tables[0].Rows.Count > 0)
                 {
                     ReportDataSource obj1 = new ReportDataSource("DataSet1", Dtt.Tables[0]);
+                    ReportDataSource obj2 = new ReportDataSource("DataSet2", Dtt.Tables[1]);
                     ReportViewer1.LocalReport.DataSources.Add(obj1);
+                    ReportViewer1.LocalReport.DataSources.Add(obj2);
                     ReportViewer1.LocalReport.ReportPath = "RDLC_Reports\\SalesReport.rdlc";
                     ReportViewer1.LocalReport.Refresh();
                     //-------- Print PDF directly without showing ReportViewer ----
@@ -288,5 +258,46 @@ public partial class Reports_SalesReport : System.Web.UI.Page
     protected void txtCustomerName_TextChanged(object sender, EventArgs e)
     {
         GridView();
+    }
+
+    protected void GvTotalSummary_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.Footer)
+        {
+            decimal totalBasic = 0;
+            decimal totalCGST = 0;
+            decimal totalSGST = 0;
+            decimal totalIGST = 0;
+            decimal grandTotal = 0;
+            int TotalQuantity = 0;
+
+       
+            // Loop through the data rows to calculate the totals
+            foreach (GridViewRow row in GvTotalSummary.Rows)
+            {
+                if (row.RowType == DataControlRowType.DataRow)
+                {
+                    // Calculate the total for each column
+                    totalBasic += Convert.ToDecimal((row.FindControl("lblBasicTotal") as Label).Text);
+                    totalCGST += Convert.ToDecimal((row.FindControl("lblCGST") as Label).Text);
+                    totalSGST += Convert.ToDecimal((row.FindControl("lblSGST") as Label).Text);
+                    totalIGST += Convert.ToDecimal((row.FindControl("lblIGST") as Label).Text);
+                    grandTotal += Convert.ToDecimal((row.FindControl("lblGrandTptals") as Label).Text);
+                     TotalQuantity += Convert.ToInt32((row.FindControl("lblQty") as Label).Text);
+
+
+                }
+            }
+
+    // Display the totals in the footer labels
+    (e.Row.FindControl("totalBasicTotal") as Label).Text = totalBasic.ToString();
+            (e.Row.FindControl("totalCGST") as Label).Text = totalCGST.ToString();
+            (e.Row.FindControl("totalSGST") as Label).Text = totalSGST.ToString();
+            (e.Row.FindControl("totalIGST") as Label).Text = totalIGST.ToString();
+            (e.Row.FindControl("totalgrand") as Label).Text = grandTotal.ToString();
+            (e.Row.FindControl("totalQty") as Label).Text = TotalQuantity.ToString();
+
+           
+        }
     }
 }

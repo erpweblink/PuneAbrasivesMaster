@@ -310,7 +310,7 @@
                                     <asp:Label ID="lblOTTotal" runat="server" Text='<%#Eval("OTTotal")%>'></asp:Label>
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:Label ID="lblOTTotalBasic"   runat="server" />
+                                    <asp:Label ID="lblOTTotalBasic" runat="server" />
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Other CGST" HeaderStyle-CssClass="gvhead">
@@ -318,7 +318,7 @@
                                     <asp:Label ID="lblOTCGST" runat="server" Text='<%#Eval("OTCGST")%>'></asp:Label>
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:Label ID="lblOTTotalCGST"   runat="server" />
+                                    <asp:Label ID="lblOTTotalCGST" runat="server" />
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Other SGST" HeaderStyle-CssClass="gvhead">
@@ -326,7 +326,7 @@
                                     <asp:Label ID="lblOTSGST" runat="server" Text='<%#Eval("OTSGST")%>'></asp:Label>
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:Label ID="lblOTTotalSGST"   runat="server" />
+                                    <asp:Label ID="lblOTTotalSGST" runat="server" />
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Other IGST" HeaderStyle-CssClass="gvhead">
@@ -334,7 +334,7 @@
                                     <asp:Label ID="lblOTIGST" runat="server" Text='<%#Eval("OTIGST")%>'></asp:Label>
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <asp:Label ID="lblOTTotalIGST"  runat="server" />
+                                    <asp:Label ID="lblOTTotalIGST" runat="server" />
                                 </FooterTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Other Total" HeaderStyle-CssClass="gvhead">
@@ -361,51 +361,87 @@
 
 
             </div>
-            <div class="container-fluid">
-                <div>
-                    <div class="table-responsive text-center" runat="server">
-                        <div class="table ">
-                            <asp:GridView ID="GvTotalSummary" runat="server" AutoGenerateColumns="False" BackColor="White"
-                                BorderColor="#336699" BorderStyle="Solid" BorderWidth="1px"
-                                CellPadding="2" Font-Names="Verdana"
-                                Font-Size="12pt" Width="100%"
-                                GridLines="Both">
-                                <Columns>
-                                    <asp:TemplateField HeaderText="Basic" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblBasic" runat="server" Text='<%#Eval("TotalSumOfBasic")%>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <%--            <asp:TemplateField HeaderText="P & F" HeaderStyle-CssClass="gvhead">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblPFValue" runat="server" Text='<%#Eval("TotalSumOfPFValue")%>'></asp:Label>
-                                </ItemTemplate>
-                            </asp:TemplateField>--%>
-                                    <asp:TemplateField HeaderText="CGST" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblCGSTAmt" runat="server" Text='<%#Eval("TotalSumOfCGST")%>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="SGST" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblSGSTAmt" runat="server" Text='<%#Eval("TotalSumOfSGST")%>'></asp:Label>
-                                        </ItemTemplate>
+            <br />
 
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="IGST" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblIGSTAmt" runat="server" Text='<%#Eval("TotalSumOfIGST")%>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="TOTAL" HeaderStyle-CssClass="gvhead">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblTOTAL" runat="server" Text='<%#Eval("TotalSumOfGrandTotalFinal")%>'></asp:Label>
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                </Columns>
-                            </asp:GridView>
-                        </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-9 col-md-10">
+                        <h4 class="mt-4 ">&nbsp HSN SUMMARY REPORT</h4>
                     </div>
+                </div>
+                <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
+                    <asp:GridView ID="GvTotalSummary" runat="server" AutoGenerateColumns="False"    CssClass="grivdiv pagination-ys"
+                        CellPadding="2" Font-Names="Verdana" OnRowDataBound="GvTotalSummary_RowDataBound"
+                        Font-Size="12pt" Width="100%" ShowFooter="true"
+                        GridLines="Both">
+                        <Columns>
+                            <asp:TemplateField HeaderText="HSN Code" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("HSN") %>' ID="lblHSN" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalHSn" Text="Total : " runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Quantity" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("Quantity") %>' ID="lblQty" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalQty" runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Units" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("Units") %>' ID="lblUOM" runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="BasicTotal" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("Total") %>' ID="lblBasicTotal" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalBasicTotal" runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="CGST" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("CGST") %>' ID="lblCGST" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalCGST" runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="SGST" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("SGST") %>' ID="lblSGST" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalSGST" runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IGST" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("IGST") %>' ID="lblIGST" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalIGST" runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Garnd Total" HeaderStyle-CssClass="gvhead">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%# Eval("ALLTotal") %>' ID="lblGrandTptals" runat="server"></asp:Label>
+                                </ItemTemplate>
+                                <FooterTemplate>
+                                    <asp:Label ID="totalgrand" runat="server"></asp:Label>
+                                </FooterTemplate>
+                            </asp:TemplateField>
+
+                        </Columns>
+                        <FooterStyle Font-Bold="True" ForeColor="Yellow" HorizontalAlign="Center" />
+                    </asp:GridView>
+
                 </div>
 
 
