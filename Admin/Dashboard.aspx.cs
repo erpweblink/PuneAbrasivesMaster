@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data.SqlClient;
+﻿using Microsoft.Reporting.WebForms;
+using System;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Net.Mail;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
-using System.Web.Services;
 using System.Net;
+using System.Net.Mail;
+using System.Text;
+using System.Web.Services;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using ZXing;
 
 public partial class Admin_Dashboard : System.Web.UI.Page
 {
@@ -45,7 +41,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
 
             lblyear.Text = "YEAR(" + financialYear + ")";
             MeetingReminder();
-            //  mailsendforCustomer();
+           // mailsendforCustomer();
             ActiveUserCount(); CompanyCount(); MachineCounts(); VendorCounts(); Quotationlist(); TaxInvoicelist(); Purchaselist(); Receiptlist(); fillgridService();
             FillGrid();
             //today
@@ -67,8 +63,8 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                     FillTargetdata();
                     divsalestarget.Visible = true;
                     Updatetarget();
-                  //  DispatchReminder();//acces for testing
-                   // AccountReminder();//acces for testing
+                    //  DispatchReminder();//acces for testing
+                    // AccountReminder();//acces for testing
                 }
             }
             if (Session["Designation"].ToString() == "Sales Engineer ")
@@ -517,6 +513,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
         }
     }
 
+    byte[] bytePdfRep = null;
     private void mailsendforCustomer()
     {
         try
@@ -541,14 +538,16 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                         {
 
                             var invoiceno = obj.ItemArray[0];
-                           // PDF(Convert.ToString(invoiceno)); that code removed on 19102024
+                            // PDF(Convert.ToString(invoiceno)); that code removed on 19102024
                             var MailTO = obj.ItemArray[6];
                             string stringInvoiceNo = Convert.ToString(invoiceno).Replace("/", "-");
                             string fileName = stringInvoiceNo + "_CustomerTaxInvoice.pdf";
-                            string fromMailID = Session["EmailID"].ToString().Trim().ToLower();
+                            var fromMailID = obj.ItemArray[14].ToString();
+                           // var fromMailID = "testing@weblinkservices.net";
                             string mailTo = MailTO.ToString();
                             MailMessage mm = new MailMessage();
-                            mm.From = new MailAddress("girish.kulkarni@puneabrasives.com", fromMailID);
+                            //string strMessage = "Apologies for the confusion caused by the previous email. It was sent in error, and we would like to clarify that the earlier message regarding the ERP system testing was meant as part of our regular testing process.\r\n\r\nPlease note that the data shared may not reflect the final figures as it is part of an ongoing test. We appreciate your understanding as we continue to ensure everything is functioning correctly.\r\n\r\nThank you for your attention and cooperation, and please feel free to reach out if you have any questions.";
+                           // mm.From = new MailAddress("girish.kulkarni@puneabrasives.com", fromMailID);
                             string strMessage = "Invoice No.:" + invoiceno + "<br/>" +
                                 "Invoice Date:" + obj.ItemArray[1] + "<br/>" +
                                 "Grand total :" + obj.ItemArray[7] + "<br/>" +
@@ -563,19 +562,21 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                 "Feel free to contact us for any further queries & Clarifications." + "<br/>" +
 
                 "Kind Regards," + "<br/>" +
-                "<strong>Web Link Services Pvt Ltd.<strong>";
-                            mm.Subject = " - UPDATE - From Web Link Services Pvt Ltd.";
+                "<strong> PUNE ABRASIVES PVT. LTD.<strong>";
+                            mm.Subject = " - UPDATE - FROM PUNE ABRASIVES PVT. LTD.";
                             mm.To.Add(mailTo);
+                           // mm.To.Add("erpdeveloper3003@gmail.com");
 
                             mm.CC.Add("girish.kulkarni@puneabrasives.com");
-                            mm.CC.Add(Session["EmailID"].ToString().Trim().ToLower());
+                            mm.CC.Add(fromMailID);
+                            EInvoiceReports(Convert.ToString(invoiceno));
                             if (!string.IsNullOrEmpty(fileName))
                             {
-                                byte[] file = File.ReadAllBytes((Server.MapPath("~/PDF_Files/")) + fileName);
+                                byte[] file = bytePdfRep;
 
                                 Stream stream = new MemoryStream(file);
                                 Attachment aa = new Attachment(stream, fileName);
-                                mm.Attachments.Add(aa);
+                                 mm.Attachments.Add(aa);
                             }
                             StreamReader reader = new StreamReader(Server.MapPath("~/Templates/CommentPage_templet.html"));
                             string readFile = reader.ReadToEnd();
@@ -588,36 +589,25 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                             myString = myString.Replace("$Comment$", formattedText);
 
                             mm.Body = myString.ToString();
-
+                            mm.From = new MailAddress(ConfigurationManager.AppSettings["mailUserName"].ToLower(), fromMailID);
                             mm.IsBodyHtml = true;
-                            //SmtpClient smtp = new SmtpClient();
-                            //smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
-                            //smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
-                            //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-                            //NetworkCred.UserName = ConfigurationManager.AppSettings["mailUserName"].ToLower();
-                            //NetworkCred.Password = ConfigurationManager.AppSettings["mailUserPass"].ToString();
-
-                            //smtp.UseDefaultCredentials = false;
-                            //smtp.Credentials = NetworkCred;
-                            //smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
-                            //System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate (object s, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
-                            //{
-                            //    return true;
-                            //};                  
-
-                            // Set the "Reply-To" header to indicate the desired display address
                             mm.ReplyToList.Add(new MailAddress(fromMailID));
-                            SmtpClient SmtpMail = new SmtpClient();
-                            SmtpMail.Host = "us2.smtp.mailhostbox.com"; // Name or IP-Address of Host used for SMTP transactions  
-                            SmtpMail.Port = 25; // Port for sending the mail  
-                            SmtpMail.Credentials = new System.Net.NetworkCredential("girish.kulkarni@puneabrasives.com", "Qi#dKZN1"); // Username/password of network, if apply  
-                            SmtpMail.DeliveryMethod = SmtpDeliveryMethod.Network;
-                            SmtpMail.EnableSsl = false;
-
-                            SmtpMail.ServicePoint.MaxIdleTime = 0;
-                            SmtpMail.ServicePoint.SetTcpKeepAlive(true, 2000, 2000);
                             mm.BodyEncoding = Encoding.Default;
                             mm.Priority = MailPriority.High;
+                            SmtpClient smtp = new SmtpClient();
+                            smtp.Host = ConfigurationManager.AppSettings["Host"]; ;
+                            smtp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
+                            NetworkCredential NetworkCred = new NetworkCredential();
+                            NetworkCred.UserName = ConfigurationManager.AppSettings["mailUserName"].ToLower();
+                            NetworkCred.Password = ConfigurationManager.AppSettings["mailUserPass"].ToString();
+
+                            smtp.UseDefaultCredentials = false;
+                            smtp.Credentials = NetworkCred;
+                            smtp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, System.Security.Cryptography.X509Certificates.X509Certificate certificate, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+                            {
+                                return true;
+                            };
                             string date = Convert.ToString(obj.ItemArray[12]);
                             if (date != null && date != "")
                             {
@@ -625,9 +615,9 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                                 DateTime Todaydate = DateTime.Now.Date;
                                 if (reminderDate.AddDays(2) < Todaydate)
                                 {
-                                    SmtpMail.Send(mm);
+                                    smtp.SendMailAsync(mm);
                                     Cls_Main.Conn_Open();
-                                    SqlCommand Cmd = new SqlCommand("UPDATE [tbl_PaymentDetailsDtl] SET IsReminderMail=@IsReminderMail,Reminderdate=@Reminderdate WHERE InvoiceNo=@Invoiceno", Cls_Main.Conn);
+                                    SqlCommand Cmd = new SqlCommand("UPDATE [tblTaxInvoiceHdr] SET IsReminderMail=@IsReminderMail,Reminderdate=@Reminderdate WHERE InvoiceNo=@Invoiceno", Cls_Main.Conn);
                                     Cmd.Parameters.AddWithValue("@Invoiceno", invoiceno);
                                     Cmd.Parameters.AddWithValue("@IsReminderMail", '1');
                                     Cmd.Parameters.AddWithValue("@Reminderdate", DateTime.Now);
@@ -639,9 +629,9 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                             }
                             else
                             {
-                                SmtpMail.Send(mm);
+                                smtp.SendMailAsync(mm);
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmd = new SqlCommand("UPDATE [tbl_PaymentDetailsDtl] SET IsReminderMail=@IsReminderMail,Reminderdate=@Reminderdate WHERE InvoiceNo=@Invoiceno", Cls_Main.Conn);
+                                SqlCommand Cmd = new SqlCommand("UPDATE [tblTaxInvoiceHdr] SET IsReminderMail=@IsReminderMail,Reminderdate=@Reminderdate WHERE InvoiceNo=@Invoiceno", Cls_Main.Conn);
                                 Cmd.Parameters.AddWithValue("@Invoiceno", invoiceno);
                                 Cmd.Parameters.AddWithValue("@IsReminderMail", '1');
                                 Cmd.Parameters.AddWithValue("@Reminderdate", DateTime.Now);
@@ -650,7 +640,6 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                                 // ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('mail send succesfully') ", true);
 
                             }
-
 
                         }
 
@@ -845,7 +834,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                 this.ModalPopupHistory.Hide();
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             string errorMsg = "An error occurred : " + ex.Message;
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
@@ -1005,7 +994,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
             }
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             string errorMsg = "An error occurred : " + ex.Message;
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
@@ -1027,7 +1016,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                 oadetails.Visible = true;
                 LinkButton7.Visible = true;
             }
-           
+
 
             DataTable dt1 = new DataTable();
             SqlDataAdapter cmd1 = new SqlDataAdapter("select * from tblTaxInvoiceHdr where Status=2  AND Invoicedate BETWEEN CAST(DATEADD(DAY, -3, GETDATE()) AS DATE) AND CAST(GETDATE() AS DATE) ORDER BY CreatedOn DESC", Cls_Main.Conn);
@@ -1039,8 +1028,8 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                 taxinvoice.Visible = true;
                 LinkButton9.Visible = true;
             }
-          
-            if(dt.Rows.Count>0 || dt1.Rows.Count>0)
+
+            if (dt.Rows.Count > 0 || dt1.Rows.Count > 0)
             {
                 this.ModalPopupExtender1.Show();
             }
@@ -1049,7 +1038,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
                 this.ModalPopupExtender1.Hide();
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             string errorMsg = "An error occurred : " + ex.Message;
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
@@ -1093,7 +1082,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
         {
             Response.Redirect("../Account/TaxInvoiceList.aspx");
         }
-       
+
     }
 
     protected void LinkButton7_Click(object sender, EventArgs e)
@@ -1101,4 +1090,142 @@ public partial class Admin_Dashboard : System.Web.UI.Page
 
         Response.Redirect("../Admin/OAListForWareHouse.aspx");
     }
+
+
+    public void EInvoiceReports(string Invoiceno)
+    {
+        byte[] imageBytes = null;
+        try
+        {
+            DataTable dt1 = new DataTable();
+
+            SqlDataAdapter sad = new SqlDataAdapter("SELECT top 1 id FROM tblTaxinvoicehdr where isdeleted=0 and invoiceno='" + Invoiceno + "'", Cls_Main.Conn);
+            sad.Fill(dt1);
+            string idtax = dt1.Rows[0]["id"].ToString();
+            bytePdfRep = null;
+            DataSet Dtt = new DataSet();
+            string strConnString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(strConnString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[SP_Reports]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Action", "GetE_InvoiceDetails");
+                    cmd.Parameters.AddWithValue("@Invoiceno", idtax);
+
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                    {
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        using (DataSet ds = new DataSet())
+                        {
+                            sda.Fill(Dtt);
+
+                        }
+                    }
+                }
+            }
+
+            if (Dtt.Tables.Count > 0)
+            {
+                if (Dtt.Tables[0].Rows.Count > 0)
+                {
+                    // Genrate Qr Code For E-Invoice RDLC
+                    con.Open();
+                    string id = idtax;
+                    SqlCommand cmdQrdtl = new SqlCommand("select signedQRCode from tbltaxinvoicehdr where Id='" + id + "'", con);
+                    Object Qrdtl = cmdQrdtl.ExecuteScalar();
+                    string F_Qrdtl = Convert.ToString(Qrdtl);
+                    con.Close();
+                    if (F_Qrdtl != "")
+                    {
+                        con.Open();
+                        SqlCommand cmdAckdtl = new SqlCommand("select AckNo from tbltaxinvoicehdr where Id='" + id + "'", con);
+                        Object ACkdtl = cmdAckdtl.ExecuteScalar();
+                        string F_Ackdtl = Convert.ToString(ACkdtl);
+                        con.Close();
+                        imageBytes = GenerateQR(F_Qrdtl);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('E-Invoice Not Created. Kindly Create First..!!');", true);
+                    }
+
+                    DataTable dt = new DataTable();
+                    dt.Columns.Add("QRCodeImage", typeof(byte[]));
+                    dt.Columns.Add("Type", typeof(string));
+                    DataRow row = dt.NewRow();
+
+                    row["QRCodeImage"] = imageBytes;
+                    row["Type"] = "(ORIGINAL FOR RECIPIENT)";
+                    dt.Rows.Add(row);
+
+                    // DataTable Dt = Cls_Main.Read_Table("SELECT *,EmailID AS Email,Username AS Name FROM tbl_UserMaster  where UserCode='" + Session["UserCode"] + "'");
+                    ReportDataSource obj1 = new ReportDataSource("DataSet1", Dtt.Tables[0]);
+                    ReportDataSource obj2 = new ReportDataSource("DataSet2", Dtt.Tables[1]);
+                    ReportDataSource obj3 = new ReportDataSource("DataSet3", Dtt.Tables[2]);
+                    ReportDataSource obj4 = new ReportDataSource("DataSet4", dt);
+                    ReportViewer1.LocalReport.DataSources.Clear();
+                    ReportViewer1.LocalReport.DataSources.Add(obj1);
+                    ReportViewer1.LocalReport.DataSources.Add(obj2);
+                    ReportViewer1.LocalReport.DataSources.Add(obj3);
+                    ReportViewer1.LocalReport.DataSources.Add(obj4);
+
+                    string e_invoice_cancel_status = Dtt.Tables[0].Rows[0]["e_invoice_cancel_status"].ToString();
+                    if (e_invoice_cancel_status == true.ToString())
+                    {
+                        ReportViewer1.LocalReport.ReportPath = "RDLC_Reports\\CancelEInvoice.rdlc";
+                    }
+                    else
+                    {
+                        ReportViewer1.LocalReport.ReportPath = "RDLC_Reports\\EInvoice.rdlc";
+                    }                  
+                    ReportViewer1.LocalReport.Refresh();
+                    //-------- Print PDF directly without showing ReportViewer ----
+                    Warning[] warnings;
+                    string[] streamids;
+                    string mimeType;
+                    string encoding;
+                    string extension;
+                    bytePdfRep = ReportViewer1.LocalReport.Render("PDF", null, out mimeType, out encoding, out extension, out streamids, out warnings);
+
+
+
+                }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Record Not Found...........!')", true);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
+        }
+    }
+
+    private byte[] GenerateQR(string QR_String)
+    {
+        byte[] QrBytes = null;
+        var writer = new BarcodeWriter();
+        writer.Format = BarcodeFormat.QR_CODE;
+        var result = writer.Write(QR_String);
+        string path = Server.MapPath("~/E_Inv_QrCOde/QR_Img.jpg");
+        var barcodeBitmap = new System.Drawing.Bitmap(result);
+
+        using (MemoryStream memory = new MemoryStream())
+        {
+            using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.ReadWrite))
+            {
+
+                barcodeBitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Jpeg);
+                QrBytes = memory.ToArray();
+                fs.Write(QrBytes, 0, QrBytes.Length);
+            }
+        }
+        //img_QrCode.Visible = true;
+        //img_QrCode.ImageUrl = "~/E_Inv_QrCOde/QR_Img.jpg";
+        return QrBytes;
+    }
+
 }
