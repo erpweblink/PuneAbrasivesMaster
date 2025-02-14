@@ -142,16 +142,8 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
     {
         try
         {
-            DataTable Dt = Cls_Main.Read_Table("Select * from tbl_SalesTargetMaster where IsDeleted=0 AND Year='"+ ddlYear.SelectedItem.Text.Trim() + "' AND Month='"+ ddlMonth.SelectedItem.Text.Trim() + "' AND CustomerName='"+txtcompanyname.Text+"' AND Grade='"+txtGrade.Text+"' AND salesperson='"+ddlSalesperson.SelectedItem.Text+"'");
-            if (Dt.Rows.Count > 0)
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Already registerd please check and edit..!!')", true);
-                txtcompanyname.Text = null;
-                txtGrade.Text = null;
-                txtRate.Text = null;
-                txtQuantity.Text = null;
 
-            }
+
             if (txtRate.Text == "" || txtQuantity.Text == "")
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Kindly Enter the Data..!!')", true);
@@ -181,29 +173,43 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
                 }
                 else
                 {
+                    DataTable Dt = Cls_Main.Read_Table("Select * from tbl_SalesTargetMaster where IsDeleted=0 AND Year='" + ddlYear.SelectedItem.Text.Trim() + "' AND Month='" + ddlMonth.SelectedItem.Text.Trim() + "' AND CustomerName='" + txtcompanyname.Text + "' AND Grade='" + txtGrade.Text + "' AND salesperson='" + ddlSalesperson.SelectedItem.Text + "'");
+                    if (Dt.Rows.Count > 0)
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Already registerd please check and edit..!!')", true);
+                        txtcompanyname.Text = null;
+                        txtGrade.Text = null;
+                        txtRate.Text = null;
+                        txtQuantity.Text = null;
 
-                    Cls_Main.Conn_Open();
-                    SqlCommand Cmd = new SqlCommand("SP_SalesTargetMaster", Cls_Main.Conn);
-                    Cmd.CommandType = CommandType.StoredProcedure;
-                    Cmd.Parameters.AddWithValue("@Action", "Save");
-                    Cmd.Parameters.AddWithValue("@companyname", txtcompanyname.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@Year", ddlYear.SelectedItem.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@TargetCode", txtTargetcode.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedItem.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@Amount", hfCalculatedAmount.Value);
-                    Cmd.Parameters.AddWithValue("@Rate", txtRate.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@User", ddlSalesperson.SelectedItem.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@Grade", txtGrade.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@Quantity", txtQuantity.Text.Trim());
-                    Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    Cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
-                    Cmd.ExecuteNonQuery();
-                    Cls_Main.Conn_Close();
-                    Cls_Main.Conn_Dispose();
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Sales Target Added Successfully..!!');window.location='SalesTargetList.aspx'; ", true);
+                    }
+                    else
+                    {
+                        Cls_Main.Conn_Open();
+                        SqlCommand Cmd = new SqlCommand("SP_SalesTargetMaster", Cls_Main.Conn);
+                        Cmd.CommandType = CommandType.StoredProcedure;
+                        Cmd.Parameters.AddWithValue("@Action", "Save");
+                        Cmd.Parameters.AddWithValue("@companyname", txtcompanyname.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Year", ddlYear.SelectedItem.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@TargetCode", txtTargetcode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedItem.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Amount", hfCalculatedAmount.Value);
+                        Cmd.Parameters.AddWithValue("@Rate", txtRate.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@User", ddlSalesperson.SelectedItem.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Grade", txtGrade.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Quantity", txtQuantity.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                        Cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                        Cmd.ExecuteNonQuery();
+                        Cls_Main.Conn_Close();
+                        Cls_Main.Conn_Dispose();
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Sales Target Added Successfully..!!');window.location='SalesTargetList.aspx'; ", true);
+
+                    }
 
                 }
             }
+
         }
         catch (Exception ex)
         {

@@ -148,6 +148,19 @@ public partial class Account_AccountMasterPage : System.Web.UI.MasterPage
                         TargetMasterID.Visible = true;
                     }
                 }
+                if (MenuName == "SalesTargetList.aspx")
+                {
+                    string page1 = row["Pages"].ToString();
+                    string pageView = row["PagesView"].ToString();
+                    if (page1 == "False" && pageView == "False")
+                    {
+                        SalesTargetID.Visible = false;
+                    }
+                    else
+                    {
+                        SalesTargetID.Visible = true;
+                    }
+                }
 
                 //Sales section
                 if (MenuName == "EnquiryList.aspx")
@@ -525,7 +538,7 @@ public partial class Account_AccountMasterPage : System.Web.UI.MasterPage
 
                 //condition
 
-                if (UserListid.Visible == false && CompanyListid.Visible == false && ComponentID.Visible == false && RolelistID.Visible == false && ProductMasterListID.Visible == false && VendorMasterListid.Visible == false && TrasnportermasterID.Visible == false)
+                if (UserListid.Visible == false && CompanyListid.Visible == false && ComponentID.Visible == false && RolelistID.Visible == false && ProductMasterListID.Visible == false && VendorMasterListid.Visible == false && TrasnportermasterID.Visible == false && TargetMasterID.Visible == false && SalesTargetID.Visible == false)
                 {
                     Mastersid.Visible = false;
                 }

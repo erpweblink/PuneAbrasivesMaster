@@ -41,6 +41,7 @@ public partial class Admin_Dashboard : System.Web.UI.Page
 
             lblyear.Text = "YEAR(" + financialYear + ")";
             MeetingReminder();
+            //that mail send method sending mail for those customers whoes payment pendng
            // mailsendforCustomer();
             ActiveUserCount(); CompanyCount(); MachineCounts(); VendorCounts(); Quotationlist(); TaxInvoicelist(); Purchaselist(); Receiptlist(); fillgridService();
             FillGrid();

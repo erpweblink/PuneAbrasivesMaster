@@ -201,7 +201,7 @@
                                 <nav id="SalesReportID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Reports/SalesReport.aspx"><i class="fa fa-download"></i>&nbsp;Sales Report</a>
                                 </nav>
-                             <%--   <nav id="InventoryForAccountID" runat="server" class="sb-sidenav-menu-nested nav">
+                                <%--   <nav id="InventoryForAccountID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Reports/InventoryForAccount.aspx"><i class="fa fa-download"></i>&nbsp;Inventory Report</a>
                                 </nav>--%>
                                 <nav id="PurchaseReportID" runat="server" class="sb-sidenav-menu-nested nav">
@@ -259,7 +259,9 @@ Add Company</a>
                                 <nav id="TargetMasterID" runat="server" class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Admin/TargetList.aspx"><i class="fa fa-users"></i>&nbsp;Target Master</a>
                                 </nav>
-
+                                <nav id="SalesTargetID" runat="server" class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="../Admin/SalesTargetList.aspx"><i class="fa fa-users"></i>&nbsp;Sales Target</a>
+                                </nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Setting</div>
                             <a id="UserAuthorizationid" runat="server" class="nav-link" href="../Admin/UserAuthorization.aspx">

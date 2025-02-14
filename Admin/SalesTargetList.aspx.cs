@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Services;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -23,7 +25,9 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
             }
             else
             {
+                GetYears();
                 FillGrid();
+                
             }
         }
     }
@@ -31,13 +35,154 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
     //Fill GridView
     private void FillGrid()
     {
-        DataTable Dt = Cls_Main.Read_Table("SELECT * FROM tbl_SalesTargetMaster WHERE IsDeleted = 0 ORDER BY ID DESC");
-        GVUser.DataSource = Dt;
-        GVUser.DataBind();
+        try
+        {
+            SqlCommand cmd = new SqlCommand("SP_SalesTargetMaster", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "GetSalesTargetList");
+            cmd.Parameters.AddWithValue("@YEAR", ddlYear.SelectedValue);
+            cmd.Parameters.AddWithValue("@User", txtusername.Text);
+            cmd.Parameters.AddWithValue("@Grade", txtGrade.Text);
+            cmd.Parameters.AddWithValue("@companyname", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
+            cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataSet dt = new DataSet();
+            sda.Fill(dt);
+            if (dt.Tables.Count > 0)
+            {
+                GVSalesTarget.DataSource = dt.Tables[0];
+                GVSalesTarget.DataBind();
+
+
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            //throw ex;
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+            //ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('" + errorMsg + "') ", true);
+        }
+    }
+    public void GetYears()
+    {
+        DataTable Dt = Cls_Main.Read_Table("Select DISTINCT Year from tbl_SalesTargetMaster where IsDeleted=0");
+        if (Dt.Rows.Count > 0)
+        {
+            ddlYear.DataSource = Dt;
+            ddlYear.DataTextField = "Year";        
+            ddlYear.DataBind();
+            ddlYear.Items.Insert(0, new ListItem("--Select--", "0"));
+        }
+
+    }
+    //Search customer method
+    [ScriptMethod()]
+    [WebMethod]
+    public static List<string> GetCustomerList(string prefixText, int count)
+    {
+        return AutoFillCompanyName(prefixText);
     }
 
-   
+    public static List<string> AutoFillCompanyName(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
 
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "Select DISTINCT [Customername] from [tbl_SalesTargetMaster] where " + "Customername like @Search + '%' and IsDeleted=0";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["Customername"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
+    }
+
+    //Search Sales person method
+    [ScriptMethod()]
+    [WebMethod]
+    public static List<string> GetUserNameList(string prefixText, int count)
+    {
+        return AutoFillUserName(prefixText);
+    }
+
+    public static List<string> AutoFillUserName(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "Select DISTINCT [SalesPerson] from [tbl_SalesTargetMaster] where " + "SalesPerson like @Search + '%' and IsDeleted=0";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["SalesPerson"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
+    }
+
+    //Search Grade method
+    [ScriptMethod()]
+    [WebMethod]
+    public static List<string> GetGradeList(string prefixText, int count)
+    {
+        return AutoFillGradeName(prefixText);
+    }
+
+    public static List<string> AutoFillGradeName(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "Select DISTINCT [Grade] from [tbl_SalesTargetMaster] where " + "Grade like @Search + '%' and IsDeleted=0";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["Grade"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
+    }
     protected void btnCreate_Click(object sender, EventArgs e)
     {
         Response.Redirect("SalesTargetMaster.aspx");
@@ -63,12 +208,6 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
         }
     }
 
-    protected void GVUser_PageIndexChanging(object sender, GridViewPageEventArgs e)
-    {
-        GVUser.PageIndex = e.NewPageIndex;
-        FillGrid();
-    }
-
     protected void GVUser_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         //Authorization
@@ -90,11 +229,37 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
                 if (Dtt.Rows.Count > 0)
                 {
                     btnCreate.Visible = false;
-                    GVUser.Columns[3].Visible = false;
+                    GVSalesTarget.Columns[3].Visible = false;
                     btnEdit.Visible = false;
                     btnDelete.Visible = false;
                 }
             }
         }
+    }
+
+    protected void btnSearchData_Click(object sender, EventArgs e)
+    {
+        FillGrid();
+    }
+
+    protected void btnresetfilter_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("SalesTargetList.aspx");
+    }
+
+    protected void txtCustomerName_TextChanged(object sender, EventArgs e)
+    {
+        FillGrid();
+    }
+
+    protected void txtusername_TextChanged(object sender, EventArgs e)
+    {
+        FillGrid();
+    }
+
+    protected void txtGrade_TextChanged(object sender, EventArgs e)
+    {
+        FillGrid();
+
     }
 }
