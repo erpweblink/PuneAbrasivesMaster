@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Admin/WLSPLMaster.master" CodeFile="SalesTargetList.aspx.cs" Inherits="Admin_SalesTargetList" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Admin/WLSPLMaster.master" CodeFile="SalesTargetList.aspx.cs" EnableEventValidation="false" Inherits="Admin_SalesTargetList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -173,7 +173,27 @@
                             <div class="col-md-3">
                                 <div style="margin-top: 14px;">
                                     <asp:Label ID="lblyear" Font-Bold="true" runat="server" Text="YEAR :"></asp:Label>
-                                    <asp:DropDownList ID="ddlYear" Font-Bold="true" CssClass="form-control" runat="server"></asp:DropDownList>
+                                    <asp:DropDownList ID="ddlYear" CssClass="form-control" runat="server"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div style="margin-top: 14px;">
+                                    <asp:Label runat="server" ID="lblMonth" Font-Bold="true" class="form-label LblStyle">Month :</asp:Label>
+                                    <asp:DropDownList ID="ddlMonth" Width="100%" CssClass="form-control" runat="server">
+                                        <asp:ListItem Value="0">-- Select Month --</asp:ListItem>
+                                        <asp:ListItem Value="1">January</asp:ListItem>
+                                        <asp:ListItem Value="2">February</asp:ListItem>
+                                        <asp:ListItem Value="3">March</asp:ListItem>
+                                        <asp:ListItem Value="4">April</asp:ListItem>
+                                        <asp:ListItem Value="5">May</asp:ListItem>
+                                        <asp:ListItem Value="6">June</asp:ListItem>
+                                        <asp:ListItem Value="7">July</asp:ListItem>
+                                        <asp:ListItem Value="8">August</asp:ListItem>
+                                        <asp:ListItem Value="9">September</asp:ListItem>
+                                        <asp:ListItem Value="10">October</asp:ListItem>
+                                        <asp:ListItem Value="11">November</asp:ListItem>
+                                        <asp:ListItem Value="12">December</asp:ListItem>
+                                    </asp:DropDownList>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -228,12 +248,10 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                            </div>
-                            <div class="col-md-3">
                                 <div style="margin-top: 34px;">
                                     <asp:Button ID="btnSearchData" CssClass="btn btn-primary" OnClick="btnSearchData_Click" runat="server" Text="Search" Style="padding: 8px;" />
                                     <asp:Button ID="btnresetfilter" OnClick="btnresetfilter_Click" CssClass="btn btn-danger" runat="server" Text="Reset" Style="padding: 8px;" />
-
+                                    <asp:Button ID="btnExport" OnClick="btnExport_Click" CssClass="btn btn-success" runat="server" Text="Export" Style="padding: 8px;" />
                                 </div>
                             </div>
                         </div>
@@ -266,12 +284,22 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Month" HeaderStyle-CssClass="gvhead">
                                             <ItemTemplate>
-                                                <asp:Label ID="Month" runat="server" Text='<%#Eval("Month")%>'></asp:Label>
+                                                <asp:Label ID="Month" runat="server" Text='<%#Eval("Months")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Customer Name" HeaderStyle-CssClass="gvhead">
                                             <ItemTemplate>
                                                 <asp:Label ID="lblCustomername" runat="server" Text='<%#Eval("CustomerName")%>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
+                                            <ItemTemplate>
+                                                <asp:Label ID="avGrade" runat="server" Text='<%#Eval("Grade")%>'></asp:Label>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Sales Person" HeaderStyle-CssClass="gvhead">
+                                            <ItemTemplate>
+                                                <asp:Label ID="Salesperson" runat="server" Text='<%#Eval("SalesPerson")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="Rate" HeaderStyle-CssClass="gvhead">
@@ -289,16 +317,17 @@
                                                 <asp:Label ID="avAmount" runat="server" Text='<%#Eval("Amount")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
+                                        <asp:TemplateField HeaderText="Sale Quantity" HeaderStyle-CssClass="gvhead">
                                             <ItemTemplate>
-                                                <asp:Label ID="avGrade" runat="server" Text='<%#Eval("Grade")%>'></asp:Label>
+                                                <asp:Label ID="SaleQuantity" runat="server" Text='<%#Eval("SaleQuantity")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Sales Person" HeaderStyle-CssClass="gvhead">
+                                        <asp:TemplateField HeaderText="Sale Amount" HeaderStyle-CssClass="gvhead">
                                             <ItemTemplate>
-                                                <asp:Label ID="Salesperson" runat="server" Text='<%#Eval("SalesPerson")%>'></asp:Label>
+                                                <asp:Label ID="SaleAmount" runat="server" Text='<%#Eval("SaleAmount")%>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
+
                                         <asp:TemplateField HeaderText="ACTION" HeaderStyle-CssClass="gvhead">
                                             <ItemTemplate>
                                                 <asp:LinkButton ID="btnEdit" runat="server" Height="27px" CausesValidation="false" CommandName="RowEdit" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
@@ -312,5 +341,8 @@
                     </div>
                 </div>
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnExport" />
+        </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

@@ -63,13 +63,14 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
         {
             btnsave.Text = "Update";
             ddlYear.SelectedItem.Text = Dt.Rows[0]["Year"].ToString();
-            ddlMonth.SelectedItem.Text = Dt.Rows[0]["Month"].ToString();
+            ddlMonth.SelectedValue = Dt.Rows[0]["Month"].ToString();
             ddlSalesperson.SelectedItem.Text = Dt.Rows[0]["SalesPerson"].ToString();
             txtRate.Text = Dt.Rows[0]["Rate"].ToString();
             txtcompanyname.Text = Dt.Rows[0]["Customername"].ToString();
             txtGrade.Text = Dt.Rows[0]["Grade"].ToString();
             txtQuantity.Text = Dt.Rows[0]["Quantity"].ToString();
             txtamount.Text = Dt.Rows[0]["Amount"].ToString();
+            hfCalculatedAmount.Value= Dt.Rows[0]["Amount"].ToString();
             txtTargetcode.Text = Dt.Rows[0]["TargetCode"].ToString();
 
 
@@ -192,7 +193,7 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
                         Cmd.Parameters.AddWithValue("@companyname", txtcompanyname.Text.Trim());
                         Cmd.Parameters.AddWithValue("@Year", ddlYear.SelectedItem.Text.Trim());
                         Cmd.Parameters.AddWithValue("@TargetCode", txtTargetcode.Text.Trim());
-                        Cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedItem.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedValue);
                         Cmd.Parameters.AddWithValue("@Amount", hfCalculatedAmount.Value);
                         Cmd.Parameters.AddWithValue("@Rate", txtRate.Text.Trim());
                         Cmd.Parameters.AddWithValue("@User", ddlSalesperson.SelectedItem.Text.Trim());
@@ -277,7 +278,7 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "Select DISTINCT [ProductName] from [tbl_productmaster] where " + "ProductName like @Search + '%' and IsDeleted=0";
+                com.CommandText = "Select DISTINCT [Grade] from [tbl_ComponentMaster] where " + "Grade like @Search + '%' and IsDeleted=0";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -287,7 +288,7 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
                 {
                     while (sdr.Read())
                     {
-                        countryNames.Add(sdr["ProductName"].ToString());
+                        countryNames.Add(sdr["Grade"].ToString());
                     }
                 }
                 con.Close();

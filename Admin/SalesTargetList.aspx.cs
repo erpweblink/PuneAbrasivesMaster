@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.Script.Services;
 using System.Web.Services;
@@ -27,7 +27,7 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
             {
                 GetYears();
                 FillGrid();
-                
+
             }
         }
     }
@@ -41,6 +41,7 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@Action", "GetSalesTargetList");
             cmd.Parameters.AddWithValue("@YEAR", ddlYear.SelectedValue);
+            cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedItem.Text);
             cmd.Parameters.AddWithValue("@User", txtusername.Text);
             cmd.Parameters.AddWithValue("@Grade", txtGrade.Text);
             cmd.Parameters.AddWithValue("@companyname", txtCustomerName.Text);
@@ -73,9 +74,9 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
         if (Dt.Rows.Count > 0)
         {
             ddlYear.DataSource = Dt;
-            ddlYear.DataTextField = "Year";        
+            ddlYear.DataTextField = "Year";
             ddlYear.DataBind();
-            ddlYear.Items.Insert(0, new ListItem("--Select--", "0"));
+            ddlYear.Items.Insert(0, new ListItem("-- Select Year --", "0"));
         }
 
     }
@@ -262,4 +263,58 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
         FillGrid();
 
     }
+
+    public override void VerifyRenderingInServerForm(Control control)
+    {
+        //required to avoid the run time error "
+        //Control 'GridView1' of type 'Grid View' must be placed inside a form tag with runat=server."
+    }
+
+    protected void btnExport_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            SqlCommand cmd = new SqlCommand("SP_SalesTargetMaster", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Action", "GetSalesTargetList");
+            cmd.Parameters.AddWithValue("@YEAR", ddlYear.SelectedValue);
+            cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedItem.Text);
+            cmd.Parameters.AddWithValue("@User", txtusername.Text);
+            cmd.Parameters.AddWithValue("@Grade", txtGrade.Text);
+            cmd.Parameters.AddWithValue("@companyname", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
+            cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            if (dt.Columns.Count > 0)
+            {
+
+                Response.Clear();
+                Response.Buffer = true;
+                Response.ClearContent();
+                Response.ClearHeaders();
+                Response.Charset = "";
+                string FileName = "SalesTarget_List_" + DateTime.Now + ".xls";
+                StringWriter strwritter = new StringWriter();
+                HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.ContentType = "application/vnd.ms-excel";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+
+                GVSalesTarget.DataSource = dt;
+                GVSalesTarget.DataBind();
+                GVSalesTarget.GridLines = GridLines.Both;
+                GVSalesTarget.HeaderStyle.Font.Bold = true;
+                GVSalesTarget.RenderControl(htmltextwrtter);
+
+
+                Response.Write(strwritter.ToString());
+                Response.End();
+
+            }
+        }
+        catch (Exception ex) { }
+    }
+  
 }
