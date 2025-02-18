@@ -1,18 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+
 
 
 public partial class Admin_CompanyMaster : System.Web.UI.Page
@@ -38,9 +35,16 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                 ViewState["ContactDetails"] = Dt_Component;
 
                 ViewState["RowNo"] = 0;
-                DataTable dt = new DataTable();
-                dt.Columns.AddRange(new DataColumn[5] { new DataColumn("id"), new DataColumn("ShippingAddress"), new DataColumn("ShipLocation"), new DataColumn("ShipPincode"), new DataColumn("ShipStatecode") });
-                ViewState["AddressData"] = dt;
+                DataTable dtb = new DataTable();
+                dtb.Columns.AddRange(new DataColumn[6] { new DataColumn("id"), new DataColumn("BillAddress"), new DataColumn("BillLocation"), new DataColumn("BillPincode"), new DataColumn("BillState"), new DataColumn("GSTNo") });
+                ViewState["BillDetails"] = dtb;
+
+
+                ViewState["RowNo"] = 0;
+                DataTable dtS = new DataTable();
+                dtS.Columns.AddRange(new DataColumn[6] { new DataColumn("id"), new DataColumn("ShippingAddress"), new DataColumn("ShipLocation"), new DataColumn("ShipPincode"), new DataColumn("ShipState"), new DataColumn("ShipGSTNo") });
+                ViewState["ShipDetails"] = dtS;
+
 
                 FillddlState();
                 CompanyCode();
@@ -66,17 +70,17 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
         {
-            ddlBStateCode.DataSource = dt;
-            ddlBStateCode.DataValueField = "StateCode";
-            ddlBStateCode.DataTextField = "StateName";
-            ddlBStateCode.DataBind();
-            ddlBStateCode.Items.Insert(0, "-- Select State --");
+            ddlBState.DataSource = dt;
+            ddlBState.DataValueField = "statecode";
+            ddlBState.DataTextField = "statename";
+            ddlBState.DataBind();
+            ddlBState.Items.Insert(0, "-- select state --");
 
-            ddlSStatecode.DataSource = dt;
-            ddlSStatecode.DataValueField = "StateCode";
-            ddlSStatecode.DataTextField = "StateName";
-            ddlSStatecode.DataBind();
-            ddlSStatecode.Items.Insert(0, "-- Select State --");
+            ddlSState.DataSource = dt;
+            ddlSState.DataValueField = "StateCode";
+            ddlSState.DataTextField = "StateName";
+            ddlSState.DataBind();
+            ddlSState.Items.Insert(0, "-- Select State --");
         }
     }
     private void fillddlCountryCode()
@@ -123,7 +127,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
             txtcompanycode.Text = Dt.Rows[0]["CompanyCode"].ToString();
             txtPrimaryEmail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
             txtSecondaryemailid.Text = Dt.Rows[0]["SecondaryEmailID"].ToString();
-            txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
+            //  txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
             if (Dt.Rows[0]["GSTno"].ToString() == "URP")
             {
                 contry.Visible = true;
@@ -139,43 +143,58 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
             txtWebsiteLink.Text = Dt.Rows[0]["WebsiteLink"].ToString();
             TxtCreditLimit.Text = Dt.Rows[0]["creditlimit"].ToString();
             ddlTypeofSupply.SelectedValue = Dt.Rows[0]["E_inv_Typeof_supply"].ToString();
-            ddlSStatecode.SelectedValue = Dt.Rows[0]["Shipping_statecode"].ToString();
-            ddlBStateCode.SelectedValue = Dt.Rows[0]["Billing_statecode"].ToString();
             ddlCountryCode.SelectedValue = Dt.Rows[0]["CountryCode"].ToString();
-            txtBillingAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
-            txtshippingaddress.Text = Dt.Rows[0]["Shippingaddress"].ToString();
-            txtbillinglocation.Text = Dt.Rows[0]["Billinglocation"].ToString();
-            txtshippinglocation.Text = Dt.Rows[0]["Shippinglocation"].ToString();
             txtBPincode.Text = Dt.Rows[0]["Billingpincode"].ToString();
-            txtSPincode.Text = Dt.Rows[0]["Shippingpincode"].ToString();
             txtPaymentTerm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
             lblPath1.Text = Dt.Rows[0]["VisitingCardPath"].ToString(); FileUpload1.Enabled = true;
-            BindAddressGrid(ID);
-            //ShowDtlEdit();
+            BindBillingAddressGrid(ID);
+            BindShippingAddressGrid(ID);
         }
     }
 
-    private void BindAddressGrid(string id)
+    private void BindShippingAddressGrid(string id)
     {
         ViewState["RowNo"] = 0;
         DataTable Dtproduct = new DataTable();
         SqlDataAdapter Daa = new SqlDataAdapter("SELECT * FROM tbl_ShippingAddress WHERE c_id='" + id + "' ", con);
         Daa.Fill(Dtproduct);
         ViewState["RowNo"] = (int)ViewState["RowNo"] + 1;
-        DataTable Dt = ViewState["AddressData"] as DataTable;
+        DataTable Dt = ViewState["ShipDetails"] as DataTable;
         //int count = 1;
         if (Dtproduct.Rows.Count > 0)
         {
             for (int i = 0; i < Dtproduct.Rows.Count; i++)
             {
-                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["ShippingAddress"].ToString(), Dtproduct.Rows[i]["ShipLocation"].ToString(), Dtproduct.Rows[i]["ShipPincode"].ToString(), Dtproduct.Rows[i]["ShipStatecode"].ToString());
+                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["ShippingAddress"].ToString(), Dtproduct.Rows[i]["ShipLocation"].ToString(), Dtproduct.Rows[i]["ShipPincode"].ToString(), Dtproduct.Rows[i]["ShipStatecode"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
                 //count = count + 1;
-                ViewState["AddressData"] = Dt;
+                ViewState["ShipDetails"] = Dt;
             }
         }
 
-        GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-        GVShippingAddress.DataBind();
+        GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"];
+        GVSAddress.DataBind();
+    }
+    private void BindBillingAddressGrid(string id)
+    {
+        ViewState["RowNo"] = 0;
+        DataTable Dtproduct = new DataTable();
+        SqlDataAdapter Daa = new SqlDataAdapter("SELECT * FROM tbl_BillingAddress WHERE c_id='" + id + "' ", con);
+        Daa.Fill(Dtproduct);
+        ViewState["RowNo"] = (int)ViewState["RowNo"] + 1;
+        DataTable Dt = ViewState["BillDetails"] as DataTable;
+        //int count = 1;
+        if (Dtproduct.Rows.Count > 0)
+        {
+            for (int i = 0; i < Dtproduct.Rows.Count; i++)
+            {
+                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["BillAddress"].ToString(), Dtproduct.Rows[i]["BillLocation"].ToString(), Dtproduct.Rows[i]["BillPincode"].ToString(), Dtproduct.Rows[i]["BillStatecode"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
+                //count = count + 1;
+                ViewState["BillDetails"] = Dt;
+            }
+        }
+
+        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+        GVBAddress.DataBind();
     }
 
     protected void btnsave_Click(object sender, EventArgs e)
@@ -193,7 +212,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
                 if (dgvContactDetails.Rows.Count > 0)
                 {
-                    if (GVShippingAddress.Rows.Count > 0)
+                    if (GVBAddress.Rows.Count > 0 && GVSAddress.Rows.Count > 0)
                     {
 
                         if (btnsave.Text == "Update")
@@ -234,13 +253,13 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             Cmd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
                             Cmd.Parameters.AddWithValue("@TypeofSupply", ddlTypeofSupply.SelectedValue);
                             Cmd.Parameters.AddWithValue("@CreditLimit", TxtCreditLimit.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
+                            //  Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
                             // Cmd.Parameters.AddWithValue("@SState", ddlSStatecode.SelectedValue);
                             //Cmd.Parameters.AddWithValue("@Area", txtArea.Text.Trim());
                             Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
                             Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
                             Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
+                            //  Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
                             Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
                             Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
                             Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
@@ -249,11 +268,11 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             Cmd.Parameters.AddWithValue("@Countrycode", ddlCountryCode.SelectedValue);
                             Cmd.Parameters.AddWithValue("@Paymentterm", txtPaymentTerm.Text);
                             //Cmd.Parameters.AddWithValue("@VisitingCardPath", PathH);
-                            Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
+                            //  Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
+                            //  Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
                             Cmd.Parameters.AddWithValue("@BillingPincode", txtBPincode.Text.Trim());
                             //  Cmd.Parameters.AddWithValue("@ShippingPincode", txtSPincode.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
+                            //  Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
                             //  Cmd.Parameters.AddWithValue("@shippinglocation", txtshippinglocation.Text.Trim());
                             Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
                             Cmd.Parameters.AddWithValue("@IsDeleted", '0');
@@ -298,25 +317,52 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             //DataTable Dtt = new DataTable();
                             //SqlDataAdapter Daa = new SqlDataAdapter("SELECT * FROM tbl_ShippingAddress WHERE c_id ='" + hhd.Value + "'", Cls_Main.Conn);
                             //Daa.Fill(Dtt);
+
                             Cls_Main.Conn_Open();
-                            SqlCommand cmddelete1 = new SqlCommand("DELETE FROM tbl_ShippingAddress WHERE c_id=@c_id", Cls_Main.Conn);
+                            SqlCommand cmddelete1 = new SqlCommand("DELETE FROM tbl_BillingAddress WHERE c_id=@c_id", Cls_Main.Conn);
                             cmddelete1.Parameters.AddWithValue("@c_id", hhd.Value);
                             cmddelete1.ExecuteNonQuery();
                             Cls_Main.Conn_Close();
-
-                            foreach (GridViewRow g2 in GVShippingAddress.Rows)
+                            foreach (GridViewRow g2 in GVBAddress.Rows)
                             {
-                                string Location = (g2.FindControl("lblSLocation") as Label).Text;
-                                string ShipingAddress = (g2.FindControl("lblshippingaddress") as Label).Text;
-                                string Pincode = (g2.FindControl("lblSPincode") as Label).Text;
-                                string StateCode = (g2.FindControl("lblSStateCode") as Label).Text;
+                                string BillAddress = (g2.FindControl("lblBillAddress") as Label).Text;
+                                string BillLocation = (g2.FindControl("lblBillLocation") as Label).Text;
+                                string BillPincode = (g2.FindControl("lblBillPincode") as Label).Text;
+                                string BillState = (g2.FindControl("lblBillState") as Label).Text;
+                                string BGSTno = (g2.FindControl("lblBGSTno") as Label).Text;
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode]) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode)", Cls_Main.Conn);
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_BillingAddress ([c_id],[BillLocation],[BillAddress],[BillPincode],[BillStatecode],GSTNo) VALUES (@c_id,@BillLocation,@BillAddress,@BillPincode,@BillStatecode,@BGSTno)", Cls_Main.Conn);
                                 Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
-                                Cmdd.Parameters.AddWithValue("@ShipLocation", Location);
-                                Cmdd.Parameters.AddWithValue("@ShippingAddress", ShipingAddress);
-                                Cmdd.Parameters.AddWithValue("@ShipPincode", Pincode);
-                                Cmdd.Parameters.AddWithValue("@ShipStatecode", StateCode);
+                                Cmdd.Parameters.AddWithValue("@BillLocation", BillLocation);
+                                Cmdd.Parameters.AddWithValue("@BillAddress", BillAddress);
+                                Cmdd.Parameters.AddWithValue("@BillPincode", BillPincode);
+                                Cmdd.Parameters.AddWithValue("@BillStatecode", BillState);
+                                Cmdd.Parameters.AddWithValue("@BGSTno", BGSTno);
+                                Cmdd.ExecuteNonQuery();
+                                Cls_Main.Conn_Close();
+
+                            }
+
+                            Cls_Main.Conn_Open();
+                            SqlCommand cmddelete2 = new SqlCommand("DELETE FROM tbl_ShippingAddress WHERE c_id=@c_id", Cls_Main.Conn);
+                            cmddelete2.Parameters.AddWithValue("@c_id", hhd.Value);
+                            cmddelete2.ExecuteNonQuery();
+                            Cls_Main.Conn_Close();
+                            foreach (GridViewRow g2 in GVSAddress.Rows)
+                            {
+                                string ShipAddress = (g2.FindControl("lblShipAddress") as Label).Text;
+                                string ShipLocation = (g2.FindControl("lblShipLocation") as Label).Text;
+                                string ShipPincode = (g2.FindControl("lblShipPincode") as Label).Text;
+                                string ShipState = (g2.FindControl("lblShipState") as Label).Text;
+                                string SGSTno = (g2.FindControl("lblSGSTno") as Label).Text;
+                                Cls_Main.Conn_Open();
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode],GSTNo) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode,@SGSTno)", Cls_Main.Conn);
+                                Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
+                                Cmdd.Parameters.AddWithValue("@ShipLocation", ShipLocation);
+                                Cmdd.Parameters.AddWithValue("@ShippingAddress", ShipAddress);
+                                Cmdd.Parameters.AddWithValue("@ShipPincode", ShipPincode);
+                                Cmdd.Parameters.AddWithValue("@ShipStatecode", ShipState);
+                                Cmdd.Parameters.AddWithValue("@SGSTno", SGSTno);
                                 Cmdd.ExecuteNonQuery();
                                 Cls_Main.Conn_Close();
 
@@ -332,7 +378,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             if (Request.QueryString["OAID"] != null)
                             {
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!'); ", true);
-                                Response.Redirect("AddCustomerPO.aspx?OAID=" +objcls.encrypt(txtcompanyname.Text)+ "");
+                                Response.Redirect("AddCustomerPO.aspx?OAID=" + objcls.encrypt(txtcompanyname.Text) + "");
 
                             }
                             else
@@ -373,13 +419,13 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             Cmd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
                             Cmd.Parameters.AddWithValue("@TypeofSupply", ddlTypeofSupply.SelectedValue);
                             Cmd.Parameters.AddWithValue("@CreditLimit", TxtCreditLimit.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
+                            // Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
                             Cmd.Parameters.AddWithValue("@Countrycode", ddlCountryCode.SelectedValue);
                             Cmd.Parameters.AddWithValue("@SState", DBNull.Value);
                             Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
                             Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
                             Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
+                            //Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
                             Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
                             Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
                             Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
@@ -387,11 +433,11 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             Cmd.Parameters.AddWithValue("@WebsiteLink", txtWebsiteLink.Text.Trim());
                             Cmd.Parameters.AddWithValue("@VisitingCardPath", PathH);
                             Cmd.Parameters.AddWithValue("@Paymentterm", txtPaymentTerm.Text);
-                            Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
+                            //   Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
+                            //  Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
                             Cmd.Parameters.AddWithValue("@BillingPincode", txtBPincode.Text.Trim());
                             Cmd.Parameters.AddWithValue("@ShippingPincode", DBNull.Value);
-                            Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
+                            //  Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippinglocation", DBNull.Value);
                             Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                             Cmd.Parameters.AddWithValue("@IsDeleted", '0');
@@ -406,20 +452,40 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
                                 hhd.Value = Dt.Rows[0]["ID"].ToString();
                             }
-
-                            foreach (GridViewRow g2 in GVShippingAddress.Rows)
+                            foreach (GridViewRow g2 in GVBAddress.Rows)
                             {
-                                string Location = (g2.FindControl("lblSLocation") as Label).Text;
-                                string ShipingAddress = (g2.FindControl("lblshippingaddress") as Label).Text;
-                                string Pincode = (g2.FindControl("lblSPincode") as Label).Text;
-                                string StateCode = (g2.FindControl("lblSStateCode") as Label).Text;
+                                string BillAddress = (g2.FindControl("lblBillAddress") as Label).Text;
+                                string BillLocation = (g2.FindControl("lblBillLocation") as Label).Text;
+                                string BillPincode = (g2.FindControl("lblBillPincode") as Label).Text;
+                                string BillState = (g2.FindControl("lblBillState") as Label).Text;
+                                string BGSTno = (g2.FindControl("lblBGSTno") as Label).Text;
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode]) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode)", Cls_Main.Conn);
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_BillingAddress ([c_id],[BillLocation],[BillAddress],[BillPincode],[BillStatecode],GSTNo) VALUES (@c_id,@BillLocation,@BillAddress,@BillPincode,@BillStatecode,@BGSTno)", Cls_Main.Conn);
                                 Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
-                                Cmdd.Parameters.AddWithValue("@ShipLocation", Location);
-                                Cmdd.Parameters.AddWithValue("@ShippingAddress", ShipingAddress);
-                                Cmdd.Parameters.AddWithValue("@ShipPincode", Pincode);
-                                Cmdd.Parameters.AddWithValue("@ShipStatecode", StateCode);
+                                Cmdd.Parameters.AddWithValue("@BillLocation", BillLocation);
+                                Cmdd.Parameters.AddWithValue("@BillAddress", BillAddress);
+                                Cmdd.Parameters.AddWithValue("@BillPincode", BillPincode);
+                                Cmdd.Parameters.AddWithValue("@BillStatecode", BillState);
+                                Cmdd.Parameters.AddWithValue("@BGSTno", BGSTno);
+                                Cmdd.ExecuteNonQuery();
+                                Cls_Main.Conn_Close();
+
+                            }
+                            foreach (GridViewRow g2 in GVSAddress.Rows)
+                            {
+                                string ShipAddress = (g2.FindControl("lblShipAddress") as Label).Text;
+                                string ShipLocation = (g2.FindControl("lblShipLocation") as Label).Text;
+                                string ShipPincode = (g2.FindControl("lblShipPincode") as Label).Text;
+                                string ShipState = (g2.FindControl("lblShipState") as Label).Text;
+                                string SGSTno = (g2.FindControl("lblSGSTno") as Label).Text;
+                                Cls_Main.Conn_Open();
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode],GSTNo) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode,@SGSTno)", Cls_Main.Conn);
+                                Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
+                                Cmdd.Parameters.AddWithValue("@ShipLocation", ShipLocation);
+                                Cmdd.Parameters.AddWithValue("@ShippingAddress", ShipAddress);
+                                Cmdd.Parameters.AddWithValue("@ShipPincode", ShipPincode);
+                                Cmdd.Parameters.AddWithValue("@ShipStatecode", ShipState);
+                                Cmdd.Parameters.AddWithValue("@SGSTno", SGSTno);
                                 Cmdd.ExecuteNonQuery();
                                 Cls_Main.Conn_Close();
 
@@ -456,12 +522,13 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
 
                         }
+
+
                     }
                     else
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Add Shipping Address..!!'); ", true);
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Fill Atleast One Address..!!'); ", true);
                     }
-
                 }
                 else
                 {
@@ -506,34 +573,6 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
     {
         Response.Redirect("CompanyMasterList.aspx", true);
     }
-
-    private void Show_Grid()
-    {
-        DataTable Dt = (DataTable)ViewState["ContactDetails"];
-        Dt.Rows.Add(ViewState["RowNo"], txtname.Text.Trim(), txtmobile.Text.Trim(), txtemaili.Text.Trim(), txtDepartment.Text.Trim(), txtdesignation.Text.Trim());
-        ViewState["ContactDetails"] = Dt;
-        txtDepartment.Text = string.Empty;
-        txtname.Text = string.Empty;
-        txtmobile.Text = string.Empty;
-        txtemaili.Text = string.Empty;
-        txtdesignation.Text = string.Empty;
-        dgvContactDetails.DataSource = (DataTable)ViewState["ContactDetails"];
-        dgvContactDetails.DataBind();
-    }
-
-    protected void btnAddMore_Click(object sender, EventArgs e)
-    {
-        btnsave.Focus();
-        if (txtname.Text == "" || txtmobile.Text == "" || txtemaili.Text == "")
-        {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill Contact Information  !!!');", true);
-        }
-        else
-        {
-            Show_Grid();
-        }
-    }
-
     protected void ShowDtlEdit()
     {
         SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM [tbl_CompanyContactDetails] WHERE CompanyCode='" + txtcompanycode.Text + "'", Cls_Main.Conn);
@@ -560,6 +599,44 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         dgvContactDetails.DataBind();
     }
 
+    //Add contact person details
+    protected void btnAddMore_Click(object sender, EventArgs e)
+    {
+        btnsave.Focus();
+        if (txtname.Text == "" || txtmobile.Text == "" || txtemaili.Text == "")
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill Contact Information  !!!');", true);
+        }
+        else
+        {
+            Show_Grid();
+        }
+    }
+
+    private void Show_Grid()
+    {
+        DataTable Dt = (DataTable)ViewState["ContactDetails"];
+        Dt.Rows.Add(ViewState["RowNo"], txtname.Text.Trim(), txtmobile.Text.Trim(), txtemaili.Text.Trim(), txtDepartment.Text.Trim(), txtdesignation.Text.Trim());
+        ViewState["ContactDetails"] = Dt;
+        txtDepartment.Text = string.Empty;
+        txtname.Text = string.Empty;
+        txtmobile.Text = string.Empty;
+        txtemaili.Text = string.Empty;
+        txtdesignation.Text = string.Empty;
+        dgvContactDetails.DataSource = (DataTable)ViewState["ContactDetails"];
+        dgvContactDetails.DataBind();
+    }
+    protected void lnkbtnDelete_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+        DataTable dt = ViewState["ContactDetails"] as DataTable;
+        dt.Rows.Remove(dt.Rows[row.RowIndex]);
+        ViewState["ContactDetails"] = dt;
+        dgvContactDetails.DataSource = (DataTable)ViewState["ContactDetails"];
+        dgvContactDetails.DataBind();
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Contact Details Delete Succesfully !!!');", true);
+        //  ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
+    }
     protected void gv_cancel_Click(object sender, EventArgs e)
     {
         GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
@@ -585,24 +662,12 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         //  ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
     }
 
-    protected void lnkbtnDelete_Click(object sender, EventArgs e)
-    {
-        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-        DataTable dt = ViewState["AddressData"] as DataTable;
-        dt.Rows.Remove(dt.Rows[row.RowIndex]);
-        ViewState["AddressData"] = dt;
-        GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-        GVShippingAddress.DataBind();
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Address Delete Succesfully !!!');", true);
-        //  ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
-    }
-
     protected void dgvContactDetails_RowEditing(object sender, GridViewEditEventArgs e)
     {
         dgvContactDetails.EditIndex = e.NewEditIndex;
         dgvContactDetails.DataSource = (DataTable)ViewState["ContactDetails"];
         dgvContactDetails.DataBind();
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
+        // ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
     }
 
     protected void gv_update_Click(object sender, EventArgs e)
@@ -626,233 +691,120 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         dgvContactDetails.EditIndex = -1;
         dgvContactDetails.DataSource = (DataTable)ViewState["ContactDetails"];
         dgvContactDetails.DataBind();
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
+        // ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
     }
 
     protected void check_addresss_CheckedChanged(object sender, EventArgs e)
     {
         if (check_addresss.Checked == true)
         {
-            txtshippingaddress.Text = txtBillingAddress.Text;
-            txtshippinglocation.Text = txtbillinglocation.Text;
-            ddlSStatecode.SelectedValue = ddlBStateCode.SelectedValue;
-            txtSPincode.Text = txtBPincode.Text;
+            GridViewRow row = (sender as CheckBox).NamingContainer as GridViewRow;
+
+            DataTable dt = ViewState["BillDetails"] as DataTable;
+
+            if (dt != null)
+            {
+                DataTable shipDetails = ViewState["ShipDetails"] as DataTable;
+                ViewState["RowNo"] = (int)ViewState["RowNo"] + 1;
+
+                // Loop through each row in BillDetails and add to ShipDetails
+                foreach (DataRow row1 in dt.Rows)
+                {
+                    DataRow newRow = shipDetails.NewRow();
+                    newRow["id"] = ViewState["RowNo"];
+                    newRow["ShippingAddress"] = row1["BillAddress"].ToString();
+                    newRow["ShipLocation"] = row1["BillLocation"].ToString();
+                    newRow["ShipPincode"] = row1["BillPincode"].ToString();
+                    newRow["ShipState"] = row1["BillState"].ToString();
+                    newRow["ShipGSTNo"] = row1["gstno"].ToString(); // If required for Shipping as well
+
+                    shipDetails.Rows.Add(newRow);
+                }
+                ViewState["ShipDetails"] = shipDetails;
+                GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"]; ;
+                GVSAddress.DataBind();
+            }
         }
     }
-
-
 
     protected void ddlTypeofSupply_TextChanged(object sender, EventArgs e)
     {
-        try
-        {
-            if (ddlTypeofSupply.SelectedItem.Text == "EXPWOP")
-            {
-                fillddlCountryCode();
-                txtgstno.Text = "URP"; txtgstno.Enabled = false;
-                txtBPincode.Text = "999999"; ddlBStateCode.SelectedItem.Text = "96"; txtBPincode.Enabled = false; ddlBStateCode.Enabled = false;
+        //    try
+        //    {
+        //        if (ddlTypeofSupply.SelectedItem.Text == "EXPWOP")
+        //        {
+        //            fillddlCountryCode();
+        //            txtgstno.Text = "URP"; txtgstno.Enabled = false;
+        //            txtBPincode.Text = "999999"; ddlBStateCode.SelectedItem.Text = "96"; txtBPincode.Enabled = false; ddlBStateCode.Enabled = false;
 
-                contry.Visible = true;
-            }
-            else
-            {
-                txtgstno.Text = ""; txtgstno.Enabled = true;
-                txtBPincode.Text = ""; txtBPincode.Enabled = true; ddlBStateCode.Enabled = true;
+        //            contry.Visible = true;
+        //        }
+        //        else
+        //        {
+        //            txtgstno.Text = ""; txtgstno.Enabled = true;
+        //            txtBPincode.Text = ""; txtBPincode.Enabled = true; ddlBStateCode.Enabled = true;
 
-                contry.Visible = false;
-            }
-        }
-        catch (Exception ex)
-        {
-            string errorMsg = "An error occurred : " + ex.Message;
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
-        }
+        //            contry.Visible = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string errorMsg = "An error occurred : " + ex.Message;
+        //        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
+        //    }
     }
 
-    protected void txtgstno_TextChanged(object sender, EventArgs e)
-    {
-        try
-        {
-            if (hhd.Value == "")
-            {
+    //protected void txtgstno_TextChanged(object sender, EventArgs e)
+    // {
+    //try
+    //{
+    //    if (hhd.Value == "")
+    //    {
+    //        Cls_Main.Conn_Open();
+    //        int count = 0;
+    //        SqlCommand cmd = new SqlCommand("SELECT Count(*) FROM tbl_CompanyMaster where GSTno='" + txtgstno.Text.Trim() + "'", Cls_Main.Conn);
+    //        count = Convert.ToInt16(cmd.ExecuteScalar());
+    //        Cls_Main.Conn_Close();
+    //        if (count > 0)
+    //        {
+    //            txtBGST.Text = "";
+    //            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Same GST number Company already available...!');", true);
+    //        }
+    //        else
+    //        {
+    //            string gstNumber = txtBGST.Text.Trim();
+    //            string pattern = @"^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}$";
 
+    //            if (System.Text.RegularExpressions.Regex.IsMatch(gstNumber, pattern))
+    //            {
+    //                string stateCode = gstNumber.Substring(0, 2);
+    //                int numericStateCode;
+    //                if (int.TryParse(stateCode, out numericStateCode))
+    //                {
+    //                    // ddlBStateCode.SelectedValue = numericStateCode.ToString();
+    //                }
+    //                else
+    //                {
+    //                    // Handle cases where the stateCode is not a valid number
+    //                    // ddlBStateCode.SelectedValue = stateCode;  // Set to original value or handle accordingly
+    //                }
 
-                Cls_Main.Conn_Open();
-                int count = 0;
-                SqlCommand cmd = new SqlCommand("SELECT Count(*) FROM tbl_CompanyMaster where GSTno='" + txtgstno.Text.Trim() + "'", Cls_Main.Conn);
-                count = Convert.ToInt16(cmd.ExecuteScalar());
-                Cls_Main.Conn_Close();
-                if (count > 0)
-                {
-                    txtgstno.Text = "";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Same GST number Company already available...!');", true);
-                }
-                else
-                {
-                    string gstNumber = txtgstno.Text.Trim();
-                    string pattern = @"^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}$";
+    //                txtCompanyPan.Text = gstNumber.Substring(2, 10);
+    //            }
+    //            else
+    //            {
+    //                ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Invalid GST Number. GST number should be in the format- 27ATFPS1959J1Z4');", true);
+    //            }
+    //        }
+    //    }
+    //}
+    //catch (Exception)
+    //{
 
-                    if (System.Text.RegularExpressions.Regex.IsMatch(gstNumber, pattern))
-                    {
-                        string stateCode = gstNumber.Substring(0, 2);
-                        int numericStateCode;
-                        if (int.TryParse(stateCode, out numericStateCode))
-                        {
-                            ddlBStateCode.SelectedValue = numericStateCode.ToString();
-                        }
-                        else
-                        {
-                            // Handle cases where the stateCode is not a valid number
-                            ddlBStateCode.SelectedValue = stateCode;  // Set to original value or handle accordingly
-                        }
+    //}
 
-                        txtCompanyPan.Text = gstNumber.Substring(2, 10);
-                    }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Invalid GST Number. GST number should be in the format- 27ATFPS1959J1Z4');", true);
-                    }
-                }
-            }
-        }
-        catch (Exception)
-        {
+    //  }
 
-        }
-
-    }
-
-    protected void btnadd_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            if (txtshippingaddress.Text == "")
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill Shipping Address !!!');", true);
-                txtshippingaddress.Focus();
-            }
-            else
-            {
-                Bind_Grid();
-                btnsave.Focus();
-            }
-
-        }
-        catch (Exception)
-        {
-
-            throw;
-        }
-
-    }
-
-
-    private void Bind_Grid()
-    {
-
-        DataTable Dt = (DataTable)ViewState["AddressData"];
-        Dt.Rows.Add(ViewState["RowNo"], txtshippingaddress.Text, txtshippinglocation.Text, txtSPincode.Text, ddlSStatecode.SelectedValue);
-        ViewState["AddressData"] = Dt;
-
-        GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-        GVShippingAddress.DataBind();
-
-        txtshippinglocation.Text = string.Empty;
-        txtshippingaddress.Text = string.Empty;
-        txtSPincode.Text = string.Empty;
-
-    }
-
-
-    protected void ImgbtnDelete_Click(object sender, ImageClickEventArgs e)
-    {
-        try
-        {
-            GridViewRow row = (sender as ImageButton).NamingContainer as GridViewRow;
-
-            DataTable dt = ViewState["AddressData"] as DataTable;
-            dt.Rows.Remove(dt.Rows[row.RowIndex]);
-            ViewState["AddressData"] = dt;
-            GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-            GVShippingAddress.DataBind();
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Record Delete Succesfully !!!');", true);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    protected void GVShippingAddress_RowEditing(object sender, GridViewEditEventArgs e)
-    {
-        GVShippingAddress.EditIndex = e.NewEditIndex;
-        GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-        GVShippingAddress.DataBind();
-    }
-
-
-
-    protected void Btn_Update_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-
-            string ShipLocation = ((TextBox)row.FindControl("txtSLocation")).Text;
-            string ShippingAddress = ((TextBox)row.FindControl("txtshipingaddress")).Text;
-            string ShipPincode = ((TextBox)row.FindControl("txtSPincode")).Text;
-            string ShipStatecode = ((TextBox)row.FindControl("txtSStateCode")).Text;
-
-            DataTable Dt = ViewState["AddressData"] as DataTable;
-
-            Dt.Rows[row.RowIndex]["ShipLocation"] = ShipLocation;
-            Dt.Rows[row.RowIndex]["ShippingAddress"] = ShippingAddress;
-            Dt.Rows[row.RowIndex]["ShipPincode"] = ShipPincode;
-            Dt.Rows[row.RowIndex]["ShipStatecode"] = ShipStatecode;
-            Dt.AcceptChanges();
-
-            ViewState["AddressData"] = Dt;
-            GVShippingAddress.EditIndex = -1;
-
-            GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-            GVShippingAddress.DataBind();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    protected void Btn_Cancel_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-
-            string ShipLocation = ((TextBox)row.FindControl("txtSLocation")).Text;
-            string ShippingAddress = ((TextBox)row.FindControl("txtshipingaddress")).Text;
-            string ShipPincode = ((TextBox)row.FindControl("txtSPincode")).Text;
-            string ShipStatecode = ((TextBox)row.FindControl("txtSStateCode")).Text;
-
-            DataTable Dt = ViewState["AddressData"] as DataTable;
-
-            Dt.Rows[row.RowIndex]["ShipLocation"] = ShipLocation;
-            Dt.Rows[row.RowIndex]["ShippingAddress"] = ShippingAddress;
-            Dt.Rows[row.RowIndex]["ShipPincode"] = ShipPincode;
-            Dt.Rows[row.RowIndex]["ShipStatecode"] = ShipStatecode;
-            Dt.AcceptChanges();
-
-            ViewState["AddressData"] = Dt;
-            GVShippingAddress.EditIndex = -1;
-
-            GVShippingAddress.DataSource = (DataTable)ViewState["AddressData"];
-            GVShippingAddress.DataBind();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
 
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
@@ -918,5 +870,305 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
     protected void Button1_Click(object sender, EventArgs e)
     {
         Response.Redirect("CompanyMasterList.aspx");
+    }
+
+    //Billing Address Methods added by 17022025
+    protected void btnAddBAddress_Click(object sender, EventArgs e)
+    {
+        if (txtBAddress.Text == "" || txtBLocation.Text == "" || txtBPincode.Text == "" || ddlBState.SelectedValue == "0" || txtBGST.Text == "")
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill all details !!!');", true);
+        }
+        else
+        {
+            DataTable Dt = (DataTable)ViewState["BillDetails"];
+            Dt.Rows.Add(ViewState["RowNo"], txtBAddress.Text.Trim(), txtBLocation.Text.Trim(), txtBPincode.Text.Trim(), ddlBState.SelectedItem.Text.Trim(), txtBGST.Text.Trim());
+            ViewState["BillDetails"] = Dt;
+            txtBAddress.Text = string.Empty;
+            txtBLocation.Text = string.Empty;
+            txtBPincode.Text = string.Empty;
+            txtBGST.Text = string.Empty;
+            ddlBState.SelectedItem.Text = string.Empty;
+            GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+            GVBAddress.DataBind();
+        }
+    }
+
+    protected void GVBAddress_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GVBAddress.EditIndex = e.NewEditIndex;
+        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+        GVBAddress.DataBind();
+        // ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
+    }
+
+    protected void lnkbtnDeleteB_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+        DataTable dt = ViewState["BillDetails"] as DataTable;
+        dt.Rows.Remove(dt.Rows[row.RowIndex]);
+        ViewState["BillDetails"] = dt;
+        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+        GVBAddress.DataBind();
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Address Delete Succesfully !!!');", true);
+
+    }
+
+    protected void gv_updateB_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+
+        string txtBAddress = ((TextBox)row.FindControl("txtBillAddress")).Text;
+        string txtBLocation = ((TextBox)row.FindControl("txtBillLocation")).Text;
+        string txtBPincode = ((TextBox)row.FindControl("txtBillPincode")).Text;
+        string txtGST = ((TextBox)row.FindControl("txtBGSTno")).Text;
+        string ddlBState = ((DropDownList)row.FindControl("ddlBState")).Text;
+        DataTable Dt = ViewState["BillDetails"] as DataTable;
+
+        Dt.Rows[row.RowIndex]["BillAddress"] = txtBAddress;
+        Dt.Rows[row.RowIndex]["BillLocation"] = txtBLocation;
+        Dt.Rows[row.RowIndex]["BillPincode"] = txtBPincode;
+        Dt.Rows[row.RowIndex]["BillState"] = ddlBState;
+        Dt.Rows[row.RowIndex]["GSTNo"] = txtGST;
+        Dt.AcceptChanges();
+        ViewState["BillDetails"] = Dt;
+        GVBAddress.EditIndex = -1;
+        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+        GVBAddress.DataBind();
+        // ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
+
+    }
+
+    protected void gv_cancelB_Click(object sender, EventArgs e)
+    {
+
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+
+        string txtBAddress = ((TextBox)row.FindControl("txtBillAddress")).Text;
+        string txtBLocation = ((TextBox)row.FindControl("txtBillLocation")).Text;
+        string txtBPincode = ((TextBox)row.FindControl("txtBillPincode")).Text;
+        string txtGST = ((TextBox)row.FindControl("txtBGSTno")).Text;
+        string ddlBState = ((DropDownList)row.FindControl("ddlBState")).Text;
+        DataTable Dt = ViewState["BillDetails"] as DataTable;
+
+        Dt.Rows[row.RowIndex]["BillAddress"] = txtBAddress;
+        Dt.Rows[row.RowIndex]["BillLocation"] = txtBLocation;
+        Dt.Rows[row.RowIndex]["BillPincode"] = txtBPincode;
+        Dt.Rows[row.RowIndex]["BillState"] = ddlBState;
+        Dt.Rows[row.RowIndex]["GSTNo"] = txtGST;
+        Dt.AcceptChanges();
+        ViewState["BillDetails"] = Dt;
+        GVBAddress.EditIndex = -1;
+        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+        GVBAddress.DataBind();
+    }
+
+    //protected void GVBAddress_RowDataBound(object sender, GridViewRowEventArgs e)
+    //{
+    //    if (e.Row.RowType == DataControlRowType.DataRow) // Only for edit mode
+    //    {
+    //        DropDownList ddlBState = (DropDownList)e.Row.FindControl("ddlBState");
+
+    //        if (ddlBState != null)
+    //        {
+    //            SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn);
+    //            DataTable dt = new DataTable();
+    //            ad.Fill(dt);
+    //            if (dt.Rows.Count > 0)
+    //            {
+    //                ddlBState.DataSource = dt;
+    //                ddlBState.DataValueField = "statecode";
+    //                ddlBState.DataTextField = "statename";
+    //                ddlBState.DataBind();
+    //                ddlBState.Items.Insert(0, "-- select state --");
+    //            }
+
+    //           // Optionally, set the selected value if available
+    //            string currentState = ((Label)e.Row.FindControl("lblBillState")).Text; // Current state from the grid
+    //            if (!string.IsNullOrEmpty(currentState))
+    //            {
+    //                ddlBState.SelectedValue = currentState; // Set the selected value in the dropdown
+    //            }
+    //        }
+    //    }
+    //}
+    protected void GVBAddress_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow) // Only for edit mode
+        {
+            DropDownList ddlBState = (DropDownList)e.Row.FindControl("ddlBState");
+
+            if (ddlBState != null)
+            {
+                try
+                {
+                    using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
+                    {
+                        DataTable dt = new DataTable();
+                        ad.Fill(dt);
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            ddlBState.DataSource = dt;
+                            ddlBState.DataValueField = "statecode";
+                            ddlBState.DataTextField = "statename";
+                            ddlBState.DataBind();
+                            ddlBState.Items.Insert(0, new ListItem("-- select state --", ""));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
+                // Optionally, set the selected value if available
+                //string currentState = ((Label)e.Row.FindControl("lblBillState")).Text; // Current state from the grid
+                //if (!string.IsNullOrEmpty(currentState))
+                //{
+                //    // Only set the selected value if it exists in the dropdown list
+                //    ListItem selectedItem = ddlBState.Items.FindByValue(currentState);
+                //    if (selectedItem != null)
+                //    {
+                //        ddlBState.SelectedValue = currentState; // Set the selected value in the dropdown
+                //    }
+                //}
+            }
+        }
+    }
+
+    //Shipping Address Methods added by 18022025
+    protected void txtSbtnAdd_Click(object sender, EventArgs e)
+    {
+        if (txtSAddress.Text == "" || txtSLocation.Text == "" || txtSPincode.Text == "" || ddlSState.SelectedValue == "0" || txtSGST.Text == "")
+        {
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please fill all details !!!');", true);
+        }
+        else
+        {
+            DataTable Dt = (DataTable)ViewState["ShipDetails"];
+            Dt.Rows.Add(ViewState["RowNo"], txtSAddress.Text.Trim(), txtSLocation.Text.Trim(), txtSPincode.Text.Trim(), ddlSState.SelectedItem.Text.Trim(), txtSGST.Text.Trim());
+            ViewState["ShipDetails"] = Dt;
+            txtSAddress.Text = string.Empty;
+            txtSLocation.Text = string.Empty;
+            txtSPincode.Text = string.Empty;
+            txtSGST.Text = string.Empty;
+            ddlSState.SelectedItem.Text = string.Empty;
+            GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"];
+            GVSAddress.DataBind();
+        }
+    }
+    protected void GVSAddress_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GVSAddress.EditIndex = e.NewEditIndex;
+        GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"];
+        GVSAddress.DataBind();
+        // ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
+    }
+
+    protected void GVSAddress_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow) // Only for edit mode
+        {
+            DropDownList ddlSState = (DropDownList)e.Row.FindControl("ddlSState");
+
+            if (ddlSState != null)
+            {
+                try
+                {
+                    using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
+                    {
+                        DataTable dt = new DataTable();
+                        ad.Fill(dt);
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            ddlSState.DataSource = dt;
+                            ddlSState.DataValueField = "statecode";
+                            ddlSState.DataTextField = "statename";
+                            ddlSState.DataBind();
+                            ddlSState.Items.Insert(0, new ListItem("-- select state --", ""));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
+                // Optionally, set the selected value if available
+                //string currentState = ((Label)e.Row.FindControl("lblBillState")).Text; // Current state from the grid
+                //if (!string.IsNullOrEmpty(currentState))
+                //{
+                //    // Only set the selected value if it exists in the dropdown list
+                //    ListItem selectedItem = ddlBState.Items.FindByValue(currentState);
+                //    if (selectedItem != null)
+                //    {
+                //        ddlBState.SelectedValue = currentState; // Set the selected value in the dropdown
+                //    }
+                //}
+            }
+        }
+    }
+
+    protected void lnkbtnDeleteS_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+        DataTable dt = ViewState["ShipDetails"] as DataTable;
+        dt.Rows.Remove(dt.Rows[row.RowIndex]);
+        ViewState["ShipDetails"] = dt;
+        GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"];
+        GVSAddress.DataBind();
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Address Delete Succesfully !!!');", true);
+
+    }
+
+    protected void gv_cancelS_Click(object sender, EventArgs e)
+    {
+
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+        string txtBAddress = ((TextBox)row.FindControl("txtShipAddress")).Text;
+        string txtBLocation = ((TextBox)row.FindControl("txtShipLocation")).Text;
+        string txtBPincode = ((TextBox)row.FindControl("txtShipPincode")).Text;
+        string txtGST = ((TextBox)row.FindControl("txtSGSTno")).Text;
+        string ddlBState = ((DropDownList)row.FindControl("ddlSState")).Text;
+        DataTable Dt = ViewState["ShipDetails"] as DataTable;
+
+        Dt.Rows[row.RowIndex]["ShipAddress"] = txtBAddress;
+        Dt.Rows[row.RowIndex]["ShipLocation"] = txtBLocation;
+        Dt.Rows[row.RowIndex]["ShipPincode"] = txtBPincode;
+        Dt.Rows[row.RowIndex]["ShipState"] = ddlBState;
+        Dt.Rows[row.RowIndex]["GSTNo"] = txtGST;
+        Dt.AcceptChanges();
+        ViewState["BillDetails"] = Dt;
+        GVBAddress.EditIndex = -1;
+        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
+        GVBAddress.DataBind();
+    }
+
+    protected void gv_updateS_Click(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
+
+        string txtBAddress = ((TextBox)row.FindControl("txtShipAddress")).Text;
+        string txtBLocation = ((TextBox)row.FindControl("txtShipLocation")).Text;
+        string txtBPincode = ((TextBox)row.FindControl("txtShipPincode")).Text;
+        string txtGST = ((TextBox)row.FindControl("txtSGSTno")).Text;
+        string ddlBState = ((DropDownList)row.FindControl("ddlSState")).Text;
+        DataTable Dt = ViewState["ShipDetails"] as DataTable;
+
+        Dt.Rows[row.RowIndex]["ShipAddress"] = txtBAddress;
+        Dt.Rows[row.RowIndex]["ShipLocation"] = txtBLocation;
+        Dt.Rows[row.RowIndex]["ShipPincode"] = txtBPincode;
+        Dt.Rows[row.RowIndex]["ShipState"] = ddlBState;
+        Dt.Rows[row.RowIndex]["ShipGSTNo"] = txtGST;
+        Dt.AcceptChanges();
+        ViewState["ShipDetails"] = Dt;
+        GVSAddress.EditIndex = -1;
+        GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"];
+        GVSAddress.DataBind();
+
     }
 }
