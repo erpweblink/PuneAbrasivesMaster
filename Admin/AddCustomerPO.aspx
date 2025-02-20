@@ -377,8 +377,10 @@
                             <div class="row">
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label12" runat="server" Font-Bold="true" CssClass="form-label">Billing Address   :</asp:Label>
-                                    <asp:CheckBox ID="check_addresss" OnCheckedChanged="check_addresss_CheckedChanged" AutoPostBack="true" runat="server" />
-                                    <asp:TextBox ID="txtaddress" CssClass="form-control" placeholder="Enter Billing Address" TextMode="MultiLine" runat="server"></asp:TextBox>
+
+                                    <asp:DropDownList ID="ddlBillAddress" Width="560px" AutoPostBack="true" OnSelectedIndexChanged="ddlBillAddress_SelectedIndexChanged"
+                                        CssClass="form-control" runat="server">
+                                    </asp:DropDownList>
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
 
@@ -864,11 +866,11 @@
                                         <div class="col-md-6">
                                             <br />
                                             <center>
-                                        <div class="col-md-12">
-                                            <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
-                                            <asp:Label ID="lbl_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
-                                             <asp:HiddenField ID="hfTotal" runat="server" />
-                                        </div>
+                                                <div class="col-md-12">
+                                                    <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
+                                                    <asp:Label ID="lbl_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
+                                                    <asp:HiddenField ID="hfTotal" runat="server" />
+                                                </div>
                                             </center>
                                         </div>
                                         <div class="col-md-6" style="text-align: right">

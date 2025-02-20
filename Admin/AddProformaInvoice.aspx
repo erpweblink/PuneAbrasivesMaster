@@ -335,7 +335,9 @@
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="lblinvoiceagainst" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Billing Address : <span class="spncls">*</span></asp:Label>
 
-                                    <asp:TextBox ID="txtbillingaddress" CssClass="form-control" ReadOnly="true" runat="server" Width="100%" TextMode="MultiLine"></asp:TextBox>
+                                    <asp:DropDownList ID="ddlBillAddress" Width="560px" AutoPostBack="true" OnSelectedIndexChanged="ddlBillAddress_SelectedIndexChanged"
+                                        CssClass="form-control" runat="server">
+                                    </asp:DropDownList>
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label11" runat="server" Font-Bold="true" CssClass="form-label">Shipping Address :<span class="spncls">*</span></asp:Label>
@@ -386,14 +388,14 @@
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label13" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Billing Statecode :<span class="spncls">*</span></asp:Label>
 
-                                    <asp:TextBox ID="txtbillingstatecode" CssClass="form-control" ReadOnly="true" TextMode="Number" runat="server" Width="100%"></asp:TextBox>
+                                    <asp:TextBox ID="txtbillingstatecode" CssClass="form-control" ReadOnly="true" runat="server" Width="100%"></asp:TextBox>
 
 
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label12" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Shipping Statecode :<span class="spncls">*</span></asp:Label>
 
-                                    <asp:TextBox ID="txtshippingstatecode" CssClass="form-control" ValidationGroup="form1" TextMode="Number" runat="server" Width="100%"></asp:TextBox>
+                                    <asp:TextBox ID="txtshippingstatecode" CssClass="form-control" ValidationGroup="form1"  runat="server" Width="100%"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" Display="Dynamic" ErrorMessage="Please Enter state code"
                                         ControlToValidate="txtshippingstatecode" ValidationGroup="form1" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
                                 </div>
@@ -908,9 +910,9 @@
                                         <div class="col-md-12">
                                             <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
                                             <asp:Label ID="lbl_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
-                                             <asp:HiddenField ID="hfTotal" runat="server" />
+                                            <asp:HiddenField ID="hfTotal" runat="server" />
                                         </div>
-                                            </center>
+                                    </center>
                                 </div>
                                 <div class="col-md-6" style="text-align: right">
                                     <div class="row">
@@ -969,7 +971,7 @@
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-6 col-md-2">
-                        <asp:Button ID="btnsave" OnClick="btnsave_Click"  OnClientClick="showLoader();" ValidationGroup="form1" CssClass="form-control btn btn-outline-primary m-2" runat="server" Text="Save" />
+                        <asp:Button ID="btnsave" OnClick="btnsave_Click" OnClientClick="showLoader();" ValidationGroup="form1" CssClass="form-control btn btn-outline-primary m-2" runat="server" Text="Save" />
                     </div>
                     <div class="col-6 col-md-2">
                         <asp:Button ID="btncancel" OnClick="btncancel_Click" CssClass="form-control btn btn-outline-danger m-2" runat="server" Text="Cancel" />

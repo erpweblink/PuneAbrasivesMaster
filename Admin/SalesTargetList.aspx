@@ -263,9 +263,9 @@
                     </div>
                     <div class="row">
                         <div style="overflow-x: auto; max-height: 600px; overflow-y: auto; border: 1px solid #ccc;">
-                            <div class="table">
+                          
                                 <asp:GridView ID="GVSalesTarget" runat="server" CellPadding="4" DataKeyNames="TargetCode" Width="100%"
-                                    CssClass="grivdiv pagination-ys" AutoGenerateColumns="false" OnRowCommand="GVUser_RowCommand" OnRowDataBound="GVUser_RowDataBound">
+                                    CssClass="grivdiv pagination-ys" AutoGenerateColumns="false" OnRowCommand="GVSalesTarget_RowCommand" OnRowDataBound="GVSalesTarget_RowDataBound">
                                     <Columns>
                                         <asp:TemplateField HeaderText="Sr.No." HeaderStyle-Width="50px" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
                                             <ItemTemplate>
@@ -336,7 +336,7 @@
                                         </asp:TemplateField>
                                     </Columns>
                                 </asp:GridView>
-                            </div>
+                          
                         </div>
                     </div>
                 </div>

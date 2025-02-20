@@ -107,17 +107,17 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
 
             ddlContacts.SelectedItem.Text = Dt.Rows[0]["KindAtt"].ToString();
 
-
+            Fillddlshippingaddress(txtcompanyname.Text);
             ddlUser.SelectedValue = Dt.Rows[0]["UserCode"].ToString();
             DateTime ffff2 = Convert.ToDateTime(Dt.Rows[0]["PoDate"].ToString());
             txtmobileno.Text = Dt.Rows[0]["Mobileno"].ToString();
             txtgstno.Text = Dt.Rows[0]["GSTNo"].ToString();
             txtpanno.Text = Dt.Rows[0]["PANNo"].ToString();
             txtemail.Text = Dt.Rows[0]["EmailID"].ToString();
-            txtaddress.Text = Dt.Rows[0]["BillingAddress"].ToString();
+            ddlBillAddress.SelectedItem.Text = Dt.Rows[0]["BillingAddress"].ToString();
             txtshortBillingaddress.Text = Dt.Rows[0]["ShortBAddress"].ToString();
             txtshortShippingaddress.Text = Dt.Rows[0]["ShortSAddress"].ToString();
-            Fillddlshippingaddress(txtcompanyname.Text);
+            
             ddlShippingaddress.SelectedItem.Text = Dt.Rows[0]["ShippingAddress"].ToString();
 
             txtbillingGST.Text = Dt.Rows[0]["BillingGST"].ToString();
@@ -256,22 +256,46 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
     private void Fillddlshippingaddress(string ID)
     {
 
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
-        DataTable dt = new DataTable();
-        ad.Fill(dt);
-        if (dt.Rows.Count > 0)
+        try
         {
-            ddlShippingaddress.DataSource = dt;
-            ddlShippingaddress.DataValueField = "ShippingAddress";
-            ddlShippingaddress.DataTextField = "ShippingAddress";
-            ddlShippingaddress.DataBind();
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                ddlShippingaddress.DataSource = dt;
+                ddlShippingaddress.DataValueField = "ShippingAddress";
+                ddlShippingaddress.DataTextField = "ShippingAddress";
+                ddlShippingaddress.DataBind();
+                ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            }
+            else
+            {
+                ddlShippingaddress.DataSource = null;
+                ddlShippingaddress.DataBind();
+                ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            }
+
+
+            SqlDataAdapter ad1 = new SqlDataAdapter("SELECT SA.BillAddress FROM tbl_BillingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+            DataTable dt1 = new DataTable();
+            ad1.Fill(dt1);
+            if (dt1.Rows.Count > 0)
+            {
+                ddlBillAddress.DataSource = dt1;
+                ddlBillAddress.DataValueField = "BillAddress";
+                ddlBillAddress.DataTextField = "BillAddress";
+                ddlBillAddress.DataBind();
+                ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
+            }
+            else
+            {
+                ddlBillAddress.DataSource = null;
+                ddlBillAddress.DataBind();
+                ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
+            }
         }
-        else
-        {
-            ddlShippingaddress.DataSource = null;
-            ddlShippingaddress.DataBind();
-            ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
-        }
+        catch { }
     }
 
     [ScriptMethod()]
@@ -374,7 +398,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                         {
                             cmd.Parameters.AddWithValue("@fileName", DBNull.Value);
                         }
-                        cmd.Parameters.AddWithValue("@BillingAddress", txtaddress.Text);
+                        cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
                         if (ddlShippingaddress.SelectedItem.Text == "-Select Shipping Address-")
                         {
                             cmd.Parameters.AddWithValue("@ShippingAddress", DBNull.Value);
@@ -501,7 +525,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
 
                         cmd.Parameters.AddWithValue("@GSTNo", txtgstno.Text);
                         cmd.Parameters.AddWithValue("@PANNo", txtpanno.Text);
-                        cmd.Parameters.AddWithValue("@BillingAddress", txtaddress.Text);
+                        cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
                         cmd.Parameters.AddWithValue("@ShippingAddress", ddlShippingaddress.SelectedItem.Text);
                         cmd.Parameters.AddWithValue("@Deliverydate", txtdeliverydate.Text);
                         cmd.Parameters.AddWithValue("@Referquotation", txtreferquotation.Text);
@@ -1469,7 +1493,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
             txtemail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
             txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
-            txtaddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
+            //ddlBillAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
             txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
             txtpanno.Text = Dt.Rows[0]["Companypancard"].ToString();
             hhdstate.Value = Dt.Rows[0]["StateCode"].ToString();
@@ -1661,14 +1685,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
 
     }
 
-    protected void check_addresss_CheckedChanged(object sender, EventArgs e)
-    {
-        //changes on meeting 08102024
-        if (check_addresss.Checked == true)
-        {
-            txtaddress.Text = ddlShippingaddress.SelectedItem.Text;
-        }
-    }
+   
 
     protected void ddlShippingaddress_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -1681,7 +1698,8 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
             txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
             txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
-            txtshippingGST.Enabled = true;
+            txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            
         }
     }
 
@@ -1701,6 +1719,24 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
 
             txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
             txtemail.Text = Dt.Rows[0]["EmailID"].ToString();
+        }
+    }
+
+    protected void ddlBillAddress_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlBillAddress.SelectedItem.Text != "-Select Billing Address-")
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM tbl_BillingAddress  AS SA where BillAddress='" + ddlBillAddress.SelectedItem.Text + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                txtshortBillingaddress.Text = ddlBillAddress.SelectedItem.Text;
+                txtbillinglocation.Text = dt.Rows[0]["BillLocation"].ToString();
+                txtbillingPincode.Text = dt.Rows[0]["BillPincode"].ToString();
+                txtbillingstatecode.Text = dt.Rows[0]["Billstatecode"].ToString();
+                txtbillingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            }
         }
     }
 }

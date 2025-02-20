@@ -25,9 +25,15 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
             }
             else
             {
+              
+                if (Session["Designation"].ToString() == "Sales Manager")
+                {
+                    txtusername.Enabled = false;
+                    txtusername.Text = Session["Username"].ToString();
+                    btnCreate.Visible = false;
+                }
                 GetYears();
                 FillGrid();
-
             }
         }
     }
@@ -189,7 +195,7 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
         Response.Redirect("SalesTargetMaster.aspx");
     }
 
-    protected void GVUser_RowCommand(object sender, GridViewCommandEventArgs e)
+    protected void GVSalesTarget_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         int id = Convert.ToInt32(e.CommandArgument.ToString());
         if (e.CommandName == "RowEdit")
@@ -209,8 +215,8 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
         }
     }
 
-    protected void GVUser_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
+    protected void GVSalesTarget_RowDataBound(object sender, GridViewRowEventArgs e)
+     {
         //Authorization
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
@@ -230,7 +236,7 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
                 if (Dtt.Rows.Count > 0)
                 {
                     btnCreate.Visible = false;
-                    GVSalesTarget.Columns[3].Visible = false;
+                    GVSalesTarget.Columns[12].Visible = false;
                     btnEdit.Visible = false;
                     btnDelete.Visible = false;
                 }
@@ -316,5 +322,5 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
         }
         catch (Exception ex) { }
     }
-  
+
 }

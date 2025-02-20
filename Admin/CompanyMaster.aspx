@@ -182,6 +182,8 @@
             } else {
                 alert("Pincode cannot be empty");
             }
+
+
         }
 
         function GetPincode2() {
@@ -215,23 +217,26 @@
 
         /* Validations for GST NO.*/
         function GetBGST() {
-            var BGST = document.getElementById("<%= txtBGST.ClientID%>").value; // Get the value of the input field
-            if (BGST) { // Check if the pincode is not empty
-                // Corrected regular expression for GST number format
-                var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
+            var valid = document.getElementById("<%= ddlTypeofSupply.SelectedItem.Text%>").value;
+            if (valid != 'EXPWOP') {
+                var BGST = document.getElementById("<%= txtBGST.ClientID%>").value; // Get the value of the input field
+                if (BGST) { // Check if the pincode is not empty
+                    // Corrected regular expression for GST number format
+                    var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
 
-                if (regex.test(BGST)) {
-                    // GST is valid; you can proceed with other operations here if needed.
+                    if (regex.test(BGST)) {
+                        // GST is valid; you can proceed with other operations here if needed.
+                    } else {
+                        alert("Invalid GST Number. GST number should be in the format 27ATFPS1959J1Z4");
+                        document.getElementById("<%= txtBGST.ClientID%>").value = '';
+                    }
                 } else {
-                    alert("Invalid GST Number. GST number should be in the format 27ATFPS1959J1Z4");
-                    document.getElementById("<%= txtBGST.ClientID%>").value = '';
+                    alert("Invalid GST Number.");
                 }
-            } else {
-                alert("Invalid GST Number.");
             }
         }
 
-        function GetBGST1() {
+  <%--      function GetBGST1() {
             var gridViewRows = document.getElementById('<%= GVBAddress.ClientID %>').getElementsByTagName('tr');
 
             for (var i = 0; i < gridViewRows.length; i++) {
@@ -255,7 +260,7 @@
                     }
                 }
             }
-        }
+        }--%>
 
 
         /* Shipping address Validations for pincode*/
@@ -308,47 +313,57 @@
 
         /* Validations for GST NO.*/
         function GetSGST() {
-            var SGST = document.getElementById("<%= txtSGST.ClientID%>").value; // Get the value of the input field
-            if (SGST) { // Check if the pincode is not empty
-                // Corrected regular expression for GST number format
-                var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
+            var valid = document.getElementById("<%= ddlTypeofSupply.SelectedItem.Text%>").value;
+            if (valid != 'EXPWOP') {
+                var SGST = document.getElementById("<%= txtSGST.ClientID%>").value; // Get the value of the input field
+                if (SGST) { // Check if the pincode is not empty
+                    // Corrected regular expression for GST number format
+                    var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
 
-                if (regex.test(SGST)) {
+                    if (regex.test(SGST)) {
 
+                    } else {
+                        alert("Invalid GST Number. GST number should be in the format 27ATFPS1959J1Z4");
+                        document.getElementById("<%= txtSGST.ClientID%>").value = '';
+                    }
                 } else {
-                    alert("Invalid GST Number. GST number should be in the format 27ATFPS1959J1Z4");
-                    document.getElementById("<%= txtSGST.ClientID%>").value = '';
+                    alert("Invalid GST Number.");
                 }
-            } else {
-                alert("Invalid GST Number.");
             }
         }
 
-        function GetSGST1() {
+      <%--  function GetSGST1() {
+            // Get all rows from the GridView
             var gridViewRows = document.getElementById('<%= GVSAddress.ClientID %>').getElementsByTagName('tr');
 
+            // Loop through each row of the GridView
             for (var i = 0; i < gridViewRows.length; i++) {
                 var row = gridViewRows[i];
-
-                // Check if the row has the required number of input fields
                 var inputs = row.getElementsByTagName('input');
-                if (inputs.length > 5) {  // Ensure there are at least 6 input fields
-                    var GST = inputs[5].value; // Index 5 for GST No.
+                debugger
+                // Ensure the row contains enough input fields (6th field for GST)
+                if (inputs.length > 5) {
+                    var GST = inputs[5].value; // GST No. is assumed to be in the 6th input field (index 5)
 
-                    if (GST) { // Check if the GST No. is not empty
+                    if (GST) { // Check if GST No. is not empty
+                        // Regular expression to match the GST number format
                         var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
 
                         if (!regex.test(GST)) {
-                            row.cells[5].style.backgroundColor = 'red'; // Index 5 for the "GST No." cell
+                            // Change background color of the cell containing GST No.
+                            row.cells[5].style.backgroundColor = 'red';
                         } else {
-                            row.cells[5].style.backgroundColor = ''; // Reset background color if valid
+                            // Reset background color if valid
+                            row.cells[5].style.backgroundColor = '';
                         }
                     } else {
-                        alert("GST No. cannot be empty in row " + (i + 1)); // Alert if empty
+                        // Alert the user if GST is empty
+                        alert("GST No. cannot be empty in row " + (i + 1));
                     }
                 }
             }
-        }
+        }--%>
+
 
 
 
@@ -423,13 +438,17 @@
                                     <asp:TextBox ID="txtSecondaryemailid" CssClass="form-control" TextMode="Email" placeholder="Enter Secondary Email ID" runat="server"></asp:TextBox>
                                     <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ErrorMessage="Please Enter Secondary Email ID" ControlToValidate="txtSecondaryemailid" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>--%>
                                 </div>
-
-                                <div class="col-md-4 col-12 mb-3">
+                                <div class="col-md-6 col-12 mb-3">
+                                    <label for="lblgstno" class="form-label LblStyle">GST No. :</label>
+                                    <asp:TextBox ID="txtgstno" CssClass="form-control" placeholder="Enter GST No." runat="server"></asp:TextBox>
+                                    <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ErrorMessage="Please Enter  Company Pan No." ControlToValidate="txtCompanyPan" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>--%>
+                                </div>
+                                <div class="col-md-6 col-12 mb-3">
                                     <label for="lblCompanyPan" class="form-label LblStyle">Company Pan No. :</label>
                                     <asp:TextBox ID="txtCompanyPan" CssClass="form-control" placeholder="Enter Company Pan No." MaxLength="12" MinLength="10" runat="server"></asp:TextBox>
                                     <%-- <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ErrorMessage="Please Enter  Company Pan No." ControlToValidate="txtCompanyPan" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>--%>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="lblPaymentTerm" class="form-label LblStyle">Payment Term(In days) :</label>
                                     <asp:TextBox ID="txtPaymentTerm" CssClass="form-control" placeholder="Enter Payment Term" onkeypress="return isNumberKey(event)" MaxLength="3" MinLength="1" runat="server"></asp:TextBox>
 
@@ -471,7 +490,7 @@
 
                                                 </td>
                                                 <td>
-                                                    <asp:Button ID="btnAddBAddress" ValidationGroup="1" CausesValidation="false" OnClick="btnAddBAddress_Click" CssClass="btn btn-primary btn-sm btncss" runat="server" Text="Save" />
+                                                    <asp:Button ID="btnAddBAddress" ValidationGroup="1" CausesValidation="false" OnClick="btnAddBAddress_Click" CssClass="btn btn-primary btn-sm btncss" runat="server" Text="Add" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -514,7 +533,7 @@
 
                                                 <asp:TemplateField HeaderText="State" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <EditItemTemplate>
-                                                        <asp:DropDownList ID="ddlBState" CssClass="form-control" runat="server"></asp:DropDownList>
+                                                        <asp:DropDownList ID="ddlBState1" CssClass="form-control" runat="server"></asp:DropDownList>
                                                     </EditItemTemplate>
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblBillState" runat="Server" Text='<%# Eval("BillState") %>' />
@@ -586,7 +605,7 @@
 
                                                 </td>
                                                 <td>
-                                                    <asp:Button ID="txtSbtnAdd" CausesValidation="false" OnClick="txtSbtnAdd_Click" CssClass="btn btn-primary btn-sm btncss" runat="server" Text="Save" />
+                                                    <asp:Button ID="txtSbtnAdd" CausesValidation="false" OnClick="txtSbtnAdd_Click" CssClass="btn btn-primary btn-sm btncss" runat="server" Text="Add" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -629,7 +648,7 @@
 
                                                 <asp:TemplateField HeaderText="State" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <EditItemTemplate>
-                                                        <asp:DropDownList ID="ddlSState" CssClass="form-control" runat="server"></asp:DropDownList>
+                                                        <asp:DropDownList ID="ddlSState1" CssClass="form-control" runat="server"></asp:DropDownList>
                                                     </EditItemTemplate>
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblShipState" runat="Server" Text='<%# Eval("ShipState") %>' />
@@ -736,7 +755,7 @@
                                                     <asp:TextBox ID="txtdesignation" CssClass="form-control" runat="server"></asp:TextBox>
                                                 </td>
                                                 <td>
-                                                    <asp:Button ID="btnAddMore" CausesValidation="false" OnClick="btnAddMore_Click" CssClass="btn btn-primary btn-sm btncss" runat="server" Text="Save" />
+                                                    <asp:Button ID="btnAddMore" CausesValidation="false" OnClick="btnAddMore_Click" CssClass="btn btn-primary btn-sm btncss" runat="server" Text="Add" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -795,12 +814,12 @@
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Action" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <ItemTemplate>
-                                                        <asp:LinkButton ID="btn_edit" CausesValidation="false" Text="Edit" runat="server" CssClass="btn btn-primary btn-sm" CommandName="Edit"></asp:LinkButton>&nbsp;                                                 
+                                                        <asp:LinkButton ID="btn_edit" CausesValidation="false" runat="server" CommandName="Edit"><i class="fa fa-edit" style="font-size:24px"></i></asp:LinkButton>&nbsp;                                                 
                                <asp:LinkButton runat="server" ID="lnkbtnDelete" ToolTip="Delete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" OnClick="lnkbtnDelete_Click" CausesValidation="false"><i class="fa fa-trash" style="font-size:24px"></i></asp:LinkButton>
                                                     </ItemTemplate>
                                                     <EditItemTemplate>
-                                                        <asp:LinkButton ID="gv_update" CausesValidation="false" Text="Update" OnClick="gv_update_Click" CssClass="btn btn-primary btn-sm" runat="server"></asp:LinkButton>&nbsp;
-                               <asp:LinkButton ID="gv_cancel" CausesValidation="false" OnClick="gv_cancel_Click" Text="Cancel" CssClass="btn btn-primary btn-sm " runat="server"></asp:LinkButton>
+                                                        <asp:LinkButton ID="gv_update" CausesValidation="false" OnClick="gv_update_Click" runat="server"><i class="fa fa-check-circle" style="font-size:24px; color:green"></i></asp:LinkButton>&nbsp;
+                               <asp:LinkButton ID="gv_cancel" CausesValidation="false" OnClick="gv_cancel_Click" runat="server"><i class="fa fa-times-circle" style="font-size:24px; color:red"></i></asp:LinkButton>
                                                     </EditItemTemplate>
                                                 </asp:TemplateField>
                                             </Columns>

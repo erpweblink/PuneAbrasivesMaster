@@ -71,13 +71,13 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         if (dt.Rows.Count > 0)
         {
             ddlBState.DataSource = dt;
-            ddlBState.DataValueField = "statecode";
+            ddlBState.DataValueField = "statename";
             ddlBState.DataTextField = "statename";
             ddlBState.DataBind();
             ddlBState.Items.Insert(0, "-- select state --");
 
             ddlSState.DataSource = dt;
-            ddlSState.DataValueField = "StateCode";
+            ddlSState.DataValueField = "statename";
             ddlSState.DataTextField = "StateName";
             ddlSState.DataBind();
             ddlSState.Items.Insert(0, "-- Select State --");
@@ -127,7 +127,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
             txtcompanycode.Text = Dt.Rows[0]["CompanyCode"].ToString();
             txtPrimaryEmail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
             txtSecondaryemailid.Text = Dt.Rows[0]["SecondaryEmailID"].ToString();
-            //  txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
+             txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
             if (Dt.Rows[0]["GSTno"].ToString() == "URP")
             {
                 contry.Visible = true;
@@ -165,6 +165,8 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         {
             for (int i = 0; i < Dtproduct.Rows.Count; i++)
             {
+                Cls_Main.Conn_Open();
+             
                 Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["ShippingAddress"].ToString(), Dtproduct.Rows[i]["ShipLocation"].ToString(), Dtproduct.Rows[i]["ShipPincode"].ToString(), Dtproduct.Rows[i]["ShipStatecode"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
                 //count = count + 1;
                 ViewState["ShipDetails"] = Dt;
@@ -187,6 +189,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         {
             for (int i = 0; i < Dtproduct.Rows.Count; i++)
             {
+              
                 Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["BillAddress"].ToString(), Dtproduct.Rows[i]["BillLocation"].ToString(), Dtproduct.Rows[i]["BillPincode"].ToString(), Dtproduct.Rows[i]["BillStatecode"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
                 //count = count + 1;
                 ViewState["BillDetails"] = Dt;
@@ -212,112 +215,101 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
                 if (dgvContactDetails.Rows.Count > 0)
                 {
-                    if (GVBAddress.Rows.Count > 0 && GVSAddress.Rows.Count > 0)
+                    //if (GVBAddress.Rows.Count > 0 && GVSAddress.Rows.Count > 0)
+                    //{
+
+                    if (btnsave.Text == "Update")
                     {
-
-                        if (btnsave.Text == "Update")
+                        Cls_Main.Conn_Open();
+                        SqlCommand Cmd = new SqlCommand("SP_CompanyMaster", Cls_Main.Conn);
+                        HttpPostedFile postedFile = FileUpload1.PostedFile;
+                        if (FileUpload1.HasFile)
                         {
+
+                            foreach (HttpPostedFile PostedFile in FileUpload1.PostedFiles)
+                            {
+                                string filename = Path.GetFileName(postedFile.FileName);
+                                string[] pdffilename = filename.Split('.');
+                                string pdffilename1 = pdffilename[0];
+                                string filenameExt = pdffilename[1];
+                                //if (filenameExt == "pdf" || filenameExt == "PDF")
+                                //{
+                                string time1 = DateTime.Now.ToString("ddmmyyyyttmmss");
+                                postedFile.SaveAs(Server.MapPath("~/VisitingcardFiles/") + pdffilename1 + time1 + "." + filenameExt);
+
+                                Cmd.Parameters.AddWithValue("@VisitingCardPath", "VisitingcardFiles/" + pdffilename1 + time1 + "." + filenameExt);
+                                //}
+                                //else
+                                //{
+                                //    ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please select a pdf file only !!');", true);
+                                //}
+                            }
+                        }
+                        else
+                        {
+                            Cmd.Parameters.AddWithValue("@VisitingCardPath", lblPath1.Text);
+                        }
+                        Cmd.CommandType = CommandType.StoredProcedure;
+                        Cmd.Parameters.AddWithValue("@Action", "Update");
+                        Cmd.Parameters.AddWithValue("@ID", hhd.Value);
+                        Cmd.Parameters.AddWithValue("@Companyname", txtcompanyname.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@TypeofSupply", ddlTypeofSupply.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@CreditLimit", TxtCreditLimit.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
+                         Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Clienttype", ddlClientType.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@WebsiteLink", txtWebsiteLink.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Countrycode", ddlCountryCode.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@Paymentterm", txtPaymentTerm.Text);
+                        Cmd.Parameters.AddWithValue("@BillingPincode", txtBPincode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
+                        Cmd.Parameters.AddWithValue("@IsDeleted", '0');
+                        Cmd.Parameters.AddWithValue("@UpdatedBy", Session["UserCode"].ToString());
+                        Cmd.ExecuteNonQuery();
+                        Cls_Main.Conn_Close();
+                        Cls_Main.Conn_Dispose();
+
+                        // Delete Contact Details
+                        Cls_Main.Conn_Open();
+                        SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_CompanyContactDetails WHERE CompanyCode=@CompanyCode", Cls_Main.Conn);
+                        cmddelete.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text);
+                        cmddelete.ExecuteNonQuery();
+                        Cls_Main.Conn_Close();
+
+                        //Save Contact Details 
+                        foreach (GridViewRow grd1 in dgvContactDetails.Rows)
+                        {
+                            string lblname = (grd1.FindControl("lblname") as Label).Text;
+                            string lblnumber = (grd1.FindControl("lblnumber") as Label).Text;
+                            string lblemailid = (grd1.FindControl("lblemailid") as Label).Text;
+                            string lblDepartment = (grd1.FindControl("lblDepartment") as Label).Text;
+                            string lbldesignation = (grd1.FindControl("lbldesignation") as Label).Text;
                             Cls_Main.Conn_Open();
-                            SqlCommand Cmd = new SqlCommand("SP_CompanyMaster", Cls_Main.Conn);
-                            HttpPostedFile postedFile = FileUpload1.PostedFile;
-                            if (FileUpload1.HasFile)
-                            {
+                            SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_CompanyContactDetails (CompanyCode,Name,Number,EmailID,Department,Designation,CreatedBy,CreatedOn) VALUES (@CompanyCode,@Name,@Number,@EmailID,@Department,@Designation,@CreatedBy,@createdOn)", Cls_Main.Conn);
+                            cmdd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
 
-                                foreach (HttpPostedFile PostedFile in FileUpload1.PostedFiles)
-                                {
-                                    string filename = Path.GetFileName(postedFile.FileName);
-                                    string[] pdffilename = filename.Split('.');
-                                    string pdffilename1 = pdffilename[0];
-                                    string filenameExt = pdffilename[1];
-                                    //if (filenameExt == "pdf" || filenameExt == "PDF")
-                                    //{
-                                    string time1 = DateTime.Now.ToString("ddmmyyyyttmmss");
-                                    postedFile.SaveAs(Server.MapPath("~/VisitingcardFiles/") + pdffilename1 + time1 + "." + filenameExt);
-
-                                    Cmd.Parameters.AddWithValue("@VisitingCardPath", "VisitingcardFiles/" + pdffilename1 + time1 + "." + filenameExt);
-                                    //}
-                                    //else
-                                    //{
-                                    //    ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please select a pdf file only !!');", true);
-                                    //}
-                                }
-                            }
-                            else
-                            {
-                                Cmd.Parameters.AddWithValue("@VisitingCardPath", lblPath1.Text);
-                            }
-                            Cmd.CommandType = CommandType.StoredProcedure;
-                            Cmd.Parameters.AddWithValue("@Action", "Update");
-                            Cmd.Parameters.AddWithValue("@ID", hhd.Value);
-                            Cmd.Parameters.AddWithValue("@Companyname", txtcompanyname.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@TypeofSupply", ddlTypeofSupply.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@CreditLimit", TxtCreditLimit.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
-                            // Cmd.Parameters.AddWithValue("@SState", ddlSStatecode.SelectedValue);
-                            //Cmd.Parameters.AddWithValue("@Area", txtArea.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Clienttype", ddlClientType.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@WebsiteLink", txtWebsiteLink.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Countrycode", ddlCountryCode.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@Paymentterm", txtPaymentTerm.Text);
-                            //Cmd.Parameters.AddWithValue("@VisitingCardPath", PathH);
-                            //  Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@BillingPincode", txtBPincode.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@ShippingPincode", txtSPincode.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@shippinglocation", txtshippinglocation.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
-                            Cmd.Parameters.AddWithValue("@IsDeleted", '0');
-                            Cmd.Parameters.AddWithValue("@UpdatedBy", Session["UserCode"].ToString());
-                            Cmd.ExecuteNonQuery();
+                            cmdd.Parameters.AddWithValue("@Name", lblname);
+                            cmdd.Parameters.AddWithValue("@Number", lblnumber);
+                            cmdd.Parameters.AddWithValue("@EmailID", lblemailid);
+                            cmdd.Parameters.AddWithValue("@Department", lblDepartment);
+                            cmdd.Parameters.AddWithValue("@Designation", lbldesignation);
+                            cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                            cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                            cmdd.ExecuteNonQuery();
                             Cls_Main.Conn_Close();
-                            Cls_Main.Conn_Dispose();
+                        }
 
-                            // Delete Contact Details
-                            Cls_Main.Conn_Open();
-                            SqlCommand cmddelete = new SqlCommand("DELETE FROM tbl_CompanyContactDetails WHERE CompanyCode=@CompanyCode", Cls_Main.Conn);
-                            cmddelete.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text);
-                            cmddelete.ExecuteNonQuery();
-                            Cls_Main.Conn_Close();
-
-                            //Save Contact Details 
-                            foreach (GridViewRow grd1 in dgvContactDetails.Rows)
-                            {
-                                string lblname = (grd1.FindControl("lblname") as Label).Text;
-                                string lblnumber = (grd1.FindControl("lblnumber") as Label).Text;
-                                string lblemailid = (grd1.FindControl("lblemailid") as Label).Text;
-                                string lblDepartment = (grd1.FindControl("lblDepartment") as Label).Text;
-                                string lbldesignation = (grd1.FindControl("lbldesignation") as Label).Text;
-                                Cls_Main.Conn_Open();
-                                SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_CompanyContactDetails (CompanyCode,Name,Number,EmailID,Department,Designation,CreatedBy,CreatedOn) VALUES (@CompanyCode,@Name,@Number,@EmailID,@Department,@Designation,@CreatedBy,@createdOn)", Cls_Main.Conn);
-                                cmdd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
-
-                                cmdd.Parameters.AddWithValue("@Name", lblname);
-                                cmdd.Parameters.AddWithValue("@Number", lblnumber);
-                                cmdd.Parameters.AddWithValue("@EmailID", lblemailid);
-                                cmdd.Parameters.AddWithValue("@Department", lblDepartment);
-                                cmdd.Parameters.AddWithValue("@Designation", lbldesignation);
-                                cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                                cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
-                                cmdd.ExecuteNonQuery();
-                                Cls_Main.Conn_Close();
-                            }
-
-
-
-
-                            //DataTable Dtt = new DataTable();
-                            //SqlDataAdapter Daa = new SqlDataAdapter("SELECT * FROM tbl_ShippingAddress WHERE c_id ='" + hhd.Value + "'", Cls_Main.Conn);
-                            //Daa.Fill(Dtt);
-
+                        //DataTable Dtt = new DataTable();
+                        //SqlDataAdapter Daa = new SqlDataAdapter("SELECT * FROM tbl_ShippingAddress WHERE c_id ='" + hhd.Value + "'", Cls_Main.Conn);
+                        //Daa.Fill(Dtt);
+                        if (GVBAddress.Rows.Count > 0)
+                        {
                             Cls_Main.Conn_Open();
                             SqlCommand cmddelete1 = new SqlCommand("DELETE FROM tbl_BillingAddress WHERE c_id=@c_id", Cls_Main.Conn);
                             cmddelete1.Parameters.AddWithValue("@c_id", hhd.Value);
@@ -342,7 +334,9 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 Cls_Main.Conn_Close();
 
                             }
-
+                        }
+                        if (GVSAddress.Rows.Count > 0)
+                        {
                             Cls_Main.Conn_Open();
                             SqlCommand cmddelete2 = new SqlCommand("DELETE FROM tbl_ShippingAddress WHERE c_id=@c_id", Cls_Main.Conn);
                             cmddelete2.Parameters.AddWithValue("@c_id", hhd.Value);
@@ -367,91 +361,95 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 Cls_Main.Conn_Close();
 
                             }
-                            if (Request.QueryString["CODE"] != null)
-                            {
+                        }
 
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!'); ", true);
-                                Response.Redirect("QuatationMaster.aspx?CODE=" + Request.QueryString["CODE"].ToString() + "");
+                        if (Request.QueryString["CODE"] != null)
+                        {
 
-                            }
-                            else
-                            if (Request.QueryString["OAID"] != null)
-                            {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!'); ", true);
-                                Response.Redirect("AddCustomerPO.aspx?OAID=" + objcls.encrypt(txtcompanyname.Text) + "");
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!'); ", true);
+                            Response.Redirect("QuatationMaster.aspx?CODE=" + Request.QueryString["CODE"].ToString() + "");
 
-                            }
-                            else
-                            {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!');window.location='CompanyMasterList.aspx'; ", true);
-                            }
+                        }
+                        else
+                        if (Request.QueryString["OAID"] != null)
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!'); ", true);
+                            Response.Redirect("AddCustomerPO.aspx?OAID=" + objcls.encrypt(txtcompanyname.Text) + "");
+
                         }
                         else
                         {
-                            Cls_Main.Conn_Open();
-                            SqlCommand Cmd = new SqlCommand("SP_CompanyMaster", Cls_Main.Conn);
-                            Cmd.CommandType = CommandType.StoredProcedure;
-                            HttpPostedFile postedFile = FileUpload1.PostedFile;
-                            if (FileUpload1.HasFile)
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Updated Successfully..!!');window.location='CompanyMasterList.aspx'; ", true);
+                        }
+                    }
+                    else
+                    {
+                        Cls_Main.Conn_Open();
+                        SqlCommand Cmd = new SqlCommand("SP_CompanyMaster", Cls_Main.Conn);
+                        Cmd.CommandType = CommandType.StoredProcedure;
+                        HttpPostedFile postedFile = FileUpload1.PostedFile;
+                        if (FileUpload1.HasFile)
+                        {
+                            foreach (HttpPostedFile PostedFile in FileUpload1.PostedFiles)
                             {
-                                foreach (HttpPostedFile PostedFile in FileUpload1.PostedFiles)
-                                {
-                                    string filename = Path.GetFileName(postedFile.FileName);
-                                    string[] pdffilename = filename.Split('.');
-                                    string pdffilename1 = pdffilename[0];
-                                    string filenameExt = pdffilename[1];
-                                    //if (filenameExt == "pdf" || filenameExt == "PDF")
-                                    //{
-                                    string time1 = DateTime.Now.ToString("ddmmyyyyttmmss");
-                                    postedFile.SaveAs(Server.MapPath("~/VisitingcardFiles/") + pdffilename1 + time1 + "." + filenameExt);
+                                string filename = Path.GetFileName(postedFile.FileName);
+                                string[] pdffilename = filename.Split('.');
+                                string pdffilename1 = pdffilename[0];
+                                string filenameExt = pdffilename[1];
+                                //if (filenameExt == "pdf" || filenameExt == "PDF")
+                                //{
+                                string time1 = DateTime.Now.ToString("ddmmyyyyttmmss");
+                                postedFile.SaveAs(Server.MapPath("~/VisitingcardFiles/") + pdffilename1 + time1 + "." + filenameExt);
 
-                                    Cmd.Parameters.AddWithValue("@VisitingCardPath", "EnquiryFiles/" + pdffilename1 + time1 + "." + filenameExt);
-                                    //}
-                                    //else
-                                    //{
-                                    //    ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please select a pdf file only !!');", true);
-                                    //}
-                                }
+                                Cmd.Parameters.AddWithValue("@VisitingCardPath", "EnquiryFiles/" + pdffilename1 + time1 + "." + filenameExt);
+                                //}
+                                //else
+                                //{
+                                //    ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please select a pdf file only !!');", true);
+                                //}
                             }
-                            Cmd.Parameters.AddWithValue("@Action", "Save");
-                            Cmd.Parameters.AddWithValue("@ID", hhd.Value);
-                            Cmd.Parameters.AddWithValue("@Companyname", txtcompanyname.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@TypeofSupply", ddlTypeofSupply.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@CreditLimit", TxtCreditLimit.Text.Trim());
-                            // Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@Countrycode", ddlCountryCode.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@SState", DBNull.Value);
-                            Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
-                            //Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@Clienttype", ddlClientType.SelectedValue);
-                            Cmd.Parameters.AddWithValue("@WebsiteLink", txtWebsiteLink.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@VisitingCardPath", PathH);
-                            Cmd.Parameters.AddWithValue("@Paymentterm", txtPaymentTerm.Text);
-                            //   Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
-                            //  Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@BillingPincode", txtBPincode.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@ShippingPincode", DBNull.Value);
-                            //  Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@shippinglocation", DBNull.Value);
-                            Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                            Cmd.Parameters.AddWithValue("@IsDeleted", '0');
-                            Cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
-                            Cmd.ExecuteNonQuery();
-                            Cls_Main.Conn_Close();
-                            Cls_Main.Conn_Dispose();
+                        }
+                        Cmd.Parameters.AddWithValue("@Action", "Save");
+                        Cmd.Parameters.AddWithValue("@ID", hhd.Value);
+                        Cmd.Parameters.AddWithValue("@Companyname", txtcompanyname.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@TypeofSupply", ddlTypeofSupply.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@CreditLimit", TxtCreditLimit.Text.Trim());
+                        // Cmd.Parameters.AddWithValue("@BState", ddlBStateCode.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@Countrycode", ddlCountryCode.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@SState", DBNull.Value);
+                        Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@Clienttype", ddlClientType.SelectedValue);
+                        Cmd.Parameters.AddWithValue("@WebsiteLink", txtWebsiteLink.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@VisitingCardPath", PathH);
+                        Cmd.Parameters.AddWithValue("@Paymentterm", txtPaymentTerm.Text);
+                        //   Cmd.Parameters.AddWithValue("@BillingAddress", txtBillingAddress.Text.Trim());
+                        //  Cmd.Parameters.AddWithValue("@Shippingaddress", txtshippingaddress.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@BillingPincode", txtBPincode.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@ShippingPincode", DBNull.Value);
+                        //  Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@shippinglocation", DBNull.Value);
+                        Cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                        Cmd.Parameters.AddWithValue("@IsDeleted", '0');
+                        Cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                        Cmd.ExecuteNonQuery();
+                        Cls_Main.Conn_Close();
+                        Cls_Main.Conn_Dispose();
 
-                            DataTable Dt = Cls_Main.Read_Table("SELECT * FROM [tbl_CompanyMaster] WHERE CompanyCode ='" + txtcompanycode.Text + "' ");
-                            if (Dt.Rows.Count > 0)
-                            {
+                        DataTable Dt = Cls_Main.Read_Table("SELECT * FROM [tbl_CompanyMaster] WHERE CompanyCode ='" + txtcompanycode.Text + "' ");
+                        if (Dt.Rows.Count > 0)
+                        {
 
-                                hhd.Value = Dt.Rows[0]["ID"].ToString();
-                            }
+                            hhd.Value = Dt.Rows[0]["ID"].ToString();
+                        }
+                        if (GVBAddress.Rows.Count > 0)
+                        {
                             foreach (GridViewRow g2 in GVBAddress.Rows)
                             {
                                 string BillAddress = (g2.FindControl("lblBillAddress") as Label).Text;
@@ -471,6 +469,9 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 Cls_Main.Conn_Close();
 
                             }
+                        }
+                        if (GVSAddress.Rows.Count > 0)
+                        {
                             foreach (GridViewRow g2 in GVSAddress.Rows)
                             {
                                 string ShipAddress = (g2.FindControl("lblShipAddress") as Label).Text;
@@ -491,44 +492,44 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
                             }
 
-
-                            //Save Contact Details 
-                            foreach (GridViewRow grd1 in dgvContactDetails.Rows)
-                            {
-
-                                string lblname = (grd1.FindControl("lblname") as Label).Text;
-                                string lblnumber = (grd1.FindControl("lblnumber") as Label).Text;
-                                string lblemailid = (grd1.FindControl("lblemailid") as Label).Text;
-                                string lblDepartment = (grd1.FindControl("lblDepartment") as Label).Text;
-                                string lbldesignation = (grd1.FindControl("lbldesignation") as Label).Text;
-
-                                Cls_Main.Conn_Open();
-                                SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_CompanyContactDetails (CompanyCode,Name,Number,EmailID,Department,Designation,CreatedBy,CreatedOn) VALUES (@CompanyCode,@Name,@Number,@EmailID,@Department,@Designation,@CreatedBy,@createdOn)", Cls_Main.Conn);
-                                cmdd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
-
-                                cmdd.Parameters.AddWithValue("@Name", lblname);
-                                cmdd.Parameters.AddWithValue("@Number", lblnumber);
-                                cmdd.Parameters.AddWithValue("@EmailID", lblemailid);
-                                cmdd.Parameters.AddWithValue("@Department", lblDepartment);
-                                cmdd.Parameters.AddWithValue("@Designation", lbldesignation);
-                                cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                                cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
-                                cmdd.ExecuteNonQuery();
-                                Cls_Main.Conn_Close();
-                            }
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Added Successfully..!!');window.location='CompanyMasterList.aspx'; ", true);
-
-
-
-
                         }
+                        //Save Contact Details 
+                        foreach (GridViewRow grd1 in dgvContactDetails.Rows)
+                        {
+
+                            string lblname = (grd1.FindControl("lblname") as Label).Text;
+                            string lblnumber = (grd1.FindControl("lblnumber") as Label).Text;
+                            string lblemailid = (grd1.FindControl("lblemailid") as Label).Text;
+                            string lblDepartment = (grd1.FindControl("lblDepartment") as Label).Text;
+                            string lbldesignation = (grd1.FindControl("lbldesignation") as Label).Text;
+
+                            Cls_Main.Conn_Open();
+                            SqlCommand cmdd = new SqlCommand("INSERT INTO tbl_CompanyContactDetails (CompanyCode,Name,Number,EmailID,Department,Designation,CreatedBy,CreatedOn) VALUES (@CompanyCode,@Name,@Number,@EmailID,@Department,@Designation,@CreatedBy,@createdOn)", Cls_Main.Conn);
+                            cmdd.Parameters.AddWithValue("@CompanyCode", txtcompanycode.Text.Trim());
+
+                            cmdd.Parameters.AddWithValue("@Name", lblname);
+                            cmdd.Parameters.AddWithValue("@Number", lblnumber);
+                            cmdd.Parameters.AddWithValue("@EmailID", lblemailid);
+                            cmdd.Parameters.AddWithValue("@Department", lblDepartment);
+                            cmdd.Parameters.AddWithValue("@Designation", lbldesignation);
+                            cmdd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                            cmdd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
+                            cmdd.ExecuteNonQuery();
+                            Cls_Main.Conn_Close();
+                        }
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Company Added Successfully..!!');window.location='CompanyMasterList.aspx'; ", true);
+
+
 
 
                     }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Fill Atleast One Address..!!'); ", true);
-                    }
+
+
+                    //}
+                    //else
+                    //{
+                    //    ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Fill Atleast One Address..!!'); ", true);
+                    //}
                 }
                 else
                 {
@@ -729,29 +730,33 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
     protected void ddlTypeofSupply_TextChanged(object sender, EventArgs e)
     {
-        //    try
-        //    {
-        //        if (ddlTypeofSupply.SelectedItem.Text == "EXPWOP")
-        //        {
-        //            fillddlCountryCode();
-        //            txtgstno.Text = "URP"; txtgstno.Enabled = false;
-        //            txtBPincode.Text = "999999"; ddlBStateCode.SelectedItem.Text = "96"; txtBPincode.Enabled = false; ddlBStateCode.Enabled = false;
+        try
+        {
+            if (ddlTypeofSupply.SelectedItem.Text == "EXPWOP")
+            {
+                fillddlCountryCode();
+                txtgstno.Text = "URP"; txtgstno.Enabled = false;
+                txtBGST.Text = "URP"; txtBGST.Enabled = false;
+                txtSGST.Text = "URP"; txtSGST.Enabled = false;
+                txtBPincode.Text = "999999";  txtBPincode.Enabled = false;
+                txtSPincode.Text = "999999"; txtSPincode.Enabled = false;
+                ddlBState.Text = "Other Territory"; ddlBState.Enabled = false;
+                ddlSState.Text = "Other Territory"; ddlSState.Enabled = false;
+                contry.Visible = true;
+            }
+            else
+            {
+                txtgstno.Text = ""; txtgstno.Enabled = true;
+                txtBPincode.Text = ""; txtBPincode.Enabled = true; 
 
-        //            contry.Visible = true;
-        //        }
-        //        else
-        //        {
-        //            txtgstno.Text = ""; txtgstno.Enabled = true;
-        //            txtBPincode.Text = ""; txtBPincode.Enabled = true; ddlBStateCode.Enabled = true;
-
-        //            contry.Visible = false;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string errorMsg = "An error occurred : " + ex.Message;
-        //        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
-        //    }
+                contry.Visible = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            string errorMsg = "An error occurred : " + ex.Message;
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + errorMsg + "');", true);
+        }
     }
 
     //protected void txtgstno_TextChanged(object sender, EventArgs e)
@@ -922,13 +927,18 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         string txtBLocation = ((TextBox)row.FindControl("txtBillLocation")).Text;
         string txtBPincode = ((TextBox)row.FindControl("txtBillPincode")).Text;
         string txtGST = ((TextBox)row.FindControl("txtBGSTno")).Text;
-        string ddlBState = ((DropDownList)row.FindControl("ddlBState")).Text;
+        string ddlBState = ((DropDownList)row.FindControl("ddlBState1")).Text;
         DataTable Dt = ViewState["BillDetails"] as DataTable;
+        Cls_Main.Conn_Open();
+        string state = string.Empty;
+        SqlCommand cmd = new SqlCommand("SELECT StateName FROM tbl_States where StateCode='" + ddlBState + "'", Cls_Main.Conn);
+        state = Convert.ToString(cmd.ExecuteScalar());
+        Cls_Main.Conn_Close();
 
         Dt.Rows[row.RowIndex]["BillAddress"] = txtBAddress;
         Dt.Rows[row.RowIndex]["BillLocation"] = txtBLocation;
         Dt.Rows[row.RowIndex]["BillPincode"] = txtBPincode;
-        Dt.Rows[row.RowIndex]["BillState"] = ddlBState;
+        Dt.Rows[row.RowIndex]["BillState"] = state;
         Dt.Rows[row.RowIndex]["GSTNo"] = txtGST;
         Dt.AcceptChanges();
         ViewState["BillDetails"] = Dt;
@@ -941,23 +951,9 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
     protected void gv_cancelB_Click(object sender, EventArgs e)
     {
-
         GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-
-        string txtBAddress = ((TextBox)row.FindControl("txtBillAddress")).Text;
-        string txtBLocation = ((TextBox)row.FindControl("txtBillLocation")).Text;
-        string txtBPincode = ((TextBox)row.FindControl("txtBillPincode")).Text;
-        string txtGST = ((TextBox)row.FindControl("txtBGSTno")).Text;
-        string ddlBState = ((DropDownList)row.FindControl("ddlBState")).Text;
-        DataTable Dt = ViewState["BillDetails"] as DataTable;
-
-        Dt.Rows[row.RowIndex]["BillAddress"] = txtBAddress;
-        Dt.Rows[row.RowIndex]["BillLocation"] = txtBLocation;
-        Dt.Rows[row.RowIndex]["BillPincode"] = txtBPincode;
-        Dt.Rows[row.RowIndex]["BillState"] = ddlBState;
-        Dt.Rows[row.RowIndex]["GSTNo"] = txtGST;
-        Dt.AcceptChanges();
-        ViewState["BillDetails"] = Dt;
+        DataTable dt = ViewState["BillDetails"] as DataTable;
+        ViewState["BillDetails"] = dt;
         GVBAddress.EditIndex = -1;
         GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
         GVBAddress.DataBind();
@@ -996,44 +992,86 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
     {
         if (e.Row.RowType == DataControlRowType.DataRow) // Only for edit mode
         {
-            DropDownList ddlBState = (DropDownList)e.Row.FindControl("ddlBState");
-
-            if (ddlBState != null)
+            LinkButton lnkedit = e.Row.FindControl("btn_editB") as LinkButton;
+            if (lnkedit == null)
             {
-                try
+                string state = DataBinder.Eval(e.Row.DataItem, "BillState") as string;
+                DropDownList ddlBState1 = e.Row.FindControl("ddlBState1") as DropDownList;
+                if (state != null)
                 {
-                    using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
+                    try
                     {
-                        DataTable dt = new DataTable();
-                        ad.Fill(dt);
 
-                        if (dt.Rows.Count > 0)
+                        using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
                         {
-                            ddlBState.DataSource = dt;
-                            ddlBState.DataValueField = "statecode";
-                            ddlBState.DataTextField = "statename";
-                            ddlBState.DataBind();
-                            ddlBState.Items.Insert(0, new ListItem("-- select state --", ""));
+                            DataTable dt = new DataTable();
+                            ad.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                ddlBState1.DataSource = dt;
+                                ddlBState1.DataValueField = "statecode";
+                                ddlBState1.DataTextField = "statename";
+                                ddlBState1.DataBind();
+                                ddlBState1.Items.Insert(0, new ListItem(state, ""));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+
+                    ListItem selectedItem = ddlBState1.Items.FindByText(state); // Find by state name
+                    if (selectedItem != null)
+                    {
+                        ddlBState1.SelectedValue = selectedItem.Value; // Set the selected value
+                    }
+                }
+            }
+            else
+            {
+
+                Label currentState = (e.Row.FindControl("lblBillState") as Label);
+
+                if (currentState.Text != null)
+                {
+                    try
+                    {
+                        using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
+                        {
+                            DataTable dt = new DataTable();
+                            ad.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                ddlBState.DataSource = dt;
+                                ddlBState.DataValueField = "statecode";
+                                ddlBState.DataTextField = "statename";
+                                ddlBState.DataBind();
+                                ddlBState.Items.Insert(0, new ListItem("-- select state --", ""));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+
+                    // Optionally, set the selected value if available
+                    // Label currentState = (e.Row.FindControl("hdnBillState") as Label);  // Current state from the grid
+                    if (!string.IsNullOrEmpty(currentState.Text))
+                    {
+                        //    // Only set the selected value if it exists in the dropdown list
+                        ListItem selectedItem = ddlBState.Items.FindByText(currentState.Text);
+                        if (selectedItem != null)
+                        {
+                            ddlBState.SelectedItem.Text = currentState.Text; // Set the selected value in the dropdown
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-
-                // Optionally, set the selected value if available
-                //string currentState = ((Label)e.Row.FindControl("lblBillState")).Text; // Current state from the grid
-                //if (!string.IsNullOrEmpty(currentState))
-                //{
-                //    // Only set the selected value if it exists in the dropdown list
-                //    ListItem selectedItem = ddlBState.Items.FindByValue(currentState);
-                //    if (selectedItem != null)
-                //    {
-                //        ddlBState.SelectedValue = currentState; // Set the selected value in the dropdown
-                //    }
-                //}
             }
         }
     }
@@ -1071,44 +1109,86 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
     {
         if (e.Row.RowType == DataControlRowType.DataRow) // Only for edit mode
         {
-            DropDownList ddlSState = (DropDownList)e.Row.FindControl("ddlSState");
-
-            if (ddlSState != null)
+            LinkButton lnkedit = e.Row.FindControl("btn_editS") as LinkButton;
+            if (lnkedit == null)
             {
-                try
+                string state = DataBinder.Eval(e.Row.DataItem, "ShipState") as string;
+                DropDownList ddlSState1 = e.Row.FindControl("ddlSState1") as DropDownList;
+                if (state != null)
                 {
-                    using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
+                    try
                     {
-                        DataTable dt = new DataTable();
-                        ad.Fill(dt);
 
-                        if (dt.Rows.Count > 0)
+                        using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
                         {
-                            ddlSState.DataSource = dt;
-                            ddlSState.DataValueField = "statecode";
-                            ddlSState.DataTextField = "statename";
-                            ddlSState.DataBind();
-                            ddlSState.Items.Insert(0, new ListItem("-- select state --", ""));
+                            DataTable dt = new DataTable();
+                            ad.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                ddlSState1.DataSource = dt;
+                                ddlSState1.DataValueField = "statecode";
+                                ddlSState1.DataTextField = "statename";
+                                ddlSState1.DataBind();
+                                ddlSState1.Items.Insert(0, new ListItem(state, ""));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+
+                    ListItem selectedItem = ddlSState1.Items.FindByText(state); // Find by state name
+                    if (selectedItem != null)
+                    {
+                        ddlSState1.SelectedValue = selectedItem.Value; // Set the selected value
+                    }
+                }
+            }
+            else
+            {
+
+                Label currentState = (e.Row.FindControl("lblShipState") as Label);
+
+                if (currentState.Text != null)
+                {
+                    try
+                    {
+                        using (SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM [tbl_States]", Cls_Main.Conn))
+                        {
+                            DataTable dt = new DataTable();
+                            ad.Fill(dt);
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                ddlSState.DataSource = dt;
+                                ddlSState.DataValueField = "statecode";
+                                ddlSState.DataTextField = "statename";
+                                ddlSState.DataBind();
+                                ddlSState.Items.Insert(0, new ListItem("-- select state --", ""));
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+
+                    // Optionally, set the selected value if available
+                    // Label currentState = (e.Row.FindControl("hdnBillState") as Label);  // Current state from the grid
+                    if (!string.IsNullOrEmpty(currentState.Text))
+                    {
+                        //    // Only set the selected value if it exists in the dropdown list
+                        ListItem selectedItem = ddlSState.Items.FindByText(currentState.Text);
+                        if (selectedItem != null)
+                        {
+                            ddlSState.SelectedItem.Text = currentState.Text; // Set the selected value in the dropdown
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-
-                    Console.WriteLine("Error: " + ex.Message);
-                }
-
-                // Optionally, set the selected value if available
-                //string currentState = ((Label)e.Row.FindControl("lblBillState")).Text; // Current state from the grid
-                //if (!string.IsNullOrEmpty(currentState))
-                //{
-                //    // Only set the selected value if it exists in the dropdown list
-                //    ListItem selectedItem = ddlBState.Items.FindByValue(currentState);
-                //    if (selectedItem != null)
-                //    {
-                //        ddlBState.SelectedValue = currentState; // Set the selected value in the dropdown
-                //    }
-                //}
             }
         }
     }
@@ -1127,43 +1207,37 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
 
     protected void gv_cancelS_Click(object sender, EventArgs e)
     {
-
         GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-        string txtBAddress = ((TextBox)row.FindControl("txtShipAddress")).Text;
-        string txtBLocation = ((TextBox)row.FindControl("txtShipLocation")).Text;
-        string txtBPincode = ((TextBox)row.FindControl("txtShipPincode")).Text;
-        string txtGST = ((TextBox)row.FindControl("txtSGSTno")).Text;
-        string ddlBState = ((DropDownList)row.FindControl("ddlSState")).Text;
-        DataTable Dt = ViewState["ShipDetails"] as DataTable;
-
-        Dt.Rows[row.RowIndex]["ShipAddress"] = txtBAddress;
-        Dt.Rows[row.RowIndex]["ShipLocation"] = txtBLocation;
-        Dt.Rows[row.RowIndex]["ShipPincode"] = txtBPincode;
-        Dt.Rows[row.RowIndex]["ShipState"] = ddlBState;
-        Dt.Rows[row.RowIndex]["GSTNo"] = txtGST;
-        Dt.AcceptChanges();
-        ViewState["BillDetails"] = Dt;
-        GVBAddress.EditIndex = -1;
-        GVBAddress.DataSource = (DataTable)ViewState["BillDetails"];
-        GVBAddress.DataBind();
+        DataTable dt = ViewState["ShipDetails"] as DataTable;
+        ViewState["ShipDetails"] = dt;
+        GVSAddress.EditIndex = -1;
+        GVSAddress.DataSource = (DataTable)ViewState["ShipDetails"];
+        GVSAddress.DataBind();
     }
 
     protected void gv_updateS_Click(object sender, EventArgs e)
     {
         GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
 
-        string txtBAddress = ((TextBox)row.FindControl("txtShipAddress")).Text;
-        string txtBLocation = ((TextBox)row.FindControl("txtShipLocation")).Text;
-        string txtBPincode = ((TextBox)row.FindControl("txtShipPincode")).Text;
-        string txtGST = ((TextBox)row.FindControl("txtSGSTno")).Text;
-        string ddlBState = ((DropDownList)row.FindControl("ddlSState")).Text;
+        string txtSSAddress = ((TextBox)row.FindControl("txtShipAddress")).Text;
+        string txtSSLocation = ((TextBox)row.FindControl("txtShipLocation")).Text;
+        string txtSSPincode = ((TextBox)row.FindControl("txtShipPincode")).Text;
+        string txtSSGST = ((TextBox)row.FindControl("txtSGSTno")).Text;
+        string ddlSState1 = ((DropDownList)row.FindControl("ddlSState1")).Text;
+
         DataTable Dt = ViewState["ShipDetails"] as DataTable;
 
-        Dt.Rows[row.RowIndex]["ShipAddress"] = txtBAddress;
-        Dt.Rows[row.RowIndex]["ShipLocation"] = txtBLocation;
-        Dt.Rows[row.RowIndex]["ShipPincode"] = txtBPincode;
-        Dt.Rows[row.RowIndex]["ShipState"] = ddlBState;
-        Dt.Rows[row.RowIndex]["ShipGSTNo"] = txtGST;
+        Cls_Main.Conn_Open();
+        string state = string.Empty;
+        SqlCommand cmd = new SqlCommand("SELECT StateName FROM tbl_States where StateCode='" + ddlSState1 + "'", Cls_Main.Conn);
+        state = Convert.ToString(cmd.ExecuteScalar());
+        Cls_Main.Conn_Close();
+
+        Dt.Rows[row.RowIndex]["ShippingAddress"] = txtSSAddress;
+        Dt.Rows[row.RowIndex]["ShipLocation"] = txtSSLocation;
+        Dt.Rows[row.RowIndex]["ShipPincode"] = txtSSPincode;
+        Dt.Rows[row.RowIndex]["ShipState"] = state;
+        Dt.Rows[row.RowIndex]["ShipGSTNo"] = txtSSGST;
         Dt.AcceptChanges();
         ViewState["ShipDetails"] = Dt;
         GVSAddress.EditIndex = -1;

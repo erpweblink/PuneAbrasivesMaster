@@ -201,7 +201,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
             Fillddlshippingaddress(Dt.Rows[0]["ShippingCustomer"].ToString());
             txtbillingcustomer.Text = Dt.Rows[0]["BillingCustomer"].ToString();
             txtshippingcustomer.Text = Dt.Rows[0]["ShippingCustomer"].ToString();
-            txtbillingaddress.Text = Dt.Rows[0]["BillingAddress"].ToString();
+            ddlBillAddress.SelectedItem.Text = Dt.Rows[0]["BillingAddress"].ToString();
             //Fillddlshippingaddress(txtshippingcustomer.Text);
             ddlShippingaddress.SelectedItem.Text = Dt.Rows[0]["ShippingAddress"].ToString();
             DateTime ffff1 = Convert.ToDateTime(Dt.Rows[0]["Invoicedate"].ToString());
@@ -379,7 +379,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
                             Cmd.Parameters.AddWithValue("@InvoiceDate", txtinvoiceDate.Text.Trim());
                             Cmd.Parameters.AddWithValue("@billingcustomer", txtbillingcustomer.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippingcustomer", txtshippingcustomer.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@billingaddress", txtbillingaddress.Text.Trim());
+                            Cmd.Parameters.AddWithValue("@billingaddress", ddlBillAddress.SelectedItem.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippingAddress", ddlShippingaddress.SelectedItem.Text.Trim());
                             Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippinglocation", txtshippinglocation.Text.Trim());
@@ -503,7 +503,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
                             Cmd.Parameters.AddWithValue("@InvoiceDate", txtinvoiceDate.Text.Trim());
                             Cmd.Parameters.AddWithValue("@billingcustomer", txtbillingcustomer.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippingcustomer", txtshippingcustomer.Text.Trim());
-                            Cmd.Parameters.AddWithValue("@billingaddress", txtbillingaddress.Text.Trim());
+                            Cmd.Parameters.AddWithValue("@billingaddress", ddlBillAddress.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippingAddress", ddlShippingaddress.SelectedItem.Text.Trim());
                             Cmd.Parameters.AddWithValue("@billinglocation", txtbillinglocation.Text.Trim());
                             Cmd.Parameters.AddWithValue("@shippinglocation", txtshippinglocation.Text.Trim());
@@ -1523,7 +1523,10 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         if (dt.Rows.Count > 0)
         {
             Fillddlshippingaddress(dt.Rows[0]["Companyname"].ToString());
-            txtbillingaddress.Text = dt.Rows[0]["Billingaddress"].ToString();
+            if (!string.IsNullOrEmpty(dt.Rows[0]["Shippingaddress"].ToString()))
+            {
+                ddlBillAddress.SelectedItem.Text = dt.Rows[0]["Billingaddress"].ToString();
+            }
             if (!string.IsNullOrEmpty(dt.Rows[0]["Shippingaddress"].ToString()))
             {
                 ddlShippingaddress.SelectedValue = dt.Rows[0]["Shippingaddress"].ToString();
@@ -1562,7 +1565,10 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         if (dt.Rows.Count > 0)
         {
             Fillddlshippingaddress(dt.Rows[0]["Companyname"].ToString());
-            txtbillingaddress.Text = dt.Rows[0]["Billingaddress"].ToString();
+            if (!string.IsNullOrEmpty(dt.Rows[0]["Billingaddress"].ToString()))
+            {
+                ddlBillAddress.SelectedItem.Text = dt.Rows[0]["Billingaddress"].ToString();
+            }
             if (!string.IsNullOrEmpty(dt.Rows[0]["Shippingaddress"].ToString()))
             {
                 ddlShippingaddress.SelectedValue = dt.Rows[0]["Shippingaddress"].ToString();
@@ -1703,24 +1709,46 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
 
     private void Fillddlshippingaddress(string ID)
     {
+        try
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                ddlShippingaddress.DataSource = dt;
+                ddlShippingaddress.DataValueField = "ShippingAddress";
+                ddlShippingaddress.DataTextField = "ShippingAddress";
+                ddlShippingaddress.DataBind();
+                ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            }
+            else
+            {
+                ddlShippingaddress.DataSource = null;
+                ddlShippingaddress.DataBind();
+                ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            }
 
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where  Companyname='" + ID + "'", Cls_Main.Conn);
-        DataTable dt = new DataTable();
-        ad.Fill(dt);
-        if (dt.Rows.Count > 0)
-        {
-            ddlShippingaddress.DataSource = dt;
-            ddlShippingaddress.DataValueField = "ShippingAddress";
-            ddlShippingaddress.DataTextField = "ShippingAddress";
-            ddlShippingaddress.DataBind();
-            ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+
+            SqlDataAdapter ad1 = new SqlDataAdapter("SELECT SA.BillAddress FROM tbl_BillingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+            DataTable dt1 = new DataTable();
+            ad1.Fill(dt1);
+            if (dt1.Rows.Count > 0)
+            {
+                ddlBillAddress.DataSource = dt1;
+                ddlBillAddress.DataValueField = "BillAddress";
+                ddlBillAddress.DataTextField = "BillAddress";
+                ddlBillAddress.DataBind();
+                ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
+            }
+            else
+            {
+                ddlBillAddress.DataSource = null;
+                ddlBillAddress.DataBind();
+                ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
+            }
         }
-        else
-        {
-            ddlShippingaddress.DataSource = null;
-            ddlShippingaddress.DataBind();
-            ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
-        }
+        catch { }
     }
 
     protected void ddlShippingaddress_SelectedIndexChanged(object sender, EventArgs e)
@@ -1733,7 +1761,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
             txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
             txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
             txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
-
+            txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
 
         }
     }
@@ -1952,6 +1980,23 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
         catch (Exception ex)
         {
             throw (ex);
+        }
+    }
+
+    protected void ddlBillAddress_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlBillAddress.SelectedItem.Text != "-Select Billing Address-")
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM tbl_BillingAddress  AS SA where BillAddress='" + ddlBillAddress.SelectedItem.Text + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                txtbillinglocation.Text = dt.Rows[0]["BillLocation"].ToString();
+                txtbillingPincode.Text = dt.Rows[0]["BillPincode"].ToString();
+                txtbillingstatecode.Text = dt.Rows[0]["Billstatecode"].ToString();
+                txtbillingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            }
         }
     }
 }

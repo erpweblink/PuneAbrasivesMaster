@@ -325,6 +325,24 @@
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ValidationGroup="1" ErrorMessage="Please fill Mobile No." ControlToValidate="txtmobileno" ForeColor="Red"></asp:RequiredFieldValidator>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="Label10" runat="server" Font-Bold="true" CssClass="form-label">Billing Address :</asp:Label>
+
+                                    <asp:DropDownList ID="ddlBillAddress" Width="100%" OnTextChanged="ddlBillAddress_TextChanged"
+                                        class="form-control overflow-Scroll" AutoPostBack="true" runat="server">
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-6 col-12 mb-3">
+
+                                    <asp:Label ID="Label3" runat="server" Text=""><b></b></asp:Label>
+                                    <asp:Label ID="Label11" runat="server" Font-Bold="true" CssClass="form-label">Shipping Address :</asp:Label>
+                                    <asp:DropDownList ID="ddlShippingaddress" Width="100%"
+                                        class="form-control overflow-Scroll" AutoPostBack="true" runat="server">
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label8" runat="server" Font-Bold="true" CssClass="form-label">Email ID :</asp:Label>
@@ -336,21 +354,6 @@
                                     <asp:Label ID="Label9" runat="server" Font-Bold="true" CssClass="form-label">GST No. :</asp:Label>
 
                                     <asp:TextBox ID="txtgstno" CssClass="form-control" placeholder="Enter GST No." runat="server"></asp:TextBox>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 col-12 mb-3">
-                                    <asp:Label ID="Label10" runat="server" Font-Bold="true" CssClass="form-label">Billing Address :</asp:Label>
-
-                                    <asp:TextBox ID="txtaddress" CssClass="form-control" placeholder="Enter Billing Address" TextMode="MultiLine" runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-md-6 col-12 mb-3">
-
-                                    <asp:Label ID="Label3" runat="server" Text=""><b></b></asp:Label>
-                                    <asp:Label ID="Label11" runat="server" Font-Bold="true" CssClass="form-label">Shipping Address :</asp:Label>
-                                    <asp:DropDownList ID="ddlShippingaddress" Width="100%"
-                                        class="form-control overflow-Scroll" AutoPostBack="true" runat="server">
-                                    </asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row">
@@ -761,11 +764,11 @@
                                             <br />
 
                                             <center>
-                                        <div class="col-md-12">
-                                            <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
-                                            <asp:Label ID="lbl_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
-                                             <asp:HiddenField ID="hfTotal" runat="server" />
-                                        </div>
+                                                <div class="col-md-12">
+                                                    <asp:Label ID="lbl_total_amt" runat="server" class="control-label col-sm-6">Total Amount (In Words) :<span class="spncls"></span></asp:Label><br />
+                                                    <asp:Label ID="lbl_total_amt_Value" ForeColor="red" class="control-label col-sm-6 font-weight-bold" runat="server" Text=""></asp:Label>
+                                                    <asp:HiddenField ID="hfTotal" runat="server" />
+                                                </div>
                                             </center>
                                         </div>
                                         <div class="col-md-6" style="text-align: right">
