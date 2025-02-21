@@ -154,12 +154,13 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 //DivManual.Visible = true;
                 btnadd.Text = "Update";
                 Fillddlshippingaddress(txtSupplierName.Text);
+                FillddlBillingAddress(txtSupplierName.Text);
                 //New Details for E-Invoice
                 txtshippingcustomer.Text = dt.Rows[0]["ShippingCustomer"].ToString();
                 ddlShippingaddress.SelectedValue = dt.Rows[0]["ShippingAddress"].ToString();
                 txtbillingGST.Text = dt.Rows[0]["BillingGST"].ToString();
                 txtshippingGST.Text = dt.Rows[0]["ShippingGST"].ToString();
-                txtbillingaddress.Text = dt.Rows[0]["BillingAddress"].ToString();
+                ddlBillAddress.SelectedItem.Text = dt.Rows[0]["BillingAddress"].ToString();
                 txtbillinglocation.Text = dt.Rows[0]["BillingLocation"].ToString();
                 txtshippinglocation.Text = dt.Rows[0]["ShippingLocation"].ToString();
                 txtbillingPincode.Text = dt.Rows[0]["BillingPincode"].ToString();
@@ -435,7 +436,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     }
 
                     cmd.Parameters.AddWithValue("@VehicalNo", TransportDeatils);
-                    cmd.Parameters.AddWithValue("@BillingAddress", txtbillingaddress.Text);
+                    cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@BillingLocation", txtbillinglocation.Text);
                     cmd.Parameters.AddWithValue("@ShippingLocation", txtshippinglocation.Text);
                     cmd.Parameters.AddWithValue("@BillingGST", txtbillingGST.Text);
@@ -745,7 +746,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             }
 
             cmd.Parameters.AddWithValue("@VehicalNo", TransportDeatils);
-            cmd.Parameters.AddWithValue("@BillingAddress", txtbillingaddress.Text);
+            cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
             cmd.Parameters.AddWithValue("@BillingLocation", txtbillinglocation.Text);
             cmd.Parameters.AddWithValue("@ShippingLocation", txtshippinglocation.Text);
             cmd.Parameters.AddWithValue("@BillingGST", txtbillingGST.Text);
@@ -762,7 +763,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             cmd.Connection.Close();
 
 
-          
+
 
 
             if (dgvParticularsDetails.Rows.Count > 0)
@@ -802,7 +803,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 }
             }
 
-           
+
             //Save Component Details 
             if (gvcomponent.Rows.Count > 0)
             {
@@ -992,7 +993,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
 
             using (SqlCommand com = new SqlCommand())
             {
-                com.CommandText = "Select DISTINCT [Companyname] from tbl_CompanyMaster where " + "Companyname like @Search + '%' and status=0";
+                com.CommandText = "Select DISTINCT [Companyname] from tbl_CompanyMaster where " + "Companyname like @Search + '%'  AND Isdeleted=0";
 
                 com.Parameters.AddWithValue("@Search", prefixText);
                 com.Connection = con;
@@ -1020,14 +1021,8 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             sad.Fill(dt);
             if (dt.Rows.Count > 0)
             {
-                Fillddlshippingaddress(txtSupplierName.Text);
-                txtbillingaddress.Text = dt.Rows[0]["Billingaddress"].ToString();
-                txtbillinglocation.Text = dt.Rows[0]["Billinglocation"].ToString();
-                txtbillingPincode.Text = dt.Rows[0]["Billingpincode"].ToString().Replace(" ", "");
-                txtbillingstatecode.Text = dt.Rows[0]["Billing_statecode"].ToString().Replace(" ", "");
-                txtshippingcustomer.Text = dt.Rows[0]["Companyname"].ToString();
-                txtbillingGST.Text = dt.Rows[0]["GSTno"].ToString().Replace(" ", "");
-                txtshippingGST.Text = dt.Rows[0]["GSTno"].ToString().Replace(" ", "");
+               // Fillddlshippingaddress(txtSupplierName.Text);
+                FillddlBillingAddress(txtSupplierName.Text);
                 GetInvoice();
                 BindBillNO();
                 // getOrderDatailsdts();
@@ -1987,18 +1982,8 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
     {
         try
         {
-            DataTable dt = new DataTable();
-            SqlDataAdapter sad = new SqlDataAdapter("select * from tbl_CompanyMaster where cname='" + txtshippingcustomer.Text + "'", con);
-            sad.Fill(dt);
-            if (dt.Rows.Count > 0)
-            {
-                //txtshippingAddress.Text = dt.Rows[0]["Shippingaddress"].ToString();
-                //txtshippinglocation.Text = dt.Rows[0]["Shippinglocation"].ToString();
-                //txtshippingPincode.Text = dt.Rows[0]["Shippingpincode"].ToString();
-                //txtshippingstatecode.Text = dt.Rows[0]["StateCode"].ToString();
-                txtshippingGST.Text = dt.Rows[0]["GSTno"].ToString();
-                Fillddlshippingaddress(txtshippingcustomer.Text);
-            }
+
+            Fillddlshippingaddress(txtshippingcustomer.Text);
 
         }
         catch (Exception ex)
@@ -2268,7 +2253,6 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
     {
         GstCalculationTcs();
     }
-
     protected void GetInvoice()
     {
         string com = "SELECT * FROM tbltaxinvoicehdr WHERE BillingCustomer = '" + txtSupplierName.Text + "' AND isdeleted = 0";
@@ -2283,33 +2267,56 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
         ddlinvoice.DataBind();
         ddlinvoice.Items.Insert(0, new ListItem("--Select Invoice Number--", "0"));
     }
-
-
     protected void Button1_Click(object sender, EventArgs e)
     {
         Response.Redirect("CreditDebitNoteSaleList.aspx");
     }
-
-    private void Fillddlshippingaddress(string ID)
+    private void FillddlBillingAddress(string id)
     {
 
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where  Companyname='" + ID + "'", Cls_Main.Conn);
-        DataTable dt = new DataTable();
-        ad.Fill(dt);
-        if (dt.Rows.Count > 0)
+        SqlDataAdapter ad1 = new SqlDataAdapter("SELECT SA.BillAddress FROM tbl_BillingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+        DataTable dt1 = new DataTable();
+        ad1.Fill(dt1);
+        if (dt1.Rows.Count > 0)
         {
-            ddlShippingaddress.DataSource = dt;
-            ddlShippingaddress.DataValueField = "ShippingAddress";
-            ddlShippingaddress.DataTextField = "ShippingAddress";
-            ddlShippingaddress.DataBind();
-            ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            ddlBillAddress.DataSource = dt1;
+            ddlBillAddress.DataValueField = "BillAddress";
+            ddlBillAddress.DataTextField = "BillAddress";
+            ddlBillAddress.DataBind();
+            ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
         }
         else
         {
-            ddlShippingaddress.DataSource = null;
-            ddlShippingaddress.DataBind();
-            ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            ddlBillAddress.DataSource = null;
+            ddlBillAddress.DataBind();
+            ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
         }
+    }
+    private void Fillddlshippingaddress(string ID)
+    {
+        try
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                ddlShippingaddress.DataSource = dt;
+                ddlShippingaddress.DataValueField = "ShippingAddress";
+                ddlShippingaddress.DataTextField = "ShippingAddress";
+                ddlShippingaddress.DataBind();
+                ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            }
+            else
+            {
+                ddlShippingaddress.DataSource = null;
+                ddlShippingaddress.DataBind();
+                ddlShippingaddress.Items.Insert(0, "-Select Shipping Address-");
+            }
+
+
+        }
+        catch { }
     }
 
     protected void ddlShippingaddress_SelectedIndexChanged(object sender, EventArgs e)
@@ -2322,7 +2329,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
             txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
             txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
-
+            txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
 
         }
     }
@@ -2506,6 +2513,23 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             cmdd.Parameters.AddWithValue("@Batch", lblbatch);
             cmdd.ExecuteNonQuery();
             Cls_Main.Conn_Close();
+        }
+    }
+
+    protected void ddlBillAddress_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlBillAddress.SelectedItem.Text != "-Select Billing Address-")
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM tbl_BillingAddress  AS SA where BillAddress='" + ddlBillAddress.SelectedItem.Text + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                txtbillinglocation.Text = dt.Rows[0]["BillLocation"].ToString();
+                txtbillingPincode.Text = dt.Rows[0]["BillPincode"].ToString();
+                txtbillingstatecode.Text = dt.Rows[0]["Billstatecode"].ToString();
+                txtbillingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            }
         }
     }
 }

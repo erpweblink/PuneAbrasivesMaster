@@ -212,6 +212,17 @@
                             </div>
                             <div class="col-md-3 col-12 mb-3">
                                 <div style="margin-top: 14px;">
+                                    <asp:Label for="lblcomponent" runat="server" Font-Bold="true">Component :</asp:Label>
+                                    <asp:TextBox ID="txtcomponent" CssClass="form-control" placeholder="Search Component" runat="server" OnTextChanged="txtcomponent_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
+                                    <asp:AutoCompleteExtender ID="AutoCompleteExtender4" runat="server" CompletionListCssClass="completionList"
+                                        CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                                        CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetComponentList"
+                                        TargetControlID="txtcomponent">
+                                    </asp:AutoCompleteExtender>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12 mb-3">
+                                <div style="margin-top: 14px;">
                                     <asp:Label ID="lblGrade" Font-Bold="true" runat="server" Text="Grade :"></asp:Label>
 
                                     <asp:TextBox ID="txtGrade" ValidationGroup="1" CssClass="form-control" AutoPostBack="true" OnTextChanged="txtGrade_TextChanged" placeholder="Search Grade" runat="server" Width="100%"></asp:TextBox>
@@ -263,80 +274,85 @@
                     </div>
                     <div class="row">
                         <div style="overflow-x: auto; max-height: 600px; overflow-y: auto; border: 1px solid #ccc;">
-                          
-                                <asp:GridView ID="GVSalesTarget" runat="server" CellPadding="4" DataKeyNames="TargetCode" Width="100%"
-                                    CssClass="grivdiv pagination-ys" AutoGenerateColumns="false" OnRowCommand="GVSalesTarget_RowCommand" OnRowDataBound="GVSalesTarget_RowDataBound">
-                                    <Columns>
-                                        <asp:TemplateField HeaderText="Sr.No." HeaderStyle-Width="50px" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="lblsno" runat="server" Text='<%# Container.DataItemIndex+1 %>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Target Code" HeaderStyle-CssClass="gvhead" Visible="false">
-                                            <ItemTemplate>
-                                                <asp:Label ID="targetcode" runat="server" Text='<%#Eval("TargetCode")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Year" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="yaer" runat="server" Text='<%#Eval("Year")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Month" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="Month" runat="server" Text='<%#Eval("Months")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Customer Name" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="lblCustomername" runat="server" Text='<%#Eval("CustomerName")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="avGrade" runat="server" Text='<%#Eval("Grade")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Sales Person" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="Salesperson" runat="server" Text='<%#Eval("SalesPerson")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Rate" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="Rate" runat="server" Text='<%#Eval("Rate")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Quantity" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="Quantity" runat="server" Text='<%#Eval("Quantity")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Amount" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="avAmount" runat="server" Text='<%#Eval("Amount")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Sale Quantity" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="SaleQuantity" runat="server" Text='<%#Eval("SaleQuantity")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="Sale Amount" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:Label ID="SaleAmount" runat="server" Text='<%#Eval("SaleAmount")%>'></asp:Label>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
 
-                                        <asp:TemplateField HeaderText="ACTION" HeaderStyle-CssClass="gvhead">
-                                            <ItemTemplate>
-                                                <asp:LinkButton ID="btnEdit" runat="server" Height="27px" CausesValidation="false" CommandName="RowEdit" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
-                                                <asp:LinkButton ID="btnDelete" runat="server" Height="27px" ToolTip="Delete" CausesValidation="false" CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-trash' style='font-size:24px;color: red;'></i></asp:LinkButton>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                    </Columns>
-                                </asp:GridView>
-                          
+                            <asp:GridView ID="GVSalesTarget" runat="server" CellPadding="4" DataKeyNames="TargetCode" Width="100%"
+                                CssClass="grivdiv pagination-ys" AutoGenerateColumns="false" OnRowCommand="GVSalesTarget_RowCommand" OnRowDataBound="GVSalesTarget_RowDataBound">
+                                <Columns>
+                                    <asp:TemplateField HeaderText="Sr.No." HeaderStyle-Width="50px" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblsno" runat="server" Text='<%# Container.DataItemIndex+1 %>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Target Code" HeaderStyle-CssClass="gvhead" Visible="false">
+                                        <ItemTemplate>
+                                            <asp:Label ID="targetcode" runat="server" Text='<%#Eval("TargetCode")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Year" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="yaer" runat="server" Text='<%#Eval("Year")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Month" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Month" runat="server" Text='<%#Eval("Months")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Customer Name" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblCustomername" runat="server" Text='<%#Eval("CustomerName")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Component" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="avComponent" runat="server" Text='<%#Eval("Component")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Grade" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="avGrade" runat="server" Text='<%#Eval("Grade")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Sales Person" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Salesperson" runat="server" Text='<%#Eval("SalesPerson")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Rate" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Rate" runat="server" Text='<%#Eval("Rate")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Quantity" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="Quantity" runat="server" Text='<%#Eval("Quantity")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Amount" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="avAmount" runat="server" Text='<%#Eval("Amount")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Sale Quantity" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="SaleQuantity" runat="server" Text='<%#Eval("SaleQuantity")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Sale Amount" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:Label ID="SaleAmount" runat="server" Text='<%#Eval("SaleAmount")%>'></asp:Label>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="ACTION" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="btnEdit" runat="server" Height="27px" CausesValidation="false" CommandName="RowEdit" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-edit' style='font-size:24px;color: #212529;'></i></asp:LinkButton>
+                                            <asp:LinkButton ID="btnDelete" runat="server" Height="27px" ToolTip="Delete" CausesValidation="false" CommandName="RowDelete" OnClientClick="Javascript:return confirm('Are you sure to Delete?')" CommandArgument='<%#Eval("ID")%>'><i class='fas fa-trash' style='font-size:24px;color: red;'></i></asp:LinkButton>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </Columns>
+                            </asp:GridView>
+
                         </div>
                     </div>
                 </div>

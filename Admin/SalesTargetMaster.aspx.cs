@@ -67,10 +67,11 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
             ddlSalesperson.SelectedItem.Text = Dt.Rows[0]["SalesPerson"].ToString();
             txtRate.Text = Dt.Rows[0]["Rate"].ToString();
             txtcompanyname.Text = Dt.Rows[0]["Customername"].ToString();
+            txtcomponent.Text = Dt.Rows[0]["Component"].ToString();
             txtGrade.Text = Dt.Rows[0]["Grade"].ToString();
             txtQuantity.Text = Dt.Rows[0]["Quantity"].ToString();
             txtamount.Text = Dt.Rows[0]["Amount"].ToString();
-            hfCalculatedAmount.Value= Dt.Rows[0]["Amount"].ToString();
+            hfCalculatedAmount.Value = Dt.Rows[0]["Amount"].ToString();
             txtTargetcode.Text = Dt.Rows[0]["TargetCode"].ToString();
 
 
@@ -161,6 +162,7 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
                     Cmd.Parameters.AddWithValue("@TargetCode", hhd.Value);
                     Cmd.Parameters.AddWithValue("@Amount", hfCalculatedAmount.Value);
                     Cmd.Parameters.AddWithValue("@companyname", txtcompanyname.Text.Trim());
+                    Cmd.Parameters.AddWithValue("@component", txtcomponent.Text.Trim());
                     Cmd.Parameters.AddWithValue("@Rate", txtRate.Text.Trim());
                     Cmd.Parameters.AddWithValue("@Grade", txtGrade.Text.Trim());
                     Cmd.Parameters.AddWithValue("@User", ddlSalesperson.SelectedItem.Text.Trim());
@@ -191,6 +193,7 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
                         Cmd.CommandType = CommandType.StoredProcedure;
                         Cmd.Parameters.AddWithValue("@Action", "Save");
                         Cmd.Parameters.AddWithValue("@companyname", txtcompanyname.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@component", txtcomponent.Text.Trim());
                         Cmd.Parameters.AddWithValue("@Year", ddlYear.SelectedItem.Text.Trim());
                         Cmd.Parameters.AddWithValue("@TargetCode", txtTargetcode.Text.Trim());
                         Cmd.Parameters.AddWithValue("@Month", ddlMonth.SelectedValue);
@@ -298,4 +301,56 @@ public partial class Admin_SalesTargetMaster : System.Web.UI.Page
     }
 
 
+    //Search Components  methods
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetComponentList(string prefixText, int count)
+    {
+        return AutoFillComponentName(prefixText);
+    }
+
+    public static List<string> AutoFillComponentName(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "SELECT DISTINCT [ComponentName] FROM [tbl_ComponentMaster] where " + "ComponentName like '%'+ @Search + '%' and IsDeleted=0 AND Status = '1'";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["ComponentName"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
+    }
+
+
+    protected void txtcomponent_TextChanged(object sender, EventArgs e)
+    {
+        if (txtcomponent.Text != "" || txtcomponent.Text != null)
+        {
+            string Compo = txtcomponent.Text;
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter sad = new SqlDataAdapter("select * from [tbl_ComponentMaster] where ComponentName = '" + Compo + "' AND IsDeleted = 0", Cls_Main.Conn);
+            sad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                txtGrade.Text = dt.Rows[0]["Grade"].ToString();
+                txtGrade.Enabled = true;
+            }
+        }
+    }
 }

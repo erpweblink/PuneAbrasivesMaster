@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.master"  EnableEventValidation="false" AutoEventWireup="true" CodeFile="CreditDebitNote_Sale.aspx.cs" Inherits="Account_CreditDebitNote" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.master" EnableEventValidation="false" AutoEventWireup="true" CodeFile="CreditDebitNote_Sale.aspx.cs" Inherits="Account_CreditDebitNote" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -9,12 +9,13 @@
         }
     </style>
     <style>
-        .gvhead{
+        .gvhead {
             background-color: #7ad2d4;
             color: #000;
             font-weight: 600;
             text-align: center;
         }
+
         .spancls {
             color: #5d5656 !important;
             font-size: 13px !important;
@@ -151,10 +152,10 @@
                                                             <asp:ListItem Value="Credit_Sale">Credit</asp:ListItem>
                                                         </asp:DropDownList>
                                                     </div>
-                                                  
-                                                        <asp:HiddenField runat="server" ID="hdnfileData" />
-                                                        <asp:HiddenField runat="server" ID="hdnGrandtotal" />
-                                                        <asp:HiddenField runat="server" ID="hdnBasictotal" />
+
+                                                    <asp:HiddenField runat="server" ID="hdnfileData" />
+                                                    <asp:HiddenField runat="server" ID="hdnGrandtotal" />
+                                                    <asp:HiddenField runat="server" ID="hdnBasictotal" />
 
                                                 </div>
                                                 <div class="row">
@@ -194,7 +195,9 @@
                                                 <div class="row">
                                                     <div class="col-md-2 spancls" style="font-weight: bold;">Billing Address<i class="reqcls">&nbsp;</i> :</div>
                                                     <div class="col-md-4">
-                                                        <asp:TextBox ID="txtbillingaddress" MaxLength="100" CssClass="form-control" runat="server" Width="100%" TextMode="MultiLine"></asp:TextBox>
+                                                        <asp:DropDownList ID="ddlBillAddress" AutoPostBack="true" OnSelectedIndexChanged="ddlBillAddress_SelectedIndexChanged"
+                                                            CssClass="form-control" runat="server">
+                                                        </asp:DropDownList>
                                                     </div>
                                                     <div class="col-md-2 spancls" style="font-weight: bold;">Shipping Address<i class="reqcls">&nbsp;</i> :</div>
                                                     <div class="col-md-4">

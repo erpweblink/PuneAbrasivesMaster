@@ -48,7 +48,7 @@
                 var total = rate * qty;
                 document.getElementById('<%=txtamount.ClientID%>').value = total;
                 document.getElementById('<%=hfCalculatedAmount.ClientID%>').value = total;
-                
+
             }
         };
     </script>
@@ -175,6 +175,17 @@
                                     </asp:AutoCompleteExtender>
                                 </div>
                                 <div class="col-md-3 col-12 mb-3">
+                                    <label for="lblcomponent" class="form-label LblStyle"><span class="spncls">*</span>Component :</label>
+                                    <asp:TextBox ID="txtcomponent" CssClass="form-control" placeholder="Search Component" runat="server" OnTextChanged="txtcomponent_TextChanged" Width="100%" AutoPostBack="true"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" Display="Dynamic" ErrorMessage="Please Enter Company Name"
+                                        ControlToValidate="txtcomponent" ValidationGroup="form1" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
+                                    <asp:AutoCompleteExtender ID="AutoCompleteExtender3" runat="server" CompletionListCssClass="completionList"
+                                        CompletionListHighlightedItemCssClass="itemHighlighted" CompletionListItemCssClass="listItem"
+                                        CompletionInterval="10" MinimumPrefixLength="1" ServiceMethod="GetComponentList"
+                                        TargetControlID="txtcomponent">
+                                    </asp:AutoCompleteExtender>
+                                </div>
+                                <div class="col-md-3 col-12 mb-3">
                                     <label for="lblGrade" class="form-label LblStyle"><span class="spncls">*</span>Grade :</label>
                                     <asp:TextBox ID="txtGrade" ValidationGroup="1" CssClass="form-control" placeholder="Search Grade" runat="server" Width="100%"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" Display="Dynamic" ErrorMessage="Please Enter Grade"
@@ -198,7 +209,7 @@
                                 </div>
                                 <div class="col-md-3 col-12 mb-3">
                                     <label for="lblAmount" class="form-label LblStyle"><span class="spncls">*</span>Total :</label>
-                                  <asp:HiddenField ID="hfCalculatedAmount" runat="server" />
+                                    <asp:HiddenField ID="hfCalculatedAmount" runat="server" />
                                     <asp:TextBox ID="txtamount" ReadOnly="true" ClientIDMode="Static" ValidationGroup="1" CssClass="form-control" placeholder="Enter Total" runat="server"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" ValidationGroup="1" runat="server" ErrorMessage="Please fill Total" ControlToValidate="txtamount" ForeColor="Red"></asp:RequiredFieldValidator>
                                 </div>

@@ -501,12 +501,19 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
                     {
                         ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Hsn Not Set Please Enter Hsn....!!');", true);
                     }
+                    else
+                    {
+                        if (HsnCd.Length == 6)
+                        {
+                            IsServc = "Y";
+                        }
+                    }
                     Qty = dt.Rows[i]["Qty"].ToString();
                     if (string.IsNullOrWhiteSpace(Qty))
                     {
                         ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Qty Not Set Please Enter Qty....!!');", true);
                     }
-                    Unit = "KGS";//dt.Rows[i]["UOM"].ToString();
+                    Unit = dt.Rows[i]["UOM"].ToString();
                     if (string.IsNullOrWhiteSpace(Unit))
                     {
                         ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Unit Not Set Please Enter Unit....!!');", true);

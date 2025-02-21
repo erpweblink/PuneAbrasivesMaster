@@ -51,6 +51,7 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@User", txtusername.Text);
             cmd.Parameters.AddWithValue("@Grade", txtGrade.Text);
             cmd.Parameters.AddWithValue("@companyname", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@component", txtcomponent.Text);
             cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
             cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -154,6 +155,48 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
                 return countryNames;
             }
         }
+    }
+
+
+
+    //Search Components  methods
+    [System.Web.Script.Services.ScriptMethod()]
+    [System.Web.Services.WebMethod]
+    public static List<string> GetComponentList(string prefixText, int count)
+    {
+        return AutoFillComponentName(prefixText);
+    }
+
+    public static List<string> AutoFillComponentName(string prefixText)
+    {
+        using (SqlConnection con = new SqlConnection())
+        {
+            con.ConnectionString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+
+            using (SqlCommand com = new SqlCommand())
+            {
+                com.CommandText = "SELECT DISTINCT [Component] FROM [tbl_SalesTargetMaster] where " + "Component like '%'+ @Search + '%' and IsDeleted=0 ";
+
+                com.Parameters.AddWithValue("@Search", prefixText);
+                com.Connection = con;
+                con.Open();
+                List<string> countryNames = new List<string>();
+                using (SqlDataReader sdr = com.ExecuteReader())
+                {
+                    while (sdr.Read())
+                    {
+                        countryNames.Add(sdr["Component"].ToString());
+                    }
+                }
+                con.Close();
+                return countryNames;
+            }
+        }
+    }
+
+    protected void txtcomponent_TextChanged(object sender, EventArgs e)
+    {
+        FillGrid();
     }
 
     //Search Grade method
