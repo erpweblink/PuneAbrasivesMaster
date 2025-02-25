@@ -111,7 +111,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             ddlUser.SelectedValue = Dt.Rows[0]["UserCode"].ToString();
             DateTime ffff2 = Convert.ToDateTime(Dt.Rows[0]["PoDate"].ToString());
             txtmobileno.Text = Dt.Rows[0]["Mobileno"].ToString();
-            txtgstno.Text = Dt.Rows[0]["GSTNo"].ToString();
+            txtbillingGST.Text = Dt.Rows[0]["GSTNo"].ToString();
             txtpanno.Text = Dt.Rows[0]["PANNo"].ToString();
             txtemail.Text = Dt.Rows[0]["EmailID"].ToString();
             ddlBillAddress.SelectedItem.Text = Dt.Rows[0]["BillingAddress"].ToString();
@@ -369,7 +369,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                         cmd.Parameters.AddWithValue("@BillingStatecode", txtbillingstatecode.Text);
                         cmd.Parameters.AddWithValue("@ShippingStatecode", txtshippingstatecode.Text);
 
-                        cmd.Parameters.AddWithValue("@GSTNo", txtgstno.Text);
+                        cmd.Parameters.AddWithValue("@GSTNo", txtbillingGST.Text);
                         cmd.Parameters.AddWithValue("@PANNo", txtpanno.Text);
                       
                         if(ddlUser.SelectedValue == "-- Select User Name--")
@@ -523,7 +523,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                         cmd.Parameters.AddWithValue("@BillingStatecode", txtbillingstatecode.Text);
                         cmd.Parameters.AddWithValue("@ShippingStatecode", txtshippingstatecode.Text);
 
-                        cmd.Parameters.AddWithValue("@GSTNo", txtgstno.Text);
+                        cmd.Parameters.AddWithValue("@GSTNo", txtbillingGST.Text);
                         cmd.Parameters.AddWithValue("@PANNo", txtpanno.Text);
                         cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
                         cmd.Parameters.AddWithValue("@ShippingAddress", ddlShippingaddress.SelectedItem.Text);
@@ -656,7 +656,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             txthsnsac.Text = Dt.Rows[0]["HSN"].ToString();
             txtrate.Text = Dt.Rows[0]["Price"].ToString();
             txtunit.Text = Dt.Rows[0]["Unit"].ToString();
-            string gstNumber = txtgstno.Text.Trim();
+            string gstNumber = txtbillingGST.Text.Trim();
             string stateCode = gstNumber.Substring(0, 2);
             hhdstate.Value = stateCode;
             if (stateCode == "27")
@@ -1492,7 +1492,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
            // Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
             txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
             txtemail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
-            txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
+            txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
             //ddlBillAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
             txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
             txtpanno.Text = Dt.Rows[0]["Companypancard"].ToString();
@@ -1684,8 +1684,6 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
         }
 
     }
-
-   
 
     protected void ddlShippingaddress_SelectedIndexChanged(object sender, EventArgs e)
     {

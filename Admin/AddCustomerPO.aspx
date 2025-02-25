@@ -364,16 +364,7 @@
                                     <asp:TextBox ID="txtreferquotation" CssClass="form-control" placeholder="Enter Refer Quotation" runat="server"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 col-12 mb-3">
-                                    <asp:Label ID="Label10" runat="server" Font-Bold="true" CssClass="form-label">GST No. :</asp:Label>
-                                    <asp:TextBox ID="txtgstno" ReadOnly="true" CssClass="form-control" placeholder="GST No." runat="server"></asp:TextBox>
-                                </div>
-                                <div class="col-md-6 col-12 mb-3">
-                                    <asp:Label ID="Label11" runat="server" Font-Bold="true" CssClass="form-label">PAN No.   :</asp:Label>
-                                    <asp:TextBox ID="txtpanno" CssClass="form-control" placeholder="PAN No." runat="server"></asp:TextBox>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label12" runat="server" Font-Bold="true" CssClass="form-label">Billing Address   :</asp:Label>
@@ -488,6 +479,12 @@
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator13" runat="server" Display="Dynamic" ErrorMessage="Please Enter shipping state code."
                                         ControlToValidate="txtshippingstatecode" ValidationGroup="1" ForeColor="Red" SetFocusOnError="true"></asp:RequiredFieldValidator>
 
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="Label11" runat="server" Font-Bold="true" CssClass="form-label">PAN No.   :</asp:Label>
+                                    <asp:TextBox ID="txtpanno" CssClass="form-control" placeholder="PAN No." runat="server"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="row">
