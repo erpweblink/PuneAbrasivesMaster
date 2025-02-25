@@ -1761,7 +1761,7 @@ public partial class Admin_AddProformaInvoice : System.Web.UI.Page
             txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
             txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
             txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
-            txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            txtshippingGST.Text = dt.Rows[0]["GSTNo1"].ToString();
 
         }
     }
