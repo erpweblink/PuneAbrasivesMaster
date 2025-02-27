@@ -214,7 +214,6 @@
             }
         }
 
-
         /* Validations for GST NO.*/
         function GetBGST() {
             var valid = document.getElementById("<%= ddlTypeofSupply.SelectedItem.Text%>").value;
@@ -236,31 +235,7 @@
             }
         }
 
-  <%--      function GetBGST1() {
-            var gridViewRows = document.getElementById('<%= GVBAddress.ClientID %>').getElementsByTagName('tr');
 
-            for (var i = 0; i < gridViewRows.length; i++) {
-                var row = gridViewRows[i];
-
-                // Check if the row has the required number of input fields
-                var inputs = row.getElementsByTagName('input');
-                if (inputs.length > 5) {  // Ensure there are at least 6 input fields
-                    var GST = inputs[5].value; // Index 5 for GST No.
-
-                    if (GST) { // Check if the GST No. is not empty
-                        var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
-
-                        if (!regex.test(GST)) {
-                            row.cells[5].style.backgroundColor = 'red'; // Index 5 for the "GST No." cell
-                        } else {
-                            row.cells[5].style.backgroundColor = ''; // Reset background color if valid
-                        }
-                    } else {
-                        alert("GST No. cannot be empty in row " + (i + 1)); // Alert if empty
-                    }
-                }
-            }
-        }--%>
 
 
         /* Shipping address Validations for pincode*/
@@ -332,37 +307,7 @@
             }
         }
 
-      <%--  function GetSGST1() {
-            // Get all rows from the GridView
-            var gridViewRows = document.getElementById('<%= GVSAddress.ClientID %>').getElementsByTagName('tr');
 
-            // Loop through each row of the GridView
-            for (var i = 0; i < gridViewRows.length; i++) {
-                var row = gridViewRows[i];
-                var inputs = row.getElementsByTagName('input');
-                debugger
-                // Ensure the row contains enough input fields (6th field for GST)
-                if (inputs.length > 5) {
-                    var GST = inputs[5].value; // GST No. is assumed to be in the 6th input field (index 5)
-
-                    if (GST) { // Check if GST No. is not empty
-                        // Regular expression to match the GST number format
-                        var regex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
-
-                        if (!regex.test(GST)) {
-                            // Change background color of the cell containing GST No.
-                            row.cells[5].style.backgroundColor = 'red';
-                        } else {
-                            // Reset background color if valid
-                            row.cells[5].style.backgroundColor = '';
-                        }
-                    } else {
-                        // Alert the user if GST is empty
-                        alert("GST No. cannot be empty in row " + (i + 1));
-                    }
-                }
-            }
-        }--%>
 
 
 
@@ -533,6 +478,8 @@
 
                                                 <asp:TemplateField HeaderText="State" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <EditItemTemplate>
+                                                        <asp:HiddenField runat="server" ID="lblBillStatehdn" Value='<%# Eval("BillState") %>' />
+
                                                         <asp:DropDownList ID="ddlBState1" CssClass="form-control" runat="server"></asp:DropDownList>
                                                     </EditItemTemplate>
                                                     <ItemTemplate>
@@ -541,7 +488,7 @@
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="GST No." ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <EditItemTemplate>
-                                                        <asp:TextBox Text='<%# Eval("GSTno") %>' onblur="GetBGST1()" CssClass="form-control" ID="txtBGSTno" runat="server"></asp:TextBox>
+                                                        <asp:TextBox Text='<%# Eval("GSTno") %>' CssClass="form-control" ID="txtBGSTno" runat="server"></asp:TextBox>
 
                                                     </EditItemTemplate>
                                                     <ItemTemplate>
@@ -648,6 +595,7 @@
 
                                                 <asp:TemplateField HeaderText="State" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <EditItemTemplate>
+                                                        <asp:HiddenField ID="lblShipStatehdn" runat="server" Value='<%# Eval("ShipState") %>' />
                                                         <asp:DropDownList ID="ddlSState1" CssClass="form-control" runat="server"></asp:DropDownList>
                                                     </EditItemTemplate>
                                                     <ItemTemplate>
@@ -656,7 +604,7 @@
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="GST No." ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                                     <EditItemTemplate>
-                                                        <asp:TextBox Text='<%# Eval("ShipGSTNo") %>' onblur="GetSGST1()" CssClass="form-control" ID="txtSGSTno" runat="server"></asp:TextBox>
+                                                        <asp:TextBox Text='<%# Eval("ShipGSTNo") %>' CssClass="form-control" ID="txtSGSTno" runat="server"></asp:TextBox>
 
                                                     </EditItemTemplate>
                                                     <ItemTemplate>

@@ -445,6 +445,22 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="ReciptReportData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TransactionMode" type="xs:string" minOccurs="0" />
+              <xs:element name="Partyname" type="xs:string" minOccurs="0" />
+              <xs:element name="postDate" type="xs:string" minOccurs="0" />
+              <xs:element name="Amount" type="xs:string" minOccurs="0" />
+              <xs:element name="VchType" type="xs:string" minOccurs="0" />
+              <xs:element name="VchNo" type="xs:string" minOccurs="0" />
+              <xs:element name="TotalAmount" type="xs:string" minOccurs="0" />
+              <xs:element name="Debit" type="xs:string" minOccurs="0" />
+              <xs:element name="Credit" type="xs:string" minOccurs="0" />
+              <xs:element name="BankName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
   </xs:element>

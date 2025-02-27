@@ -127,7 +127,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
             txtcompanycode.Text = Dt.Rows[0]["CompanyCode"].ToString();
             txtPrimaryEmail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
             txtSecondaryemailid.Text = Dt.Rows[0]["SecondaryEmailID"].ToString();
-             txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
+            txtgstno.Text = Dt.Rows[0]["GSTno"].ToString();
             if (Dt.Rows[0]["GSTno"].ToString() == "URP")
             {
                 contry.Visible = true;
@@ -166,8 +166,8 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
             for (int i = 0; i < Dtproduct.Rows.Count; i++)
             {
                 Cls_Main.Conn_Open();
-             
-                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["ShippingAddress"].ToString(), Dtproduct.Rows[i]["ShipLocation"].ToString(), Dtproduct.Rows[i]["ShipPincode"].ToString(), Dtproduct.Rows[i]["ShipStatecode"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
+
+                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["ShippingAddress"].ToString(), Dtproduct.Rows[i]["ShipLocation"].ToString(), Dtproduct.Rows[i]["ShipPincode"].ToString(), Dtproduct.Rows[i]["ShipStatename"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
                 //count = count + 1;
                 ViewState["ShipDetails"] = Dt;
             }
@@ -189,8 +189,8 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         {
             for (int i = 0; i < Dtproduct.Rows.Count; i++)
             {
-              
-                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["BillAddress"].ToString(), Dtproduct.Rows[i]["BillLocation"].ToString(), Dtproduct.Rows[i]["BillPincode"].ToString(), Dtproduct.Rows[i]["BillStatecode"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
+
+                Dt.Rows.Add(ViewState["RowNo"], Dtproduct.Rows[i]["BillAddress"].ToString(), Dtproduct.Rows[i]["BillLocation"].ToString(), Dtproduct.Rows[i]["BillPincode"].ToString(), Dtproduct.Rows[i]["BillStatename"].ToString(), Dtproduct.Rows[i]["GSTNo"].ToString());
                 //count = count + 1;
                 ViewState["BillDetails"] = Dt;
             }
@@ -259,7 +259,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                         Cmd.Parameters.AddWithValue("@Vendorcode", txtvendorcode.Text.Trim());
                         Cmd.Parameters.AddWithValue("@PrimaryEmail", txtPrimaryEmail.Text.Trim());
                         Cmd.Parameters.AddWithValue("@Secondaryemailid", txtSecondaryemailid.Text.Trim());
-                         Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
+                        Cmd.Parameters.AddWithValue("@GSTno", txtgstno.Text.Trim());
                         Cmd.Parameters.AddWithValue("@UDYAMNO", txtUDYAM.Text.Trim());
                         Cmd.Parameters.AddWithValue("@CINNO", txtCINNO.Text.Trim());
                         Cmd.Parameters.AddWithValue("@CompanyPancard", txtCompanyPan.Text.Trim());
@@ -322,13 +322,21 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 string BillPincode = (g2.FindControl("lblBillPincode") as Label).Text;
                                 string BillState = (g2.FindControl("lblBillState") as Label).Text;
                                 string BGSTno = (g2.FindControl("lblBGSTno") as Label).Text;
+                                string statecode = string.Empty;
+                                DataTable Dt1 = Cls_Main.Read_Table("SELECT * FROM tbl_States WHERE StateName ='" + BillState + "' ");
+                                if (Dt1.Rows.Count > 0)
+                                {
+                                    statecode = Dt1.Rows[0]["StateCode"].ToString();
+                                }
+
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_BillingAddress ([c_id],[BillLocation],[BillAddress],[BillPincode],[BillStatecode],GSTNo) VALUES (@c_id,@BillLocation,@BillAddress,@BillPincode,@BillStatecode,@BGSTno)", Cls_Main.Conn);
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_BillingAddress ([c_id],[BillLocation],[BillAddress],[BillPincode],[BillStatecode],GSTNo,BillStateName) VALUES (@c_id,@BillLocation,@BillAddress,@BillPincode,@BillStatecode,@BGSTno,@BillStatename)", Cls_Main.Conn);
                                 Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
                                 Cmdd.Parameters.AddWithValue("@BillLocation", BillLocation);
                                 Cmdd.Parameters.AddWithValue("@BillAddress", BillAddress);
                                 Cmdd.Parameters.AddWithValue("@BillPincode", BillPincode);
-                                Cmdd.Parameters.AddWithValue("@BillStatecode", BillState);
+                                Cmdd.Parameters.AddWithValue("@BillStatecode", statecode);
+                                Cmdd.Parameters.AddWithValue("@BillStatename", BillState);
                                 Cmdd.Parameters.AddWithValue("@BGSTno", BGSTno);
                                 Cmdd.ExecuteNonQuery();
                                 Cls_Main.Conn_Close();
@@ -349,13 +357,21 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 string ShipPincode = (g2.FindControl("lblShipPincode") as Label).Text;
                                 string ShipState = (g2.FindControl("lblShipState") as Label).Text;
                                 string SGSTno = (g2.FindControl("lblSGSTno") as Label).Text;
+                                string statecode = string.Empty;
+                                DataTable Dt1 = Cls_Main.Read_Table("SELECT * FROM tbl_States WHERE StateName ='" + ShipState + "' ");
+                                if (Dt1.Rows.Count > 0)
+                                {
+                                    statecode = Dt1.Rows[0]["StateCode"].ToString();
+                                }
+
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode],GSTNo) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode,@SGSTno)", Cls_Main.Conn);
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode],GSTNo,ShipStatename) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode,@SGSTno,@ShipStatename)", Cls_Main.Conn);
                                 Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
                                 Cmdd.Parameters.AddWithValue("@ShipLocation", ShipLocation);
                                 Cmdd.Parameters.AddWithValue("@ShippingAddress", ShipAddress);
                                 Cmdd.Parameters.AddWithValue("@ShipPincode", ShipPincode);
-                                Cmdd.Parameters.AddWithValue("@ShipStatecode", ShipState);
+                                Cmdd.Parameters.AddWithValue("@ShipStatecode", statecode);
+                                Cmdd.Parameters.AddWithValue("@ShipStatename", ShipState);
                                 Cmdd.Parameters.AddWithValue("@SGSTno", SGSTno);
                                 Cmdd.ExecuteNonQuery();
                                 Cls_Main.Conn_Close();
@@ -457,13 +473,21 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 string BillPincode = (g2.FindControl("lblBillPincode") as Label).Text;
                                 string BillState = (g2.FindControl("lblBillState") as Label).Text;
                                 string BGSTno = (g2.FindControl("lblBGSTno") as Label).Text;
+                                string statecode = string.Empty;
+                                DataTable Dt1 = Cls_Main.Read_Table("SELECT * FROM tbl_States WHERE StateName ='" + BillState + "' ");
+                                if (Dt1.Rows.Count > 0)
+                                {
+                                    statecode = Dt1.Rows[0]["StateCode"].ToString();
+                                }
+
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_BillingAddress ([c_id],[BillLocation],[BillAddress],[BillPincode],[BillStatecode],GSTNo) VALUES (@c_id,@BillLocation,@BillAddress,@BillPincode,@BillStatecode,@BGSTno)", Cls_Main.Conn);
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_BillingAddress ([c_id],[BillLocation],[BillAddress],[BillPincode],[BillStatecode],GSTNo,BillStateName) VALUES (@c_id,@BillLocation,@BillAddress,@BillPincode,@BillStatecode,@BGSTno,@BillStatename)", Cls_Main.Conn);
                                 Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
                                 Cmdd.Parameters.AddWithValue("@BillLocation", BillLocation);
                                 Cmdd.Parameters.AddWithValue("@BillAddress", BillAddress);
                                 Cmdd.Parameters.AddWithValue("@BillPincode", BillPincode);
-                                Cmdd.Parameters.AddWithValue("@BillStatecode", BillState);
+                                Cmdd.Parameters.AddWithValue("@BillStatecode", statecode);
+                                Cmdd.Parameters.AddWithValue("@BillStatename", BillState);
                                 Cmdd.Parameters.AddWithValue("@BGSTno", BGSTno);
                                 Cmdd.ExecuteNonQuery();
                                 Cls_Main.Conn_Close();
@@ -479,13 +503,21 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                                 string ShipPincode = (g2.FindControl("lblShipPincode") as Label).Text;
                                 string ShipState = (g2.FindControl("lblShipState") as Label).Text;
                                 string SGSTno = (g2.FindControl("lblSGSTno") as Label).Text;
+                                string statecode = string.Empty;
+                                DataTable Dt1 = Cls_Main.Read_Table("SELECT * FROM tbl_States WHERE StateName ='" + ShipState + "' ");
+                                if (Dt1.Rows.Count > 0)
+                                {
+                                    statecode = Dt1.Rows[0]["StateCode"].ToString();
+                                }
+
                                 Cls_Main.Conn_Open();
-                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode],GSTNo) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode,@SGSTno)", Cls_Main.Conn);
+                                SqlCommand Cmdd = new SqlCommand("INSERT INTO tbl_ShippingAddress ([c_id],[ShipLocation],[ShippingAddress],[ShipPincode],[ShipStatecode],GSTNo,ShipStatename) VALUES (@c_id,@ShipLocation,@ShippingAddress,@ShipPincode,@ShipStatecode,@SGSTno,@ShipStatename)", Cls_Main.Conn);
                                 Cmdd.Parameters.AddWithValue("@c_id", hhd.Value);
                                 Cmdd.Parameters.AddWithValue("@ShipLocation", ShipLocation);
                                 Cmdd.Parameters.AddWithValue("@ShippingAddress", ShipAddress);
                                 Cmdd.Parameters.AddWithValue("@ShipPincode", ShipPincode);
-                                Cmdd.Parameters.AddWithValue("@ShipStatecode", ShipState);
+                                Cmdd.Parameters.AddWithValue("@ShipStatecode", statecode);
+                                Cmdd.Parameters.AddWithValue("@ShipStatename", ShipState);
                                 Cmdd.Parameters.AddWithValue("@SGSTno", SGSTno);
                                 Cmdd.ExecuteNonQuery();
                                 Cls_Main.Conn_Close();
@@ -738,7 +770,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                 txtgstno.Text = "URP"; txtgstno.Enabled = false;
                 txtBGST.Text = "URP"; txtBGST.Enabled = false;
                 txtSGST.Text = "URP"; txtSGST.Enabled = false;
-                txtBPincode.Text = "999999";  txtBPincode.Enabled = false;
+                txtBPincode.Text = "999999"; txtBPincode.Enabled = false;
                 txtSPincode.Text = "999999"; txtSPincode.Enabled = false;
                 ddlBState.Text = "Other Territory"; ddlBState.Enabled = false;
                 ddlSState.Text = "Other Territory"; ddlSState.Enabled = false;
@@ -747,7 +779,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
             else
             {
                 txtgstno.Text = ""; txtgstno.Enabled = true;
-                txtBPincode.Text = ""; txtBPincode.Enabled = true; 
+                txtBPincode.Text = ""; txtBPincode.Enabled = true;
 
                 contry.Visible = false;
             }
@@ -922,18 +954,23 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
     protected void gv_updateB_Click(object sender, EventArgs e)
     {
         GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-
+        string state = string.Empty;
         string txtBAddress = ((TextBox)row.FindControl("txtBillAddress")).Text;
         string txtBLocation = ((TextBox)row.FindControl("txtBillLocation")).Text;
         string txtBPincode = ((TextBox)row.FindControl("txtBillPincode")).Text;
         string txtGST = ((TextBox)row.FindControl("txtBGSTno")).Text;
+        string txthdnstate = ((HiddenField)row.FindControl("lblBillStatehdn")).Value;
         string ddlBState = ((DropDownList)row.FindControl("ddlBState1")).Text;
         DataTable Dt = ViewState["BillDetails"] as DataTable;
         Cls_Main.Conn_Open();
-        string state = string.Empty;
-        SqlCommand cmd = new SqlCommand("SELECT StateName FROM tbl_States where StateCode='" + ddlBState + "'", Cls_Main.Conn);
-        state = Convert.ToString(cmd.ExecuteScalar());
-        Cls_Main.Conn_Close();
+        if (ddlBState == "")
+        {
+            state = txthdnstate;
+        }
+        else
+        {
+            state = ddlBState;
+        }
 
         Dt.Rows[row.RowIndex]["BillAddress"] = txtBAddress;
         Dt.Rows[row.RowIndex]["BillLocation"] = txtBLocation;
@@ -1010,7 +1047,7 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
                             if (dt.Rows.Count > 0)
                             {
                                 ddlBState1.DataSource = dt;
-                                ddlBState1.DataValueField = "statecode";
+                                ddlBState1.DataValueField = "statename";
                                 ddlBState1.DataTextField = "statename";
                                 ddlBState1.DataBind();
                                 ddlBState1.Items.Insert(0, new ListItem(state, ""));
@@ -1218,20 +1255,22 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
     protected void gv_updateS_Click(object sender, EventArgs e)
     {
         GridViewRow row = (sender as LinkButton).NamingContainer as GridViewRow;
-
+        string state = string.Empty;
         string txtSSAddress = ((TextBox)row.FindControl("txtShipAddress")).Text;
         string txtSSLocation = ((TextBox)row.FindControl("txtShipLocation")).Text;
         string txtSSPincode = ((TextBox)row.FindControl("txtShipPincode")).Text;
         string txtSSGST = ((TextBox)row.FindControl("txtSGSTno")).Text;
         string ddlSState1 = ((DropDownList)row.FindControl("ddlSState1")).Text;
-
+        string txthdnstate = ((HiddenField)row.FindControl("lblShipStatehdn")).Value;
         DataTable Dt = ViewState["ShipDetails"] as DataTable;
-
-        Cls_Main.Conn_Open();
-        string state = string.Empty;
-        SqlCommand cmd = new SqlCommand("SELECT StateName FROM tbl_States where StateCode='" + ddlSState1 + "'", Cls_Main.Conn);
-        state = Convert.ToString(cmd.ExecuteScalar());
-        Cls_Main.Conn_Close();
+        if (ddlSState1 == "")
+        {
+            state = txthdnstate;
+        }
+        else
+        {
+            state = ddlSState1;
+        }
 
         Dt.Rows[row.RowIndex]["ShippingAddress"] = txtSSAddress;
         Dt.Rows[row.RowIndex]["ShipLocation"] = txtSSLocation;
@@ -1245,4 +1284,6 @@ public partial class Admin_CompanyMaster : System.Web.UI.Page
         GVSAddress.DataBind();
 
     }
+
+
 }

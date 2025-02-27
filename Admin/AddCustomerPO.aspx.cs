@@ -1429,304 +1429,304 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
 
     // ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", "scrollToElement();", true);
 
-}
 
-protected void txtRate_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
 
-protected void txtCGSTPer_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
-
-protected void txtSGSTPer_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
-
-protected void txtIGSTPer_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
-
-protected void txtDiscount_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
-
-protected void btncancel_Click(object sender, EventArgs e)
-{
-    Response.Redirect("CustomerPurchaseOrderList.aspx");
-}
-
-protected void txtcompanyname_TextChanged(object sender, EventArgs e)
-{
-    GetCompanyDetails();
-}
-
-public void GetCompanyDetails()
-{
-    SqlDataAdapter Da = new SqlDataAdapter("select TOP 1 * from tbl_CompanyMaster AS CM left join tbl_CompanyContactDetails AS CC on CM.CompanyCode=CC.CompanyCode  WHERE Companyname='" + txtcompanyname.Text + "'", Cls_Main.Conn);
-    DataTable Dt = new DataTable();
-    Da.Fill(Dt);
-    if (Dt.Rows.Count > 0)
+    protected void txtRate_TextChanged(object sender, EventArgs e)
     {
-        Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
-        // Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
-        txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
-        txtemail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
-        txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-        //ddlBillAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
-        txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
-        txtpanno.Text = Dt.Rows[0]["Companypancard"].ToString();
-        hhdstate.Value = Dt.Rows[0]["StateCode"].ToString();
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
 
-        txtshortBillingaddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
-        txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-        txtshippingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-        txtbillinglocation.Text = Dt.Rows[0]["Billinglocation"].ToString();
-        txtbillingPincode.Text = Dt.Rows[0]["Billingpincode"].ToString();
-        txtbillingstatecode.Text = Dt.Rows[0]["Billing_statecode"].ToString();
+    protected void txtCGSTPer_TextChanged(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
 
-        if (ddlShippingaddress.SelectedItem.Text != null || ddlShippingaddress.SelectedItem.Text != "" || ddlShippingaddress.SelectedItem.Text != "-Select Shipping Address-")
+    protected void txtSGSTPer_TextChanged(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
+
+    protected void txtIGSTPer_TextChanged(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
+
+    protected void txtDiscount_TextChanged(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
+
+    protected void btncancel_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("CustomerPurchaseOrderList.aspx");
+    }
+
+    protected void txtcompanyname_TextChanged(object sender, EventArgs e)
+    {
+        GetCompanyDetails();
+    }
+
+    public void GetCompanyDetails()
+    {
+        SqlDataAdapter Da = new SqlDataAdapter("select TOP 1 * from tbl_CompanyMaster AS CM left join tbl_CompanyContactDetails AS CC on CM.CompanyCode=CC.CompanyCode  WHERE Companyname='" + txtcompanyname.Text + "'", Cls_Main.Conn);
+        DataTable Dt = new DataTable();
+        Da.Fill(Dt);
+        if (Dt.Rows.Count > 0)
         {
-            SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
-            DataTable dt = new DataTable();
-            ad.Fill(dt);
-            if (dt.Rows.Count > 0)
+            Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
+            // Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
+            txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
+            txtemail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
+            txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+            //ddlBillAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
+            txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
+            txtpanno.Text = Dt.Rows[0]["Companypancard"].ToString();
+            hhdstate.Value = Dt.Rows[0]["StateCode"].ToString();
+
+            txtshortBillingaddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
+            txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+            txtshippingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+            txtbillinglocation.Text = Dt.Rows[0]["Billinglocation"].ToString();
+            txtbillingPincode.Text = Dt.Rows[0]["Billingpincode"].ToString();
+            txtbillingstatecode.Text = Dt.Rows[0]["Billing_statecode"].ToString();
+
+            if (ddlShippingaddress.SelectedItem.Text != null || ddlShippingaddress.SelectedItem.Text != "" || ddlShippingaddress.SelectedItem.Text != "-Select Shipping Address-")
             {
-                txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
-                txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
-                txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
-                txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
+                SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
+                DataTable dt = new DataTable();
+                ad.Fill(dt);
+                if (dt.Rows.Count > 0)
+                {
+                    txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
+                    txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
+                    txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
+                    txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
 
+                }
             }
+
+
+
+            FillKittens();
         }
-
-
-
-        FillKittens();
     }
-}
 
-protected void txtagainstNumber_TextChanged(object sender, EventArgs e)
-{
-    if (txtagainstNumber.SelectedItem.Text != "--Select--" && txtagainstNumber.SelectedItem.Text != "")
+    protected void txtagainstNumber_TextChanged(object sender, EventArgs e)
     {
-        Dt_Product.Columns.AddRange(new DataColumn[20] { new DataColumn("id"), new DataColumn("Productname"), new DataColumn("Description"), new DataColumn("HSN"), new DataColumn("Quantity"), new DataColumn("Units"), new DataColumn("Rate"), new DataColumn("Total"), new DataColumn("CGSTPer"), new DataColumn("CGSTAmt"), new DataColumn("SGSTPer"), new DataColumn("SGSTAmt"), new DataColumn("IGSTPer"), new DataColumn("IGSTAmt"), new DataColumn("Discountpercentage"), new DataColumn("DiscountAmount"), new DataColumn("Alltotal"), new DataColumn("Orderquantity"), new DataColumn("ShippingQuantity"), new DataColumn("Balance") });
-        ViewState["PurchaseOrderProduct"] = Dt_Product;
-        divTotalPart.Visible = true;
-
-        SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM [tbl_QuotationDtls] WHERE Quotation_no='" + txtagainstNumber.SelectedItem.Text + "'", Cls_Main.Conn);
-        DataTable DTCOMP = new DataTable();
-        Da.Fill(DTCOMP);
-
-        int count = 0;
-
-        if (DTCOMP.Rows.Count > 0)
+        if (txtagainstNumber.SelectedItem.Text != "--Select--" && txtagainstNumber.SelectedItem.Text != "")
         {
-            if (Dt_Product.Columns.Count < 0)
+            Dt_Product.Columns.AddRange(new DataColumn[20] { new DataColumn("id"), new DataColumn("Productname"), new DataColumn("Description"), new DataColumn("HSN"), new DataColumn("Quantity"), new DataColumn("Units"), new DataColumn("Rate"), new DataColumn("Total"), new DataColumn("CGSTPer"), new DataColumn("CGSTAmt"), new DataColumn("SGSTPer"), new DataColumn("SGSTAmt"), new DataColumn("IGSTPer"), new DataColumn("IGSTAmt"), new DataColumn("Discountpercentage"), new DataColumn("DiscountAmount"), new DataColumn("Alltotal"), new DataColumn("Orderquantity"), new DataColumn("ShippingQuantity"), new DataColumn("Balance") });
+            ViewState["PurchaseOrderProduct"] = Dt_Product;
+            divTotalPart.Visible = true;
+
+            SqlDataAdapter Da = new SqlDataAdapter("SELECT * FROM [tbl_QuotationDtls] WHERE Quotation_no='" + txtagainstNumber.SelectedItem.Text + "'", Cls_Main.Conn);
+            DataTable DTCOMP = new DataTable();
+            Da.Fill(DTCOMP);
+
+            int count = 0;
+
+            if (DTCOMP.Rows.Count > 0)
             {
-                Show_Grid();
+                if (Dt_Product.Columns.Count < 0)
+                {
+                    Show_Grid();
+                }
+
+                for (int i = 0; i < DTCOMP.Rows.Count; i++)
+                {
+                    Dt_Product.Rows.Add(count, DTCOMP.Rows[i]["Productname"].ToString(), DTCOMP.Rows[i]["Description"].ToString(), DTCOMP.Rows[i]["HSN"].ToString(), DTCOMP.Rows[i]["Quantity"].ToString(), DTCOMP.Rows[i]["Units"].ToString(), DTCOMP.Rows[i]["Rate"].ToString(), DTCOMP.Rows[i]["Total"].ToString(), DTCOMP.Rows[i]["CGSTPer"].ToString(), DTCOMP.Rows[i]["CGSTAmt"].ToString(), DTCOMP.Rows[i]["SGSTPer"].ToString(), DTCOMP.Rows[i]["SGSTAmt"].ToString(), DTCOMP.Rows[i]["IGSTPer"].ToString(), DTCOMP.Rows[i]["IGSTAmt"].ToString(), DTCOMP.Rows[i]["Discountpercentage"].ToString(), DTCOMP.Rows[i]["DiscountAmount"].ToString(), DTCOMP.Rows[i]["Alltotal"].ToString());
+                    count = count + 1;
+                }
             }
 
-            for (int i = 0; i < DTCOMP.Rows.Count; i++)
-            {
-                Dt_Product.Rows.Add(count, DTCOMP.Rows[i]["Productname"].ToString(), DTCOMP.Rows[i]["Description"].ToString(), DTCOMP.Rows[i]["HSN"].ToString(), DTCOMP.Rows[i]["Quantity"].ToString(), DTCOMP.Rows[i]["Units"].ToString(), DTCOMP.Rows[i]["Rate"].ToString(), DTCOMP.Rows[i]["Total"].ToString(), DTCOMP.Rows[i]["CGSTPer"].ToString(), DTCOMP.Rows[i]["CGSTAmt"].ToString(), DTCOMP.Rows[i]["SGSTPer"].ToString(), DTCOMP.Rows[i]["SGSTAmt"].ToString(), DTCOMP.Rows[i]["IGSTPer"].ToString(), DTCOMP.Rows[i]["IGSTAmt"].ToString(), DTCOMP.Rows[i]["Discountpercentage"].ToString(), DTCOMP.Rows[i]["DiscountAmount"].ToString(), DTCOMP.Rows[i]["Alltotal"].ToString());
-                count = count + 1;
-            }
+            dgvMachineDetails.EmptyDataText = "No Data Found";
+            dgvMachineDetails.DataSource = Dt_Product;
+            dgvMachineDetails.DataBind();
+
         }
-
-        dgvMachineDetails.EmptyDataText = "No Data Found";
-        dgvMachineDetails.DataSource = Dt_Product;
-        dgvMachineDetails.DataBind();
-
     }
-}
 
-protected void txtinvoiceagainst_TextChanged(object sender, EventArgs e)
-{
-    if (txtinvoiceagainst.SelectedItem.Text == "Order")
+    protected void txtinvoiceagainst_TextChanged(object sender, EventArgs e)
     {
-        idheader.Visible = false;
-        idproducttable.Visible = false;
-        txtagainstNumber.Enabled = true;
-
-        Fillddlagainstnumber();
-
-    }
-    if (txtinvoiceagainst.SelectedItem.Text == "Direct")
-    {
-        //  Fillddlagainstnumber();
-        idheader.Visible = true;
-        idproducttable.Visible = true;
-        txtagainstNumber.Enabled = false;
-        dgvMachineDetails.DataSource = null;
-        dgvMachineDetails.DataBind();
-        divTotalPart.Visible = false;
-        ViewState.Remove("PurchaseOrderProduct");
-        ViewState["RowNo"] = 0;
-
-        Dt_Product.Columns.AddRange(new DataColumn[20] { new DataColumn("id"), new DataColumn("Productname"), new DataColumn("Description"), new DataColumn("HSN"), new DataColumn("Quantity"), new DataColumn("Units"), new DataColumn("Rate"), new DataColumn("Total"), new DataColumn("CGSTPer"), new DataColumn("CGSTAmt"), new DataColumn("SGSTPer"), new DataColumn("SGSTAmt"), new DataColumn("IGSTPer"), new DataColumn("IGSTAmt"), new DataColumn("Discountpercentage"), new DataColumn("DiscountAmount"), new DataColumn("Alltotal"), new DataColumn("Orderquantity"), new DataColumn("ShippingQuantity"), new DataColumn("Balance") });
-        ViewState["PurchaseOrderProduct"] = Dt_Product;
-        // FillddlProduct();
-    }
-}
-private void Fillddlagainstnumber()
-{
-    txtagainstNumber.Items.Clear();
-    SqlDataAdapter ad = new SqlDataAdapter("SELECT DISTINCT [Quotationno] FROM [tbl_QuotationHdr] WHERE  Companyname='" + txtcompanyname.Text + "' AND IsDeleted=0  AND Status=1", Cls_Main.Conn);
-    DataTable dt = new DataTable();
-    ad.Fill(dt);
-    if (dt.Rows.Count > 0)
-    {
-        txtagainstNumber.DataSource = dt;
-        txtagainstNumber.DataTextField = "Quotationno";
-        txtagainstNumber.DataBind();
-        txtagainstNumber.Items.Insert(0, "-- Select Quotation No --");
-    }
-    else
-    {
-        txtagainstNumber.DataSource = null;
-        txtagainstNumber.DataBind();
-        txtagainstNumber.Items.Insert(0, "-- Select Quotation No --");
-    }
-}
-
-protected void Button1_Click(object sender, EventArgs e)
-{
-    Response.Redirect("CustomerPurchaseOrderList.aspx");
-}
-
-protected void txtshippingq_TextChanged(object sender, EventArgs e)
-{
-    var TotalAmt = Convert.ToDecimal(txtorderq.Text.Trim()) - Convert.ToDecimal(txtshippingq.Text.Trim());
-    txtbalance.Text = TotalAmt.ToString();
-}
-
-protected void txtOquantity_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
-
-protected void txtSQuantity_TextChanged(object sender, EventArgs e)
-{
-    GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
-    Calculations(row);
-}
-
-
-protected void txtrate_TextChanged(object sender, EventArgs e)
-{
-    var TotalAmt = Convert.ToDecimal(txtquantity.Text.Trim()) * Convert.ToDecimal(txtrate.Text.Trim());
-    txttotal.Text = Convert.ToString(TotalAmt);
-    decimal total;
-    decimal Percentage;
-    if (txtIGST.Text == null || txtIGST.Text == "" || txtIGST.Text == "0")
-    {
-        Percentage = Convert.ToDecimal(txtCGST.Text);
-        total = (TotalAmt * Percentage / 100);
-
-        txtCGSTamt.Text = total.ToString();
-
-        txtSGSTamt.Text = txtCGSTamt.Text;
-
-        txtSGST.Text = txtCGST.Text;
-        var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtCGSTamt.Text.Trim()) + Convert.ToDecimal(txtSGSTamt.Text.Trim());
-        txtgrandtotal.Text = GrandTotal.ToString();
-    }
-    else
-    {
-        Percentage = Convert.ToDecimal(txtIGST.Text);
-        total = (TotalAmt * Percentage / 100);
-
-        txtIGSTamt.Text = total.ToString();
-        var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtIGSTamt.Text.Trim());
-        txtgrandtotal.Text = GrandTotal.ToString();
-    }
-}
-
-protected void uploadfile_Click(object sender, EventArgs e)
-{
-    if (AttachmentUpload.HasFile)
-    {
-        string fileName = Path.GetFileName(AttachmentUpload.PostedFile.FileName);
-        byte[] fileContent;
-
-        using (Stream fs = AttachmentUpload.PostedFile.InputStream)
+        if (txtinvoiceagainst.SelectedItem.Text == "Order")
         {
-            using (BinaryReader br = new BinaryReader(fs))
-            {
-                fileContent = br.ReadBytes((int)fs.Length);
-            }
+            idheader.Visible = false;
+            idproducttable.Visible = false;
+            txtagainstNumber.Enabled = true;
+
+            Fillddlagainstnumber();
+
         }
-        ViewState["attachment"] = null;
-        ViewState["attachment"] = fileContent;
-        lblfile1.Text = fileName;
+        if (txtinvoiceagainst.SelectedItem.Text == "Direct")
+        {
+            //  Fillddlagainstnumber();
+            idheader.Visible = true;
+            idproducttable.Visible = true;
+            txtagainstNumber.Enabled = false;
+            dgvMachineDetails.DataSource = null;
+            dgvMachineDetails.DataBind();
+            divTotalPart.Visible = false;
+            ViewState.Remove("PurchaseOrderProduct");
+            ViewState["RowNo"] = 0;
+
+            Dt_Product.Columns.AddRange(new DataColumn[20] { new DataColumn("id"), new DataColumn("Productname"), new DataColumn("Description"), new DataColumn("HSN"), new DataColumn("Quantity"), new DataColumn("Units"), new DataColumn("Rate"), new DataColumn("Total"), new DataColumn("CGSTPer"), new DataColumn("CGSTAmt"), new DataColumn("SGSTPer"), new DataColumn("SGSTAmt"), new DataColumn("IGSTPer"), new DataColumn("IGSTAmt"), new DataColumn("Discountpercentage"), new DataColumn("DiscountAmount"), new DataColumn("Alltotal"), new DataColumn("Orderquantity"), new DataColumn("ShippingQuantity"), new DataColumn("Balance") });
+            ViewState["PurchaseOrderProduct"] = Dt_Product;
+            // FillddlProduct();
+        }
     }
-
-}
-
-protected void ddlShippingaddress_SelectedIndexChanged(object sender, EventArgs e)
-{
-    SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
-    DataTable dt = new DataTable();
-    ad.Fill(dt);
-    if (dt.Rows.Count > 0)
+    private void Fillddlagainstnumber()
     {
-        txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
-        txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
-        txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
-        txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
-        txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
-
-    }
-}
-
-protected void lnkEditCompany_Click(object sender, EventArgs e)
-{
-    DataTable Dt = Cls_Main.Read_Table("SELECT ID FROM [tbl_CompanyMaster] where CompanyName='" + txtcompanyname.Text + "' ");
-    Response.Redirect("CompanyMaster.aspx?ID=" + objcls.encrypt(Dt.Rows[0]["ID"].ToString()) + "&OAID=" + objcls.encrypt(txtpono.Text) + "");
-}
-
-protected void ddlContacts_SelectedIndexChanged(object sender, EventArgs e)
-{
-    SqlDataAdapter Da = new SqlDataAdapter("select Name,EmailID,Number from tbl_CompanyMaster AS CM left join tbl_CompanyContactDetails AS CC on CM.CompanyCode=CC.CompanyCode  WHERE CC.ID='" + ddlContacts.SelectedValue + "'", Cls_Main.Conn);
-    DataTable Dt = new DataTable();
-    Da.Fill(Dt);
-    if (Dt.Rows.Count > 0)
-    {
-
-        txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
-        txtemail.Text = Dt.Rows[0]["EmailID"].ToString();
-    }
-}
-
-protected void ddlBillAddress_SelectedIndexChanged(object sender, EventArgs e)
-{
-    if (ddlBillAddress.SelectedItem.Text != "-Select Billing Address-")
-    {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM tbl_BillingAddress  AS SA where BillAddress='" + ddlBillAddress.SelectedItem.Text + "'", Cls_Main.Conn);
+        txtagainstNumber.Items.Clear();
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT DISTINCT [Quotationno] FROM [tbl_QuotationHdr] WHERE  Companyname='" + txtcompanyname.Text + "' AND IsDeleted=0  AND Status=1", Cls_Main.Conn);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
         {
-            txtshortBillingaddress.Text = ddlBillAddress.SelectedItem.Text;
-            txtbillinglocation.Text = dt.Rows[0]["BillLocation"].ToString();
-            txtbillingPincode.Text = dt.Rows[0]["BillPincode"].ToString();
-            txtbillingstatecode.Text = dt.Rows[0]["Billstatecode"].ToString();
-            txtbillingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            txtagainstNumber.DataSource = dt;
+            txtagainstNumber.DataTextField = "Quotationno";
+            txtagainstNumber.DataBind();
+            txtagainstNumber.Items.Insert(0, "-- Select Quotation No --");
+        }
+        else
+        {
+            txtagainstNumber.DataSource = null;
+            txtagainstNumber.DataBind();
+            txtagainstNumber.Items.Insert(0, "-- Select Quotation No --");
         }
     }
-}
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("CustomerPurchaseOrderList.aspx");
+    }
+
+    protected void txtshippingq_TextChanged(object sender, EventArgs e)
+    {
+        var TotalAmt = Convert.ToDecimal(txtorderq.Text.Trim()) - Convert.ToDecimal(txtshippingq.Text.Trim());
+        txtbalance.Text = TotalAmt.ToString();
+    }
+
+    protected void txtOquantity_TextChanged(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
+
+    protected void txtSQuantity_TextChanged(object sender, EventArgs e)
+    {
+        GridViewRow row = (sender as TextBox).NamingContainer as GridViewRow;
+        Calculations(row);
+    }
+
+
+    protected void txtrate_TextChanged(object sender, EventArgs e)
+    {
+        var TotalAmt = Convert.ToDecimal(txtquantity.Text.Trim()) * Convert.ToDecimal(txtrate.Text.Trim());
+        txttotal.Text = Convert.ToString(TotalAmt);
+        decimal total;
+        decimal Percentage;
+        if (txtIGST.Text == null || txtIGST.Text == "" || txtIGST.Text == "0")
+        {
+            Percentage = Convert.ToDecimal(txtCGST.Text);
+            total = (TotalAmt * Percentage / 100);
+
+            txtCGSTamt.Text = total.ToString();
+
+            txtSGSTamt.Text = txtCGSTamt.Text;
+
+            txtSGST.Text = txtCGST.Text;
+            var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtCGSTamt.Text.Trim()) + Convert.ToDecimal(txtSGSTamt.Text.Trim());
+            txtgrandtotal.Text = GrandTotal.ToString();
+        }
+        else
+        {
+            Percentage = Convert.ToDecimal(txtIGST.Text);
+            total = (TotalAmt * Percentage / 100);
+
+            txtIGSTamt.Text = total.ToString();
+            var GrandTotal = Convert.ToDecimal(txttotal.Text.Trim()) + Convert.ToDecimal(txtIGSTamt.Text.Trim());
+            txtgrandtotal.Text = GrandTotal.ToString();
+        }
+    }
+
+    protected void uploadfile_Click(object sender, EventArgs e)
+    {
+        if (AttachmentUpload.HasFile)
+        {
+            string fileName = Path.GetFileName(AttachmentUpload.PostedFile.FileName);
+            byte[] fileContent;
+
+            using (Stream fs = AttachmentUpload.PostedFile.InputStream)
+            {
+                using (BinaryReader br = new BinaryReader(fs))
+                {
+                    fileContent = br.ReadBytes((int)fs.Length);
+                }
+            }
+            ViewState["attachment"] = null;
+            ViewState["attachment"] = fileContent;
+            lblfile1.Text = fileName;
+        }
+
+    }
+
+    protected void ddlShippingaddress_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
+        DataTable dt = new DataTable();
+        ad.Fill(dt);
+        if (dt.Rows.Count > 0)
+        {
+            txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
+            txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
+            txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
+            txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
+            txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+
+        }
+    }
+
+    protected void lnkEditCompany_Click(object sender, EventArgs e)
+    {
+        DataTable Dt = Cls_Main.Read_Table("SELECT ID FROM [tbl_CompanyMaster] where CompanyName='" + txtcompanyname.Text + "' ");
+        Response.Redirect("CompanyMaster.aspx?ID=" + objcls.encrypt(Dt.Rows[0]["ID"].ToString()) + "&OAID=" + objcls.encrypt(txtpono.Text) + "");
+    }
+
+    protected void ddlContacts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SqlDataAdapter Da = new SqlDataAdapter("select Name,EmailID,Number from tbl_CompanyMaster AS CM left join tbl_CompanyContactDetails AS CC on CM.CompanyCode=CC.CompanyCode  WHERE CC.ID='" + ddlContacts.SelectedValue + "'", Cls_Main.Conn);
+        DataTable Dt = new DataTable();
+        Da.Fill(Dt);
+        if (Dt.Rows.Count > 0)
+        {
+
+            txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
+            txtemail.Text = Dt.Rows[0]["EmailID"].ToString();
+        }
+    }
+
+    protected void ddlBillAddress_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (ddlBillAddress.SelectedItem.Text != "-Select Billing Address-")
+        {
+            SqlDataAdapter ad = new SqlDataAdapter("SELECT * FROM tbl_BillingAddress  AS SA where BillAddress='" + ddlBillAddress.SelectedItem.Text + "'", Cls_Main.Conn);
+            DataTable dt = new DataTable();
+            ad.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                txtshortBillingaddress.Text = ddlBillAddress.SelectedItem.Text;
+                txtbillinglocation.Text = dt.Rows[0]["BillLocation"].ToString();
+                txtbillingPincode.Text = dt.Rows[0]["BillPincode"].ToString();
+                txtbillingstatecode.Text = dt.Rows[0]["Billstatecode"].ToString();
+                txtbillingGST.Text = dt.Rows[0]["GSTNo"].ToString();
+            }
+        }
+    }
 }
 
 
