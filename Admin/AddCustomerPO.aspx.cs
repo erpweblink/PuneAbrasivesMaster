@@ -1482,33 +1482,33 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             // Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
             txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
             txtemail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
-            txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+           // txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
             //ddlBillAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
             txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
             txtpanno.Text = Dt.Rows[0]["Companypancard"].ToString();
             hhdstate.Value = Dt.Rows[0]["StateCode"].ToString();
 
-            txtshortBillingaddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
-            txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-            txtshippingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-            txtbillinglocation.Text = Dt.Rows[0]["Billinglocation"].ToString();
-            txtbillingPincode.Text = Dt.Rows[0]["Billingpincode"].ToString();
-            txtbillingstatecode.Text = Dt.Rows[0]["Billing_statecode"].ToString();
+            //txtshortBillingaddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
+            //txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+            //txtshippingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+            //txtbillinglocation.Text = Dt.Rows[0]["Billinglocation"].ToString();
+            //txtbillingPincode.Text = Dt.Rows[0]["Billingpincode"].ToString();
+            //txtbillingstatecode.Text = Dt.Rows[0]["Billing_statecode"].ToString();
 
-            if (ddlShippingaddress.SelectedItem.Text != null || ddlShippingaddress.SelectedItem.Text != "" || ddlShippingaddress.SelectedItem.Text != "-Select Shipping Address-")
-            {
-                SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
-                DataTable dt = new DataTable();
-                ad.Fill(dt);
-                if (dt.Rows.Count > 0)
-                {
-                    txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
-                    txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
-                    txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
-                    txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
+            //if (ddlShippingaddress.SelectedItem.Text != null || ddlShippingaddress.SelectedItem.Text != "" || ddlShippingaddress.SelectedItem.Text != "-Select Shipping Address-")
+            //{
+            //    SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
+            //    DataTable dt = new DataTable();
+            //    ad.Fill(dt);
+            //    if (dt.Rows.Count > 0)
+            //    {
+            //        txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
+            //        txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
+            //        txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
+            //        txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
 
-                }
-            }
+            //    }
+            //}
 
 
 
