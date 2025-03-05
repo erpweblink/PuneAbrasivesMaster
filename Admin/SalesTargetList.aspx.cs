@@ -278,7 +278,7 @@ public partial class Admin_SalesTargetList : System.Web.UI.Page
                 Sdd.Fill(Dtt);
                 if (Dtt.Rows.Count > 0)
                 {
-                    btnCreate.Visible = false;
+                    btnCreate1.Visible = false;
                     GVSalesTarget.Columns[12].Visible = false;
                     btnEdit.Visible = false;
                     btnDelete.Visible = false;

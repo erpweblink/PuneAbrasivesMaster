@@ -1,17 +1,12 @@
 ﻿
 using Microsoft.Reporting.WebForms;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 

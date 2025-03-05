@@ -165,7 +165,7 @@
                             <h4 class="mt-4">&nbsp <b>SALES TARGET LIST</b></h4>
                         </div>
                         <div class="col-md-2 mt-4">
-                            <asp:LinkButton ID="btnCreate" CssClass="form-control btn btn-warning" Font-Bold="true" CausesValidation="false" runat="server" OnClick="btnCreate_Click">
+                            <asp:LinkButton ID="btnCreate1" CssClass="form-control btn btn-warning" Font-Bold="true" CausesValidation="false" runat="server" OnClick="btnCreate_Click">
 <i class="fas fa-file-alt"></i>&nbsp Create
                             </asp:LinkButton>
                         </div>

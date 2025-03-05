@@ -2274,7 +2274,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
     private void FillddlBillingAddress(string id)
     {
 
-        SqlDataAdapter ad1 = new SqlDataAdapter("SELECT SA.BillAddress FROM tbl_BillingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
+        SqlDataAdapter ad1 = new SqlDataAdapter("SELECT SA.BillAddress FROM tbl_BillingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + id + "'", Cls_Main.Conn);
         DataTable dt1 = new DataTable();
         ad1.Fill(dt1);
         if (dt1.Rows.Count > 0)

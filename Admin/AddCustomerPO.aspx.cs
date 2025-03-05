@@ -4,13 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net.Mail;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
@@ -30,6 +24,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
         }
         else
         {
+
             if (!IsPostBack)
             {
                 FillddlProduct(); POCode(); FillddlUsers();
@@ -73,6 +68,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                 }
             }
         }
+
     }
     protected void POCode()
     {
@@ -108,6 +104,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             ddlContacts.SelectedItem.Text = Dt.Rows[0]["KindAtt"].ToString();
 
             Fillddlshippingaddress(txtcompanyname.Text);
+            Fillddlbillingaddress(txtcompanyname.Text);
             ddlUser.SelectedValue = Dt.Rows[0]["UserCode"].ToString();
             DateTime ffff2 = Convert.ToDateTime(Dt.Rows[0]["PoDate"].ToString());
             txtmobileno.Text = Dt.Rows[0]["Mobileno"].ToString();
@@ -255,7 +252,6 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
 
     private void Fillddlshippingaddress(string ID)
     {
-
         try
         {
             SqlDataAdapter ad = new SqlDataAdapter("SELECT SA.ShippingAddress FROM tbl_ShippingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
@@ -277,6 +273,15 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             }
 
 
+        }
+        catch { }
+    }
+
+    private void Fillddlbillingaddress(string ID)
+    {
+        try
+        {
+
             SqlDataAdapter ad1 = new SqlDataAdapter("SELECT SA.BillAddress FROM tbl_BillingAddress  AS SA INNER JOIN tbl_CompanyMaster AS CM ON CM.ID=SA.c_id where Companyname='" + ID + "'", Cls_Main.Conn);
             DataTable dt1 = new DataTable();
             ad1.Fill(dt1);
@@ -294,6 +299,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                 ddlBillAddress.DataBind();
                 ddlBillAddress.Items.Insert(0, "-Select Billing Address-");
             }
+
         }
         catch { }
     }
@@ -1479,38 +1485,15 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
         if (Dt.Rows.Count > 0)
         {
             Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
+            Fillddlbillingaddress(Dt.Rows[0]["Companyname"].ToString());
             // Fillddlshippingaddress(Dt.Rows[0]["Companyname"].ToString());
             txtmobileno.Text = Dt.Rows[0]["Number"].ToString();
             txtemail.Text = Dt.Rows[0]["PrimaryEmailID"].ToString();
-           // txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
+            // txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
             //ddlBillAddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
             txtpaymentterm.Text = Dt.Rows[0]["PaymentTerm"].ToString();
             txtpanno.Text = Dt.Rows[0]["Companypancard"].ToString();
             hhdstate.Value = Dt.Rows[0]["StateCode"].ToString();
-
-            //txtshortBillingaddress.Text = Dt.Rows[0]["Billingaddress"].ToString();
-            //txtbillingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-            //txtshippingGST.Text = Dt.Rows[0]["GSTno"].ToString();
-            //txtbillinglocation.Text = Dt.Rows[0]["Billinglocation"].ToString();
-            //txtbillingPincode.Text = Dt.Rows[0]["Billingpincode"].ToString();
-            //txtbillingstatecode.Text = Dt.Rows[0]["Billing_statecode"].ToString();
-
-            //if (ddlShippingaddress.SelectedItem.Text != null || ddlShippingaddress.SelectedItem.Text != "" || ddlShippingaddress.SelectedItem.Text != "-Select Shipping Address-")
-            //{
-            //    SqlDataAdapter ad = new SqlDataAdapter("SELECT TOP 1 * FROM tbl_ShippingAddress  where ShippingAddress='" + ddlShippingaddress.SelectedItem.Text + "'", Cls_Main.Conn);
-            //    DataTable dt = new DataTable();
-            //    ad.Fill(dt);
-            //    if (dt.Rows.Count > 0)
-            //    {
-            //        txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
-            //        txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
-            //        txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
-            //        txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
-
-            //    }
-            //}
-
-
 
             FillKittens();
         }
@@ -1727,6 +1710,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             }
         }
     }
+
 }
 
 

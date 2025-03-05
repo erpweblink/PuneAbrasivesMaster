@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.Master" EnableEventValidation="false" AutoEventWireup="true" CodeFile="AddCustomerPO.aspx.cs" Inherits="Admin_AddCustomerPO" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/WLSPLMaster.Master" EnableEventValidation="false" AutoEventWireup="true" Async="true" CodeFile="AddCustomerPO.aspx.cs" Inherits="Admin_AddCustomerPO" %>
 
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -195,76 +195,11 @@
             display: initial !important;
         }
     </style>
-    <style>
-        /* Loader CSS */
-        .loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            /* Ensure it appears above other content */
-            display: none;
-            /* Hidden by default */
-        }
 
-        .loader {
-            border: 8px solid #f3f3f3;
-            /* Light grey */
-            border-top: 8px solid #3498db;
-            /* Blue */
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-    <script type="text/javascript">
-        // Show loader
-        function showLoader() {
-            document.getElementById('loader').style.display = 'flex';
-        }
-
-        // Hide loader
-        function hideLoader() {
-            document.getElementById('loader').style.display = 'none';
-        }
-
-        // This ensures the loader hides when the page is fully loaded (initial load)
-        document.onreadystatechange = function () {
-            if (document.readyState === "complete") {
-                hideLoader();
-            }
-        };
-
-        // Handling UpdatePanel's partial postbacks using PageRequestManager
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
-        prm.add_beginRequest(function () {
-            showLoader(); // Show loader when an async postback begins
-        });
-        prm.add_endRequest(function () {
-            hideLoader(); // Hide loader when an async postback completes
-        });
-    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
-    <asp:UpdatePanel ID="UpdatePanel1" runat="server" onsubmit="return validateAndSubmitForm();">
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server" >
         <ContentTemplate>
             <div class="container-fluid px-4">
                 <div class="row">
@@ -369,8 +304,8 @@
                                 <div class="col-md-6 col-12 mb-3">
                                     <asp:Label ID="Label12" runat="server" Font-Bold="true" CssClass="form-label">Billing Address   :</asp:Label>
 
-                                    <asp:DropDownList ID="ddlBillAddress" Width="560px" AutoPostBack="true" OnSelectedIndexChanged="ddlBillAddress_SelectedIndexChanged"
-                                        CssClass="form-control" runat="server">
+                                    <asp:DropDownList ID="ddlBillAddress" runat="server" Width="560px" AutoPostBack="true" OnSelectedIndexChanged="ddlBillAddress_SelectedIndexChanged"
+                                        CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
                                 <div class="col-md-6 col-12 mb-3">
@@ -957,7 +892,7 @@
             <asp:PostBackTrigger ControlID="btnsave" />
             <asp:PostBackTrigger ControlID="btncancel" />
             <asp:PostBackTrigger ControlID="uploadfile" />
-            <asp:AsyncPostBackTrigger ControlID="txtinvoiceagainst" />
+            <asp:AsyncPostBackTrigger ControlID="txtinvoiceagainst" />        
         </Triggers>
     </asp:UpdatePanel>
 </asp:Content>
