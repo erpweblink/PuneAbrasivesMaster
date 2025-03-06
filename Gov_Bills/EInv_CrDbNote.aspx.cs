@@ -310,7 +310,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Buyer_Firm_Name Not Set Please Enter Buyer_Firm_Name....!!');", true);
                 }
-                string Buyer_Address1 = dtCompany.Rows[0]["BillingAddress"].ToString();
+                string Buyer_Address1 = dtCompany.Rows[0]["ShortBAddress"].ToString();
                 //Buyer_Address = Buyer_Address1.Replace(" ", "");
                 Buyer_Address = Regex.Replace(Buyer_Address1, @"\s+", " ");
                 //Buyer_Address = "Pimpale Saudagar";
@@ -403,7 +403,7 @@ public partial class Gov_Bills_EInv_CrDbNote : System.Web.UI.Page
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Ship_Firm_Name Not Set Please Enter Ship_Firm_Name..!!');", true);
                 }
-                string Ship_Firm_Address1 = dtCompany.Rows[0]["ShippingAddress"].ToString();
+                string Ship_Firm_Address1 = dtCompany.Rows[0]["ShortSAddress"].ToString();
                 // Ship_Firm_Address = dtCompany.Rows[0]["ShippingAddress"].ToString();
                 Ship_Firm_Address = Regex.Replace(Ship_Firm_Address1, @"\s+", " ");
                 // Ship_Firm_Address = "Pimpale Saudagar";

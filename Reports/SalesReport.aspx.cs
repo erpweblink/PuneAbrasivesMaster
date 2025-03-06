@@ -37,8 +37,9 @@ public partial class Reports_SalesReport : System.Web.UI.Page
         {
             SqlCommand cmd = new SqlCommand("SP_Reports", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@Action", "GetSalesReportlist");
+            cmd.Parameters.AddWithValue("@Action", "GetSalesReportNew");
             cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);
+            cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedItem.Text);
             cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
             cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -97,8 +98,9 @@ public partial class Reports_SalesReport : System.Web.UI.Page
                 using (SqlCommand cmd = new SqlCommand("[SP_Reports]", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Action", "GetSalesReportlist");
+                    cmd.Parameters.AddWithValue("@Action", "GetSalesReportNew");
                     cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);
+                    cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
                     cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
                     using (SqlDataAdapter sda = new SqlDataAdapter())
@@ -299,5 +301,10 @@ public partial class Reports_SalesReport : System.Web.UI.Page
 
            
         }
+    }
+
+    protected void ddlStatus_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        GridView();
     }
 }

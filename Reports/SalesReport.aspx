@@ -168,6 +168,16 @@
                     </div>
                     <div class="col-md-3">
                         <div style="margin-top: 14px;">
+                            <asp:Label ID="lblstaus" runat="server" Font-Bold="true">Type</asp:Label>
+                            <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
+                                <asp:ListItem Selected="True" Text="Tax Invoice"></asp:ListItem>
+                                <asp:ListItem Text="EInvoice Generated"></asp:ListItem>
+                                <asp:ListItem Text="EInvoice Canceled"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="margin-top: 14px;">
                             <asp:Label ID="lblfromdate" runat="server" Font-Bold="true" Text="From Date :"></asp:Label>
                             <asp:TextBox ID="txtfromdate" CssClass="form-control" runat="server" TextMode="Date" Width="100%"></asp:TextBox>
                         </div>
@@ -370,7 +380,7 @@
                     </div>
                 </div>
                 <div style="overflow-x: auto; max-height: 400px; overflow-y: auto; border: 1px solid #ccc;">
-                    <asp:GridView ID="GvTotalSummary" runat="server" AutoGenerateColumns="False"    CssClass="grivdiv pagination-ys"
+                    <asp:GridView ID="GvTotalSummary" runat="server" AutoGenerateColumns="False" CssClass="grivdiv pagination-ys"
                         CellPadding="2" Font-Names="Verdana" OnRowDataBound="GvTotalSummary_RowDataBound"
                         Font-Size="12pt" Width="100%" ShowFooter="true"
                         GridLines="Both">

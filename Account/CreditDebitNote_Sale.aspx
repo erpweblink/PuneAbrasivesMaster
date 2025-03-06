@@ -208,6 +208,26 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <div class="col-md-2 spancls"  style="font-weight: bold;">E-Invoice Billing Address <i class="reqcls">&nbsp;*</i> :</div>
+                                                    <div class="col-md-4">
+                                                        <asp:TextBox ID="txtshortBillingaddress" CssClass="form-control" MaxLength="100" placeholder="Enter Short Billing Address" runat="server"></asp:TextBox>
+                                                        <asp:Label ID="Label24" runat="server" Font-Bold="true" ForeColor="Red" CssClass="form-label">You can only enter a maximum of 100 words.</asp:Label>
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator21" ValidationGroup="form1" Font-Bold="true" runat="server" ControlToValidate="txtshortBillingaddress"
+                                                            ForeColor="Red" ErrorMessage="* Please Enter Short Billing Address" Display="Dynamic" SetFocusOnError="true"></asp:RequiredFieldValidator>
+                                                        <asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtshortBillingaddress"
+                                                            ValidationExpression="^[^'&quot;]*$" ErrorMessage="* Single or double quotes are not allowed" ForeColor="Red"></asp:RegularExpressionValidator>
+                                                    </div>
+                                                    <div class="col-md-2 spancls"  style="font-weight: bold;">E-Invoice Shipping Address<i class="reqcls">&nbsp;*</i> :</div>
+                                                    <div class="col-md-4">
+                                                        <asp:TextBox ID="txtshortShippingaddress" CssClass="form-control" MaxLength="100" placeholder="Enter Short Shipping Address" runat="server"></asp:TextBox>
+                                                        <asp:Label ID="Label25" runat="server" Font-Bold="true" ForeColor="Red" CssClass="form-label">You can only enter a maximum of 100 words.</asp:Label>
+                                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator22" ValidationGroup="form1" Font-Bold="true" runat="server" ControlToValidate="txtshortShippingaddress"
+                                                            ForeColor="Red" ErrorMessage="* Please Enter Short Shipping Address" Display="Dynamic" SetFocusOnError="true"></asp:RequiredFieldValidator>
+                                                        <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtshortShippingaddress"
+                                                            ValidationExpression="^[^'&quot;]*$" ErrorMessage="* Single or double quotes are not allowed" ForeColor="Red"></asp:RegularExpressionValidator>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col-md-2 spancls" style="font-weight: bold;">Billing Location<i class="reqcls">&nbsp;</i> :</div>
                                                     <div class="col-md-4">
                                                         <asp:TextBox ID="txtbillinglocation" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>

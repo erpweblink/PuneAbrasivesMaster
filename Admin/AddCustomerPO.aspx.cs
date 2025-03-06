@@ -352,6 +352,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                 {
                     if (btnsave.Text == "Save")
                     {
+                      
                         Cls_Main.Conn_Open();
                         SqlCommand cmd = new SqlCommand("SP_CustomerPurchaseOrderHdr", Cls_Main.Conn);
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -492,6 +493,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                             cmdd.ExecuteNonQuery();
                             Cls_Main.Conn_Close();
                         }
+                       
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Order Acceptance Save Successfully..!!');window.location='CustomerPurchaseOrderList.aspx'; ", true);
                     }
                     else if (btnsave.Text == "Update")

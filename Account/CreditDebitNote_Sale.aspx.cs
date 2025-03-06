@@ -120,7 +120,8 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                 SGSTPertcs.Text = dt.Rows[0]["SGST"].ToString();
                 IGSTPertcs.Text = dt.Rows[0]["IGST"].ToString();
                 txtCost.Text = dt.Rows[0]["Cost"].ToString();
-
+                txtshortBillingaddress.Text = dt.Rows[0]["ShortBAddress"].ToString();
+                txtshortShippingaddress.Text = dt.Rows[0]["ShortSAddress"].ToString();
                 //  fillddlCategory();
                 BindBillNO();
 
@@ -414,6 +415,8 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
                     //new Basic & TCS Addition 26-12-23 End
 
                     //New Details For E-Invoice Start
+                    cmd.Parameters.AddWithValue("@ShortBAddress", txtshortBillingaddress.Text);
+                    cmd.Parameters.AddWithValue("@ShortSAddress", txtshortShippingaddress.Text);
                     cmd.Parameters.AddWithValue("@ShippingCustomer", txtshippingcustomer.Text);
                     cmd.Parameters.AddWithValue("@ShippingAddress", ddlShippingaddress.SelectedItem.Text);
                     cmd.Parameters.AddWithValue("@TransportMode", txttransportMode.Text);
@@ -724,6 +727,8 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@CreatedBy", Session["Username"].ToString());
 
             //New Details For E-Invoice Start
+            cmd.Parameters.AddWithValue("@ShortBAddress", txtshortBillingaddress.Text);
+            cmd.Parameters.AddWithValue("@ShortSAddress", txtshortShippingaddress.Text);
             cmd.Parameters.AddWithValue("@ShippingCustomer", txtshippingcustomer.Text);
             cmd.Parameters.AddWithValue("@ShippingAddress", ddlShippingaddress.SelectedItem.Text);
             cmd.Parameters.AddWithValue("@TransportMode", txttransportMode.Text);
@@ -2327,6 +2332,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
         if (dt.Rows.Count > 0)
         {
             txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
+            txtshortShippingaddress.Text = dt.Rows[0]["ShippingAddress1"].ToString();
             txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();
             txtshippingstatecode.Text = dt.Rows[0]["ShipStatecode"].ToString();
             txtshippingGST.Text = dt.Rows[0]["GSTNo"].ToString();
@@ -2525,6 +2531,7 @@ public partial class Account_CreditDebitNote : System.Web.UI.Page
             ad.Fill(dt);
             if (dt.Rows.Count > 0)
             {
+                txtshortBillingaddress.Text = dt.Rows[0]["BillAddress"].ToString();
                 txtbillinglocation.Text = dt.Rows[0]["BillLocation"].ToString();
                 txtbillingPincode.Text = dt.Rows[0]["BillPincode"].ToString();
                 txtbillingstatecode.Text = dt.Rows[0]["Billstatecode"].ToString();
