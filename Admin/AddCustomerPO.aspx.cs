@@ -116,7 +116,8 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             txtshortShippingaddress.Text = Dt.Rows[0]["ShortSAddress"].ToString();
 
             ddlShippingaddress.SelectedItem.Text = Dt.Rows[0]["ShippingAddress"].ToString();
-
+            ViewState["Address"] = null;
+            ViewState["Address"] = Dt.Rows[0]["ShippingAddress"].ToString();
             txtbillingGST.Text = Dt.Rows[0]["BillingGST"].ToString();
             txtshippingGST.Text = Dt.Rows[0]["ShippingGST"].ToString();
             txtbillinglocation.Text = Dt.Rows[0]["BillingLocation"].ToString();
@@ -126,6 +127,11 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
             txtbillingstatecode.Text = Dt.Rows[0]["BillingStatecode"].ToString();
             txtshippingstatecode.Text = Dt.Rows[0]["ShippingStatecode"].ToString();
 
+            txtPayment.Text = Dt.Rows[0]["Payment"].ToString();
+            txtTransport.Text = Dt.Rows[0]["Transport"].ToString();
+            txtDeliveryTime.Text = Dt.Rows[0]["DeliveryTime"].ToString();
+            txtPacking.Text = Dt.Rows[0]["Packing"].ToString();
+            txtTaxs.Text = Dt.Rows[0]["Taxs"].ToString();
 
             DateTime ffff3 = Convert.ToDateTime(Dt.Rows[0]["Deliverydate"].ToString());
             txtreferquotation.Text = Dt.Rows[0]["Referquotation"].ToString();
@@ -352,7 +358,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                 {
                     if (btnsave.Text == "Save")
                     {
-                      
+
                         Cls_Main.Conn_Open();
                         SqlCommand cmd = new SqlCommand("SP_CustomerPurchaseOrderHdr", Cls_Main.Conn);
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -406,14 +412,9 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                             cmd.Parameters.AddWithValue("@fileName", DBNull.Value);
                         }
                         cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
-                        if (ddlShippingaddress.SelectedItem.Text == "-Select Shipping Address-")
-                        {
-                            cmd.Parameters.AddWithValue("@ShippingAddress", DBNull.Value);
-                        }
-                        else
-                        {
-                            cmd.Parameters.AddWithValue("@ShippingAddress", ddlShippingaddress.SelectedItem.Text);
-                        }
+
+                        cmd.Parameters.AddWithValue("@ShippingAddress", ViewState["Address"].ToString());
+
                         cmd.Parameters.AddWithValue("@Deliverydate", txtdeliverydate.Text);
                         cmd.Parameters.AddWithValue("@Referquotation", txtreferquotation.Text);
                         cmd.Parameters.AddWithValue("@Remarks", txtremark.Text);
@@ -432,6 +433,12 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                         {
                             cmd.Parameters.AddWithValue("@AgainstNumber", txtagainstNumber.SelectedItem.Text);
                         }
+
+                        cmd.Parameters.AddWithValue("@Payment", txtPayment.Text);
+                        cmd.Parameters.AddWithValue("@Transport", txtTransport.Text);
+                        cmd.Parameters.AddWithValue("@DeliveryTime", txtDeliveryTime.Text);
+                        cmd.Parameters.AddWithValue("@Packing", txtPacking.Text);
+                        cmd.Parameters.AddWithValue("@Taxs", txtTaxs.Text);
 
                         cmd.Parameters.AddWithValue("@Termofdelivery", txtTermsofdelivery.Text);
                         cmd.Parameters.AddWithValue("@IsDeleted", '0');
@@ -493,7 +500,7 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                             cmdd.ExecuteNonQuery();
                             Cls_Main.Conn_Close();
                         }
-                       
+
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Order Acceptance Save Successfully..!!');window.location='CustomerPurchaseOrderList.aspx'; ", true);
                     }
                     else if (btnsave.Text == "Update")
@@ -534,7 +541,8 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                         cmd.Parameters.AddWithValue("@GSTNo", txtbillingGST.Text);
                         cmd.Parameters.AddWithValue("@PANNo", txtpanno.Text);
                         cmd.Parameters.AddWithValue("@BillingAddress", ddlBillAddress.SelectedItem.Text);
-                        cmd.Parameters.AddWithValue("@ShippingAddress", ddlShippingaddress.SelectedItem.Text);
+                        cmd.Parameters.AddWithValue("@ShippingAddress", ViewState["Address"].ToString());
+
                         cmd.Parameters.AddWithValue("@Deliverydate", txtdeliverydate.Text);
                         cmd.Parameters.AddWithValue("@Referquotation", txtreferquotation.Text);
                         cmd.Parameters.AddWithValue("@Remarks", txtremark.Text);
@@ -572,6 +580,12 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
                         {
                             cmd.Parameters.AddWithValue("@fileName", lblfile1.Text);
                         }
+                        cmd.Parameters.AddWithValue("@Payment", txtPayment.Text);
+                        cmd.Parameters.AddWithValue("@Transport", txtTransport.Text);
+                        cmd.Parameters.AddWithValue("@DeliveryTime", txtDeliveryTime.Text);
+                        cmd.Parameters.AddWithValue("@Packing", txtPacking.Text);
+                        cmd.Parameters.AddWithValue("@Taxs", txtTaxs.Text);
+
                         cmd.Parameters.AddWithValue("@Termofdelivery", txtTermsofdelivery.Text);
                         cmd.Parameters.AddWithValue("@UpdatedBy", Session["UserCode"].ToString());
                         cmd.Parameters.AddWithValue("@UpdatedOn", DateTime.Now);
@@ -1667,6 +1681,8 @@ public partial class Admin_AddCustomerPO : System.Web.UI.Page
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
         {
+            ViewState["Address"] = null;
+            ViewState["Address"] = ddlShippingaddress.SelectedItem.Text;
             txtshortShippingaddress.Text = ddlShippingaddress.SelectedItem.Text;
             txtshippinglocation.Text = dt.Rows[0]["ShipLocation"].ToString();
             txtshippingPincode.Text = dt.Rows[0]["ShipPincode"].ToString();

@@ -199,7 +199,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server"></asp:ToolkitScriptManager>
-    <asp:UpdatePanel ID="UpdatePanel1" runat="server" >
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
             <div class="container-fluid px-4">
                 <div class="row">
@@ -470,6 +470,45 @@
                                         <asp:Button ID="uploadfile" runat="server" CausesValidation="false" AutoPostBack="true" Text="Upload" CssClass="form-control btn btn-outline-primary m-2" OnClick="uploadfile_Click" />
                                     </div>
                                 </div>
+
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <hr />
+                                <b style="color: red">*TERMS AND CONDITIONS</b>
+                                <hr />
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="lblPayment" runat="server" Font-Bold="true" CssClass="form-label">Payment  :</asp:Label>
+
+                                    <asp:TextBox ID="txtPayment" CssClass="form-control" placeholder="Enter Payment " Text="30 Days" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="lblTransport" runat="server" Font-Bold="true" CssClass="form-label">Transport :</asp:Label>
+
+                                    <asp:TextBox ID="txtTransport" CssClass="form-control" Text="To Our Account" placeholder="Enter Transport" runat="server"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="lblDeliveryTime" runat="server" Font-Bold="true" CssClass="form-label">Delivery Time :</asp:Label>
+
+                                    <asp:TextBox ID="txtDeliveryTime" CssClass="form-control" Text="Immediate" placeholder="Enter Delivery Time" runat="server"></asp:TextBox>
+                                </div>
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="lblPacking" runat="server" Font-Bold="true" CssClass="form-label">Packing :</asp:Label>
+
+                                    <asp:TextBox ID="txtPacking" CssClass="form-control" Text="As per our Standard" placeholder="Enter Packing" runat="server"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12 mb-3">
+                                    <asp:Label ID="lblTaxs" runat="server" Font-Bold="true" CssClass="form-label">Taxes :</asp:Label>
+
+                                    <asp:TextBox ID="txtTaxs" CssClass="form-control" Text="18% GST" placeholder="Enter Taxes" runat="server"></asp:TextBox>
+                                </div>
+
                             </div>
 
                             <%--Grid View Start--%>
@@ -892,7 +931,7 @@
             <asp:PostBackTrigger ControlID="btnsave" />
             <asp:PostBackTrigger ControlID="btncancel" />
             <asp:PostBackTrigger ControlID="uploadfile" />
-            <asp:AsyncPostBackTrigger ControlID="txtinvoiceagainst" />        
+            <asp:AsyncPostBackTrigger ControlID="txtinvoiceagainst" />
         </Triggers>
     </asp:UpdatePanel>
 </asp:Content>
