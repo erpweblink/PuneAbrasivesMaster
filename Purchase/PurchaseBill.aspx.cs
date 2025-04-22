@@ -40,7 +40,7 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
             {
                 //fillddlpaymentterm();
                 //fillddlFooter();
-              //  fillddlUnit();
+                //  fillddlUnit();
                 Session["Iscompleted"] = "true";
                 txtBilldate.Text = DateTime.Today.ToString("dd-MM-yyyy");
                 UpdateHistorymsg = string.Empty; //regdate = string.Empty;
@@ -127,7 +127,7 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
             btnadd.Text = "Update";
             txtSupplierName.Text = dt.Rows[0]["SupplierName"].ToString();
 
-            BindPO();
+            // BindPO();
             txtSupplierBillNo.Text = dt.Rows[0]["SupplierBillNo"].ToString();
             txtBillNo.Text = dt.Rows[0]["BillNo"].ToString();
 
@@ -310,7 +310,7 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
         return invoiceno;
     }
 
-   protected string Code()
+    protected string Code()
     {
         string FinYear = null;
         string FinFullYear = null;
@@ -921,9 +921,23 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
         }
     }
 
-    protected void BindPO()
+    protected void BindPO(string type)
     {
-        SqlDataAdapter ad = new SqlDataAdapter("SELECT Id,PONo FROM tblPurchaseOrderHdr where SupplierName='" + txtSupplierName.Text.Trim() + "' and IsClosed is null", con);
+        string query = string.Empty;
+        if (type == "Order")
+        {
+            query = "SELECT Id,PONo FROM tbl_PendingInwardHdr where SupplierName='" + txtSupplierName.Text.Trim() + "' ";
+        }
+        else if (type == "Verbal")
+        {
+            query = @"select Distinct InvoiceNo AS PONo from tbl_PendingInwardHdr AS PH
+INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where SupplierName='" + txtSupplierName.Text.Trim() + "' ";
+        }
+        else
+        {
+            query = "SELECT Id,PONo FROM tbl_PendingInwardHdr where EntryType=2 ";
+        }
+        SqlDataAdapter ad = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -931,7 +945,7 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
             ddlAgainstNumber.DataSource = dt;
             ddlAgainstNumber.DataBind();
             ddlAgainstNumber.DataTextField = "PONo";
-            ddlAgainstNumber.DataValueField = "Id";
+            ddlAgainstNumber.DataValueField = "PONo";
             ddlAgainstNumber.DataBind();
         }
         else
@@ -947,7 +961,7 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
         {
             if (txtSupplierName.Text != "")
             {
-                BindPO();
+                BindPO("Order");
                 ddlAgainstNumber.Enabled = true;
             }
             else
@@ -956,6 +970,18 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
             }
         }
         else if (ddlBillAgainst.SelectedItem.Text == "Verbal")
+        {
+            if (txtSupplierName.Text != "")
+            {
+                BindPO("Verbal");
+                ddlAgainstNumber.Enabled = true;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('Please Select Supplier Name !!');", true);
+            }
+        }
+        else
         {
             if (txtSupplierName.Text != "")
             {
@@ -988,8 +1014,22 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
 
     protected void getOrderDatailsdts()
     {
+        string query = string.Empty;
+        if (ddlBillAgainst.SelectedValue == "Order")
+        {
+            query = "SELECT * FROM tbl_PendingInwardHdr where SupplierName='" + txtSupplierName.Text.Trim() + "' ";
+        }
+        else if (ddlBillAgainst.SelectedValue == "Verbal")
+        {
+            query = @"select * from tbl_PendingInwardHdr AS PH
+INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where SupplierName='" + txtSupplierName.Text.Trim() + "' ";
+        }
+        else
+        {
+            query = "SELECT * FROM tbl_PendingInwardHdr where EntryType=2 ";
+        }
         string ID = ddlAgainstNumber.SelectedValue;
-        SqlDataAdapter ad = new SqlDataAdapter("select * from tblPurchaseOrderDtls where HeaderID='" + ID.Trim() + "' ", con);
+        SqlDataAdapter ad = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -1867,10 +1907,10 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
         {
             txtVHSN.Text = dt.Rows[0]["HSN"].ToString() == "" ? "0" : dt.Rows[0]["HSN"].ToString();
             txtVRate.Text = dt.Rows[0]["Price"].ToString() == "" ? "0" : dt.Rows[0]["Price"].ToString();
-           // txtVCGSTPer.Text = dt.Rows[0]["CGST"].ToString() == "" ? "0" : dt.Rows[0]["CGST"].ToString();
-          //  txtVSGSTPer.Text = dt.Rows[0]["SGST"].ToString() == "" ? "0" : dt.Rows[0]["SGST"].ToString();
-           // txtVIGSTPer.Text = dt.Rows[0]["IGST"].ToString() == "" ? "0" : dt.Rows[0]["IGST"].ToString();
-          //  txtUOM.SelectedValue = dt.Rows[0]["Unit"].ToString() == "" ? "0" : dt.Rows[0]["Unit"].ToString();
+            // txtVCGSTPer.Text = dt.Rows[0]["CGST"].ToString() == "" ? "0" : dt.Rows[0]["CGST"].ToString();
+            //  txtVSGSTPer.Text = dt.Rows[0]["SGST"].ToString() == "" ? "0" : dt.Rows[0]["SGST"].ToString();
+            // txtVIGSTPer.Text = dt.Rows[0]["IGST"].ToString() == "" ? "0" : dt.Rows[0]["IGST"].ToString();
+            //  txtUOM.SelectedValue = dt.Rows[0]["Unit"].ToString() == "" ? "0" : dt.Rows[0]["Unit"].ToString();
             //txtVDescription.Text = dt.Rows[0]["Description"].ToString() == "" ? "0" : dt.Rows[0]["Description"].ToString();
         }
         else
@@ -2433,7 +2473,7 @@ public partial class Purchase_PurchaseBill : System.Web.UI.Page
                 EmailID = dt.Rows[0]["EmailID"].ToString();
                 contNo = dt.Rows[0]["MobileNo"].ToString();
                 var id = dt.Rows[0]["ID"].ToString();
-               
+
             }
 
             //PdfContentByte cb = writer.DirectContent;

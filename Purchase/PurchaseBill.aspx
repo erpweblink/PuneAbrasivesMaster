@@ -207,7 +207,7 @@
                 showCancelButton: false,
                 showConfirmButton: false
             }).then(function () {
-                window.location.href = "../Admin/AllSupplierList.aspx";
+                window.location.href = "../Purchase/PurchaseBillList.aspx";
             })
         };
     </script>
