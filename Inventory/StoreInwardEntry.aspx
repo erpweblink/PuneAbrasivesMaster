@@ -161,9 +161,6 @@
                 }
             }
         }
-
-
-
     </script>
 
     <style>
@@ -287,7 +284,7 @@
             var row = $(this).closest('tr');
             var grid = document.getElementById("ContentPlaceHolder1_dgvTaxinvoiceDetails");
             var rows = grid.getElementsByTagName("tr");
-            debugger
+
             for (var i = 0; i < rows.length; i++) {
                 var txtAmountReceive = rows[i].querySelector('[id*="txtProduct"]');
                 if (txtAmountReceive && txtAmountReceive.value !== '') {
@@ -299,6 +296,16 @@
             }
             row.find('.suggestion-list').hide();
         });
+    </script>
+
+    <script>
+        function deleteRow(btn) {
+            if (confirm('Are you sure you want to delete this row?')) {
+                // Find the row and remove it
+                var row = btn.closest('tr');
+                row.parentNode.removeChild(row);
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -329,7 +336,7 @@
 
 
                                 </div>
-                                <div class="col-md-6 col-12 mb-3">
+                                <div class="col-md-6 col-12 mb-3" id="divcdate" runat="server">
                                     <asp:Label ID="Label17" runat="server" Font-Bold="true" CssClass="form-label LblStyle">Created Date.: </asp:Label>
 
                                     <asp:TextBox ID="txtcreateddate" CssClass="form-control" TextMode="Date" runat="server" Width="100%"></asp:TextBox>
@@ -471,7 +478,7 @@
                                 <Columns>
                                     <asp:TemplateField ItemStyle-Width="20">
                                         <HeaderTemplate>
-                                            <asp:CheckBox ID="chkAll" runat="server" onclick="toggleAll(this);" />
+                                            <asp:CheckBox ID="chkAll" runat="server" onclick="toggleAll(this);" AutoPostBack="false" />
                                         </HeaderTemplate>
                                         <ItemTemplate>
                                             <asp:CheckBox ID="chkRow" runat="server" Checked='<%# Eval("IsSelected") == DBNull.Value ? false : Convert.ToBoolean(Eval("IsSelected")) %>' AutoPostBack="false" />
@@ -521,7 +528,12 @@
                                                 ValidationGroup="1" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:TemplateField HeaderText="Quantity" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="Total Qty" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <asp:TextBox ID="txtTotQuantity" runat="server" ReadOnly="true" Style="text-align: center" CssClass="form-control" Text='<%# Eval("TotalQty") %>'></asp:TextBox>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Remaining Quantity" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
                                             <asp:TextBox ID="txtQuantity" runat="server" ReadOnly="true" Style="text-align: center" CssClass="form-control" Text='<%# Eval("Qty") %>'></asp:TextBox>
                                         </ItemTemplate>
@@ -552,6 +564,13 @@
                                         <ItemTemplate>
                                             <asp:TextBox ID="txtBatchno" Text='<%# Eval("Batchno") %>' Style="text-align: center" CssClass="form-control" runat="server"></asp:TextBox>
 
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Action" ItemStyle-Width="60" HeaderStyle-CssClass="gvhead">
+                                        <ItemTemplate>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>

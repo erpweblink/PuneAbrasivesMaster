@@ -1,14 +1,8 @@
-﻿
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web;
 using System.Web.Script.Services;
 using System.Web.Services;
 using System.Web.UI;
@@ -31,17 +25,21 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             }
             else
             {
-
+                txtcreateddate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                txtchallandate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+                txtinvoicedate.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 txtmaterialrecivedby.Text = Session["Username"].ToString();
                 ViewState["RowNo"] = 0;
                 Dt_Product.Columns.AddRange(new DataColumn[5] { new DataColumn("id"), new DataColumn("Particular"), new DataColumn("ComponentName"), new DataColumn("Batch"), new DataColumn("Quantity") });
                 ViewState["gvcomponent"] = Dt_Product;
+                ddlponumber.Enabled = false;
                 if (Request.QueryString["Id"] != null)
                 {
                     ID = objcls.Decrypt(Request.QueryString["Id"].ToString());
                     hhd.Value = ID;
                     Load_Record(ID);
                     btnsave.Text = "Update";
+                    divcdate.Visible = false;
                 }
                 else
                 {
@@ -53,6 +51,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                     dt.Columns.Add("Particulars");
                     dt.Columns.Add("Description");
                     dt.Columns.Add("HSN");
+                    dt.Columns.Add("TotalQty");
                     dt.Columns.Add("Qty");
                     dt.Columns.Add("InQty");
                     dt.Columns.Add("Batchno");
@@ -110,7 +109,19 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
 
 
                 DataTable dtt1 = new DataTable();
-                SqlDataAdapter sad31 = new SqlDataAdapter(@"select componentname as Particulars,Quantity AS Qty,Quantity AS InQty,Batch AS Batchno, * from tbl_PendingInwardDtls  WHERE OrderNo = '" + hdnOrderNo.Value + "'", con);
+               // SqlDataAdapter sad31 = new SqlDataAdapter(@"select componentname as Particulars,'N/A' AS TotalQty ,Quantity AS Qty,Quantity AS InQty,Batch AS Batchno, * from tbl_PendingInwardDtls  WHERE OrderNo = '" + hdnOrderNo.Value + "'", con);
+               
+                SqlDataAdapter sad31 = new SqlDataAdapter("SELECT PD.ID,PD.HSN,PD.IsSelected,PD.Description,PD.ComponentName AS Particulars,Billed.TotalBilledQty AS TotalQty,PD.Quantity AS Qty,PD.Quantity AS InQty,PD.Batch AS Batchno " +
+                                " FROM tbl_PendingInwardHdr AS PH "+
+                                " LEFT JOIN tbl_PendingInwardDtls AS PD ON PD.OrderNo = PH.OrderNo "+ 
+                                " LEFT JOIN ( "+
+                                    " SELECT PBB.Particulars, PBB.HSN, SUM(CONVERT(INT, PBB.Qty)) AS TotalBilledQty "+
+                                    " FROM tblPurchaseOrderHdr AS PBH "+ 
+                                    " INNER JOIN tblPurchaseOrderDtls AS PBB ON PBB.HeaderID = PBH.ID "+
+                                    " WHERE PBH.Pono = (SELECT Pono FROM tbl_PendingInwardHdr WHERE OrderNo = '" + hdnOrderNo.Value + "') " +
+                                    " GROUP BY PBB.Particulars, PBB.HSN "+
+                                " ) AS Billed ON Billed.Particulars = PD.ComponentName AND Billed.HSN = PD.HSN "+
+                                " WHERE PH.OrderNo = '" + hdnOrderNo.Value + "'", con);
                 sad31.Fill(dtt1);
                 if (dtt1.Rows.Count > 0)
                 {
@@ -126,7 +137,6 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             throw;
         }
     }
-
     protected void btnsave_Click(object sender, EventArgs e)
     {
         try
@@ -142,28 +152,15 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                     {
                         btnsave.Focus();
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('fill batch number in checked rows...!!');", true);
-                        count = 1;
+                        count = 0;
                         break;
                     }
+                    count = 1;
                 }
 
             }
-            if (count == 0)
+            if (count == 1)
             {
-                foreach (GridViewRow grd1 in dgvTaxinvoiceDetails.Rows)
-                {
-                    CheckBox Check = (grd1.FindControl("chkRow") as CheckBox);
-                    TextBox Batchno = (grd1.FindControl("txtBatchno") as TextBox);
-                    if (Check.Checked == true)
-                    {
-                        break;
-                    }
-                    if (string.IsNullOrWhiteSpace(Batchno.Text))
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please Enter Batch No...!!');", true);
-                        break;
-                    }
-                }
                 if (string.IsNullOrWhiteSpace(txtsupliername.Text))
                 {
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Kindly Enter the Data..!!'); ", true);
@@ -194,13 +191,16 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
 
                 }
             }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please check atleast one checkbox..!!')", true);
+            }
         }
         catch (Exception ex)
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Please try again..!!')", true);
         }
     }
-
     private void SaveHeader(string action, string OrderNo)
     {
         Cls_Main.Conn_Open();
@@ -242,7 +242,6 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
         Cls_Main.Conn_Close();
         Cls_Main.Conn_Dispose();
     }
-
     private void SaveComponents(string OrderNo)
     {
         foreach (GridViewRow grd1 in dgvTaxinvoiceDetails.Rows)
@@ -303,7 +302,6 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
 
 
     }
-
     private void DeleteExistingComponents(string orderNo)
     {
         Cls_Main.Conn_Open();
@@ -312,79 +310,34 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
         cmd.ExecuteNonQuery();
         Cls_Main.Conn_Close();
     }
-
     protected void btncancel_Click(object sender, EventArgs e)
     {
         Response.Redirect("StoreInwardList.aspx");
     }
-
     protected void dgvTaxinvoiceDetails_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         try
         {
+
+
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
 
-                //TextBox txtProduct = (TextBox)e.Row.FindControl("txtProduct");
+                TextBox txtProduct = (TextBox)e.Row.FindControl("txtProduct");
                 TextBox txtDescription = (TextBox)e.Row.FindControl("txtDescription");
                 TextBox txtHSN = (TextBox)e.Row.FindControl("txtHSN");
                 TextBox txtQuantity = (TextBox)e.Row.FindControl("txtQuantity");
                 TextBox txtInQuantity = (TextBox)e.Row.FindControl("txtInQuantity");
 
-
-                //if (txtProduct.Text != "")
-                //{
-                //    txtProduct.Enabled = false;
-                //}
-                if (txtDescription.Text != "")
+                if (ddlType.SelectedValue == "Order")
                 {
+                    txtProduct.Enabled = false;
                     txtDescription.Enabled = false;
-                }
-                if (txtHSN.Text != "")
-                {
                     txtHSN.Enabled = false;
+                    txtQuantity.Enabled = false;
+                    btnAdd.Visible = false;
                 }
-                //if (txtQuantity.Text != "")
-                //{
-                //    txtQuantity.Enabled = false;
-                //}
-                //if (txtInQuantity.Text != "")
-                //{
-                //    txtInQuantity.Enabled = false;
-                //}
-
-                //DropDownList ddlcomponent = (DropDownList)e.Row.FindControl("ddlcomponent");
-                //if (ddlcomponent.SelectedValue == "" && ddlcomponent.Items.Count == 0)
-                //{
-                //    DataTable dtt1 = new DataTable();
-                //    SqlDataAdapter sad31 = new SqlDataAdapter(@"select DISTINCT ComponentName from tbl_ComponentMaster where Status=1 and IsDeleted=0", con);
-                //    sad31.Fill(dtt1);
-                //    if (dtt1.Rows.Count > 0)
-                //    {
-                //        ddlcomponent.DataSource = dtt1;
-                //        ddlcomponent.DataTextField = "ComponentName";
-                //        ddlcomponent.DataBind();
-                //        ddlcomponent.Items.Insert(0, new ListItem("Select Component", ""));
-                //    }
-                //}
-                //DataRowView drv = e.Row.DataItem as DataRowView;
-                //{
-                //    if (drv != null && drv.DataView.Table.Columns.Contains("ComponentName"))
-                //    {
-                //        string selectedComponent = drv["ComponentName"].ToString();
-                //        if (!string.IsNullOrEmpty(selectedComponent))
-                //        {
-                //            ListItem item = ddlcomponent.Items.FindByValue(selectedComponent);
-                //            if (item != null)
-                //                ddlcomponent.SelectedValue = selectedComponent;
-                //        }
-                //    }
-
-                //}
-
             }
-
-
         }
         catch (Exception ex)
         {
@@ -392,7 +345,6 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             throw ex;
         }
     }
-
 
     public string ConvertNumbertoWords(int number)
     {
@@ -695,14 +647,10 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
 
         }
     }
-
-
     protected void Button1_Click(object sender, EventArgs e)
     {
         Response.Redirect("StoreInwardList.aspx");
     }
-
-
     protected void txtsupliername_TextChanged(object sender, EventArgs e)
     {
         SqlDataAdapter Da = new SqlDataAdapter("select * from tbl_VendorMaster WHERE Vendorname='" + txtsupliername.Text + "'", Cls_Main.Conn);
@@ -715,13 +663,25 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             txtGSTNO.Text = Dt.Rows[0]["GSTNo"].ToString();
             txtSuplieraddress.Text = Dt.Rows[0]["Address"].ToString();
             txtmobileno.Text = Dt.Rows[0]["MobileNo"].ToString();
-
         }
     }
-
     public void GetPurchaseOrderNo()
     {
-        SqlDataAdapter ad = new SqlDataAdapter("select * from tblPurchaseOrderHdr where Suppliername='" + txtsupliername.Text + "'", Cls_Main.Conn);
+        //SqlDataAdapter ad = new SqlDataAdapter("select * from tblPurchaseOrderHdr where Suppliername='" + txtsupliername.Text + "'", Cls_Main.Conn);
+
+        SqlDataAdapter ad = new SqlDataAdapter("With NewTable as " +
+            " (SELECT  PH.Pono,PD.Qty AS TotalQty, (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, 0)) AS Qty " +
+            " FROM tblPurchaseOrderHdr AS PH " +
+            " LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id " +
+            " LEFT JOIN ( SELECT PBB.ComponentName,PBB.HSN, " +
+            " SUM(CONVERT(INT, PBB.Quantity)) AS TotalBilledQty " +
+            " FROM tbl_PendingInwardHdr AS PBH  " +
+            " INNER JOIN tbl_PendingInwardDtls AS PBB ON PBB.OrderNo = PBH.OrderNo " +
+            " WHERE PBH.SupplierName = '" + txtsupliername.Text + "' " +
+            " GROUP BY PBB.ComponentName, PBB.HSN ) AS Billed ON Billed.ComponentName = PD.Particulars " +
+            " AND Billed.HSN = PD.HSN WHERE PH.Suppliername='" + txtsupliername.Text + "') " +
+            " select Distinct Pono from NewTable where Qty >'0'", Cls_Main.Conn);
+
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -730,17 +690,36 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             ddlponumber.DataTextField = "PoNo";
             ddlponumber.DataBind();
             ddlponumber.Items.Insert(0, "--- select ---");
+        }else{
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('There is no pending products..!!');", true);
         }
-    }
 
+    }
     protected void ddlponumber_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (ddlponumber.SelectedValue != "0")
         {
             DataTable dtt1 = new DataTable();
-            SqlDataAdapter sad31 = new SqlDataAdapter(@"select * from tblPurchaseOrderHdr AS PH
-LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id
-WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con);
+            //            SqlDataAdapter sad31 = new SqlDataAdapter(@"select *,Qty AS InQty from tblPurchaseOrderHdr AS PH
+            //LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id
+            //WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con); 
+
+            SqlDataAdapter sad31 = new SqlDataAdapter("with Record as( " +
+                " SELECT PD.Qty AS TotalQty,PH.IsSelected,PD.ID AS id,PD.Particulars,PD.Batchno,PD.Description,PD.HSN AS HSN, " +
+                        " (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, 0)) AS Qty, (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, " +
+                        " 0)) AS InQty  FROM tblPurchaseOrderHdr AS PH" +
+                        " LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id " +
+                        " LEFT JOIN (" +
+                                " SELECT PBB.ComponentName,PBB.HSN, " +
+                                " SUM(CONVERT(INT, PBB.Quantity)) AS TotalBilledQty " +
+                            " FROM tbl_PendingInwardHdr AS PBH " +
+                            " INNER JOIN tbl_PendingInwardDtls AS PBB ON PBB.OrderNo = PBH.OrderNo " +
+                            " WHERE PBH.Pono = '" + ddlponumber.SelectedItem.Text + "'" +
+                            " GROUP BY PBB.ComponentName, PBB.HSN " +
+                        " ) AS Billed ON Billed.ComponentName = PD.Particulars AND Billed.HSN = PD.HSN " +
+                        " WHERE PH.PONo = '" + ddlponumber.SelectedItem.Text + "') " +
+                        " Select TotalQty,IsSelected,ID AS id,Particulars,Batchno,Description,HSN AS HSN, " +
+                        " Qty, InQty  from Record Where Qty <>'0' ", con);
             sad31.Fill(dtt1);
             if (dtt1.Rows.Count > 0)
             {
@@ -760,7 +739,6 @@ WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con);
     {
         return AutoFillCompanyName(prefixText);
     }
-
     public static List<string> AutoFillCompanyName(string prefixText)
     {
         using (SqlConnection con = new SqlConnection())
@@ -787,15 +765,19 @@ WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con);
             }
         }
     }
-
     protected void ddlType_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (ddlType.SelectedValue == "Order")
         {
+            btnAdd.Visible = false;
             GetPurchaseOrderNo();
+            ddlponumber.Enabled = true;
+        }
+        else{
+            ddlponumber.Enabled = false;
+            ddlponumber.Items.Insert(0, "--- select ---");
         }
     }
-
     protected void btnAdd_Click(object sender, EventArgs e)
     {
 
@@ -831,7 +813,6 @@ WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con);
         dgvTaxinvoiceDetails.DataSource = dt;
         dgvTaxinvoiceDetails.DataBind();
     }
-
     protected void ddlcomponent_SelectedIndexChanged(object sender, EventArgs e)
     {
         ViewState["Compo"] = null;
@@ -843,12 +824,11 @@ WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con);
         ViewState["SelectedComponent"] = selectedValue;
     }
 
-
     [WebMethod]
     public static List<ListItem> GetComponent(string Component)
     {
         List<ListItem> Result = new List<ListItem>();
-        SqlDataAdapter ad = new SqlDataAdapter("select ID,ComponentName from tbl_ComponentMaster where Status=1 and IsDeleted=0 AND  ComponentName like '%'+ '"+Component+"' + '%'", Cls_Main.Conn);
+        SqlDataAdapter ad = new SqlDataAdapter("select ID,ComponentName from tbl_ComponentMaster where Status=1 and IsDeleted=0 AND  ComponentName like '%'+ '" + Component + "' + '%'", Cls_Main.Conn);
         DataTable dt = new DataTable();
         ad.Fill(dt);
         if (dt.Rows.Count > 0)
@@ -860,8 +840,6 @@ WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con);
         }
         return Result;
     }
-
-    
 }
 
 
