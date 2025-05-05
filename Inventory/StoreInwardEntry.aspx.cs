@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -109,18 +110,18 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
 
 
                 DataTable dtt1 = new DataTable();
-               // SqlDataAdapter sad31 = new SqlDataAdapter(@"select componentname as Particulars,'N/A' AS TotalQty ,Quantity AS Qty,Quantity AS InQty,Batch AS Batchno, * from tbl_PendingInwardDtls  WHERE OrderNo = '" + hdnOrderNo.Value + "'", con);
-               
+                // SqlDataAdapter sad31 = new SqlDataAdapter(@"select componentname as Particulars,'N/A' AS TotalQty ,Quantity AS Qty,Quantity AS InQty,Batch AS Batchno, * from tbl_PendingInwardDtls  WHERE OrderNo = '" + hdnOrderNo.Value + "'", con);
+
                 SqlDataAdapter sad31 = new SqlDataAdapter("SELECT PD.ID,PD.HSN,PD.IsSelected,PD.Description,PD.ComponentName AS Particulars,Billed.TotalBilledQty AS TotalQty,PD.Quantity AS Qty,PD.Quantity AS InQty,PD.Batch AS Batchno " +
-                                " FROM tbl_PendingInwardHdr AS PH "+
-                                " LEFT JOIN tbl_PendingInwardDtls AS PD ON PD.OrderNo = PH.OrderNo "+ 
-                                " LEFT JOIN ( "+
-                                    " SELECT PBB.Particulars, PBB.HSN, SUM(CONVERT(INT, PBB.Qty)) AS TotalBilledQty "+
-                                    " FROM tblPurchaseOrderHdr AS PBH "+ 
-                                    " INNER JOIN tblPurchaseOrderDtls AS PBB ON PBB.HeaderID = PBH.ID "+
+                                " FROM tbl_PendingInwardHdr AS PH " +
+                                " LEFT JOIN tbl_PendingInwardDtls AS PD ON PD.OrderNo = PH.OrderNo " +
+                                " LEFT JOIN ( " +
+                                    " SELECT PBB.Particulars, PBB.HSN, SUM(CONVERT(INT, PBB.Qty)) AS TotalBilledQty " +
+                                    " FROM tblPurchaseOrderHdr AS PBH " +
+                                    " INNER JOIN tblPurchaseOrderDtls AS PBB ON PBB.HeaderID = PBH.ID " +
                                     " WHERE PBH.Pono = (SELECT Pono FROM tbl_PendingInwardHdr WHERE OrderNo = '" + hdnOrderNo.Value + "') " +
-                                    " GROUP BY PBB.Particulars, PBB.HSN "+
-                                " ) AS Billed ON Billed.Particulars = PD.ComponentName AND Billed.HSN = PD.HSN "+
+                                    " GROUP BY PBB.Particulars, PBB.HSN " +
+                                " ) AS Billed ON Billed.Particulars = PD.ComponentName AND Billed.HSN = PD.HSN " +
                                 " WHERE PH.OrderNo = '" + hdnOrderNo.Value + "'", con);
                 sad31.Fill(dtt1);
                 if (dtt1.Rows.Count > 0)
@@ -669,18 +670,34 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
     {
         //SqlDataAdapter ad = new SqlDataAdapter("select * from tblPurchaseOrderHdr where Suppliername='" + txtsupliername.Text + "'", Cls_Main.Conn);
 
-        SqlDataAdapter ad = new SqlDataAdapter("With NewTable as " +
-            " (SELECT  PH.Pono,PD.Qty AS TotalQty, (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, 0)) AS Qty " +
-            " FROM tblPurchaseOrderHdr AS PH " +
-            " LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id " +
-            " LEFT JOIN ( SELECT PBB.ComponentName,PBB.HSN, " +
-            " SUM(CONVERT(INT, PBB.Quantity)) AS TotalBilledQty " +
-            " FROM tbl_PendingInwardHdr AS PBH  " +
-            " INNER JOIN tbl_PendingInwardDtls AS PBB ON PBB.OrderNo = PBH.OrderNo " +
-            " WHERE PBH.SupplierName = '" + txtsupliername.Text + "' " +
-            " GROUP BY PBB.ComponentName, PBB.HSN ) AS Billed ON Billed.ComponentName = PD.Particulars " +
-            " AND Billed.HSN = PD.HSN WHERE PH.Suppliername='" + txtsupliername.Text + "') " +
-            " select Distinct Pono from NewTable where Qty >'0'", Cls_Main.Conn);
+        SqlDataAdapter ad = new SqlDataAdapter("WITH ABC AS(select ComponentName,SUM(CAST(quantity AS int)) AS QTY,Pono,'' AS PendingQty" +
+                        " from tbl_PendingInwardHdr AS PH" +
+                        " INNER JOIN tbl_PendingInwardDtls AS PD ON PH.OrderNo = PD.OrderNo" +
+                        " WHERE PH.Suppliername = '" + txtsupliername.Text + "'" +
+                        " GROUP BY ComponentName, Pono" +
+                        " UNION" +
+                        " select Product, '' AS QTY, Pono, SUM(CAST(Qty AS int)) AS PendingQty" +
+                        " from tblPurchaseOrderHdr AS PH" +
+                        " INNER JOIN tblPurchaseOrderDtls AS PD ON PH.Id = PD.HeaderID" +
+                        " WHERE PH.Suppliername = '" + txtsupliername.Text + "'" +
+                        " GROUP BY Product, Pono)" +
+                        " SELECT Distinct Pono" +
+                       " FROM ABC " +
+                       " GROUP BY ComponentName, Pono " +
+                       " HAVING(SUM(CAST(PendingQty AS int)) - SUM(CAST(Qty AS int))) <> 0", Cls_Main.Conn);
+
+        //SqlDataAdapter ad = new SqlDataAdapter("With NewTable as " +
+        //    " (SELECT  PH.Pono,PD.Qty AS TotalQty, (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, 0)) AS Qty " +
+        //    " FROM tblPurchaseOrderHdr AS PH " +
+        //    " LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id " +
+        //    " LEFT JOIN ( SELECT PBB.ComponentName,PBB.HSN, " +
+        //    " SUM(CONVERT(INT, PBB.Quantity)) AS TotalBilledQty " +
+        //    " FROM tbl_PendingInwardHdr AS PBH  " +
+        //    " INNER JOIN tbl_PendingInwardDtls AS PBB ON PBB.OrderNo = PBH.OrderNo " +
+        //    " WHERE PBH.SupplierName = '" + txtsupliername.Text + "' " +
+        //    " GROUP BY PBB.ComponentName, PBB.HSN) AS Billed ON Billed.ComponentName = PD.Particulars " +
+        //    " AND Billed.HSN = PD.HSN  WHERE PH.Suppliername='" + txtsupliername.Text + "') " +
+        //    " select Distinct Pono from NewTable ", Cls_Main.Conn); //where Qty >'0'
 
         DataTable dt = new DataTable();
         ad.Fill(dt);
@@ -690,7 +707,9 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             ddlponumber.DataTextField = "PoNo";
             ddlponumber.DataBind();
             ddlponumber.Items.Insert(0, "--- select ---");
-        }else{
+        }
+        else
+        {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('There is no pending products..!!');", true);
         }
 
@@ -730,6 +749,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                 dgvTaxinvoiceDetails.DataSource = dtt1;
                 dgvTaxinvoiceDetails.DataBind();
             }
+           
         }
     }
 
@@ -773,7 +793,8 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             GetPurchaseOrderNo();
             ddlponumber.Enabled = true;
         }
-        else{
+        else
+        {
             ddlponumber.Enabled = false;
             ddlponumber.Items.Insert(0, "--- select ---");
         }

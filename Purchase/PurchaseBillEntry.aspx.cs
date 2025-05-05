@@ -847,23 +847,17 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
     protected void BindPO(string type)
     {
         string query = string.Empty;
-        string query1 = string.Empty;
+       
         if (type == "Order")
         {
             query = "SELECT Distinct PONo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono!='--- select ---'";
 
-            query1 = "SELECT   OrderNo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono!='--- select ---' " +
-                     " AND OrderNo NOT IN((SELECT OrderNo FROM tblPurchaseBillHdr WHERE OrderNo IS NOT NULL)) " +
-                     " order by CAST(SUBSTRING(OrderNo, CHARINDEX('-', OrderNo) + 1, LEN(OrderNo)) AS INT) DESC ";
+          
         }
         else if (type == "Verbal")
         {
             query = @"select Distinct InvoiceNo AS PONo from tbl_PendingInwardHdr AS PH
                       INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where SupplierName='" + txtsupliername.Text.Trim() + "' AND pono='--- select ---'";
-
-            query1 = "SELECT   OrderNo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono!='--- select ---' " +
-                    " AND OrderNo NOT IN((SELECT OrderNo FROM tblPurchaseBillHdr WHERE OrderNo IS NOT NULL)) " +
-                    " order by CAST(SUBSTRING(OrderNo, CHARINDEX('-', OrderNo) + 1, LEN(OrderNo)) AS INT) DESC ";
             ddinwardAgainstNumber.Enabled = false;
         }
         else
@@ -871,32 +865,17 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
             query = "SELECT Id,PONo FROM tbl_PendingInwardHdr where EntryType=2 ";
         }
         SqlDataAdapter ad = new SqlDataAdapter(query, con);
-        SqlDataAdapter ad1 = new SqlDataAdapter(query1, con);
         DataTable dt = new DataTable();
-        DataTable dt1 = new DataTable();
         ad.Fill(dt);
-        ad1.Fill(dt1);
-        if (dt.Rows.Count > 0 || dt1.Rows.Count > 0)
+       if (dt.Rows.Count > 0)
         {
             ddlAgainstNumber.DataSource = dt;
             ddlAgainstNumber.DataBind();
             ddlAgainstNumber.DataTextField = "PONo";
             ddlAgainstNumber.DataValueField = "PONo";
             ddlAgainstNumber.DataBind();
-
-            ddinwardAgainstNumber.DataSource = dt1;
-            ddinwardAgainstNumber.DataBind();
-            ddinwardAgainstNumber.DataTextField = "OrderNo";
-            ddinwardAgainstNumber.DataValueField = "OrderNo";
-            ddinwardAgainstNumber.DataBind();
-
-        }
-        else
-        {
-
         }
         ddlAgainstNumber.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select Order--", "0"));
-        ddinwardAgainstNumber.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select Inward--", "0"));
     }
     protected void ddlAgainstNumber_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -912,6 +891,40 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
 
             throw;
         }
+    }
+    protected void BindInwardByPO(object sender, EventArgs e)
+    {
+        string query = string.Empty;
+        if (ddlBillAgainst.SelectedItem.Text == "Order")
+        {
+           
+            query = " SELECT OrderNo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono!='--- select ---' AND pono ='"+ ddlAgainstNumber.SelectedItem.Text + "' " +
+                     " AND OrderNo NOT IN((SELECT OrderNo FROM tblPurchaseBillHdr WHERE OrderNo IS NOT NULL)) " +
+                     " order by CAST(SUBSTRING(OrderNo, CHARINDEX('-', OrderNo) + 1, LEN(OrderNo)) AS INT) DESC ";
+        }
+        else if (ddlBillAgainst.SelectedItem.Text == "Verbal")
+        {
+            ddinwardAgainstNumber.Enabled = false;
+        }
+        else
+        {
+            query = "SELECT Id,PONo FROM tbl_PendingInwardHdr where EntryType=2 ";
+        }
+
+        SqlDataAdapter ad = new SqlDataAdapter(query, con);
+        DataTable dt = new DataTable();
+        ad.Fill(dt);
+        if (dt.Rows.Count > 0)
+        {
+           
+            ddinwardAgainstNumber.DataSource = dt;
+            ddinwardAgainstNumber.DataBind();
+            ddinwardAgainstNumber.DataTextField = "OrderNo";
+            ddinwardAgainstNumber.DataValueField = "OrderNo";
+            ddinwardAgainstNumber.DataBind();
+
+        }
+        ddinwardAgainstNumber.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select Inward--", "0"));
     }
     protected void getOrderDatailsdts()
     {
@@ -1297,6 +1310,8 @@ INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where Invoiceno
         return Result;
     }
 
+
+   
 }
 
 
