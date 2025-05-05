@@ -88,6 +88,7 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
                 BindPO(ddlBillAgainst.Text);
                 ddlAgainstNumber.SelectedValue = dt.Rows[0]["AgainstNumber"].ToString();
                 ddlAgainstNumber.Enabled = false;
+                BindInwardByPO();
                 ddinwardAgainstNumber.SelectedItem.Text = dt.Rows[0]["OrderNo"].ToString();
                 ddinwardAgainstNumber.Enabled = false;
                 txtTransportMode.Text = dt.Rows[0]["TransportMode"].ToString();
@@ -892,7 +893,12 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
             throw;
         }
     }
-    protected void BindInwardByPO(object sender, EventArgs e)
+
+    protected void ddlBindInwardChnage(object sender, EventArgs e)
+    {
+        BindInwardByPO();
+    }
+    protected void BindInwardByPO()
     {
         string query = string.Empty;
         if (ddlBillAgainst.SelectedItem.Text == "Order")
@@ -1310,8 +1316,6 @@ INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where Invoiceno
         return Result;
     }
 
-
-   
 }
 
 

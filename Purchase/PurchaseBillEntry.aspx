@@ -408,7 +408,7 @@
                                     <div class="row">
                                         <div class="col-md-6 col-12 mb-3">
                                             <asp:Label runat="server" ID="lblponumber" Font-Bold="true" CssClass="form-label LblStyle">Against No.</asp:Label>
-                                            <asp:DropDownList runat="server" ID="ddlAgainstNumber" class="form-control" OnSelectedIndexChanged="BindInwardByPO" AutoPostBack="true"></asp:DropDownList>
+                                            <asp:DropDownList runat="server" ID="ddlAgainstNumber" class="form-control" OnSelectedIndexChanged="ddlBindInwardChnage" AutoPostBack="true"></asp:DropDownList>
                                             <%--OnSelectedIndexChanged="ddlAgainstNumber_SelectedIndexChanged" AutoPostBack="true" --%>
                                         </div>
                                         <div class="col-md-6 col-12 mb-3">
