@@ -28,6 +28,31 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
             }
             else
             {
+
+                // Create a DataTable with the required columns
+                DataTable dt = new DataTable();
+                dt.Columns.Add("IsSelected");
+                dt.Columns.Add("id");
+                dt.Columns.Add("Particulars");
+                dt.Columns.Add("Description");
+                dt.Columns.Add("HSN");
+                dt.Columns.Add("Qty");
+                dt.Columns.Add("Units");
+                dt.Columns.Add("Rate");
+                dt.Columns.Add("CGSTPer");
+                dt.Columns.Add("SGSTPer");
+                dt.Columns.Add("IGSTPer");
+                dt.Columns.Add("Discount");
+                dt.Columns.Add("Batchno");
+
+                //Added Empty Row
+                dt.Rows.Add(dt.NewRow());
+
+
+                // Bind to GridView
+                dgvTaxinvoiceDetails.DataSource = dt;
+                dgvTaxinvoiceDetails.DataBind();
+
                 txtBilldate.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 txtDOR.Text = DateTime.Now.ToString("yyyy-MM-dd");
                 if (Request.QueryString["Id"] != null)
@@ -43,34 +68,9 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
                     hhd.Value = ID;
                     Load_OrderNORecord(ID);
                 }
-                else
-                {
+               
 
-                    // Create a DataTable with the required columns
-                    DataTable dt = new DataTable();
-                    dt.Columns.Add("IsSelected");
-                    dt.Columns.Add("id");
-                    dt.Columns.Add("Particulars");
-                    dt.Columns.Add("Description");
-                    dt.Columns.Add("HSN");
-                    dt.Columns.Add("Qty");
-                    dt.Columns.Add("Units");
-                    dt.Columns.Add("Rate");
-                    dt.Columns.Add("CGSTPer");
-                    dt.Columns.Add("SGSTPer");
-                    dt.Columns.Add("IGSTPer");
-                    dt.Columns.Add("Discount");
-                    dt.Columns.Add("Batchno");
-
-                    //Added Empty Row
-                    dt.Rows.Add(dt.NewRow());
-
-
-                    // Bind to GridView
-                    dgvTaxinvoiceDetails.DataSource = dt;
-                    dgvTaxinvoiceDetails.DataBind();
-
-                }
+                
 
             }
         }
