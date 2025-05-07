@@ -37,6 +37,12 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
                     Load_Record(ID);
                     btnsave.Text = "Update";
                 }
+                if (Request.QueryString["OrderNo"] != null)
+                {
+                    ID = objcls.Decrypt(Request.QueryString["OrderNo"].ToString());
+                    hhd.Value = ID;
+                    Load_OrderNORecord(ID);
+                }
                 else
                 {
 
@@ -68,7 +74,7 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
 
             }
         }
-    }   
+    }
     //Data Fetch
     private void Load_Record(string ID)
     {
@@ -138,12 +144,49 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
                 {
                     binddetails(txtBillNo.Text);
                 }
-
-
-
             }
         }
         catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    private void Load_OrderNORecord(string ID)
+    {
+        try
+        {
+            DataTable dt = Cls_Main.Read_Table("SELECT * FROM [tbl_PendingInwardHdr] WHERE OrderNo='" + ID + "' ");
+            if (dt.Rows.Count > 0)
+            {
+                txtsupliername.Text = dt.Rows[0]["SupplierName"].ToString();
+                txtsupliername.ReadOnly = true;
+                DateTime BillDate = DateTime.Now;
+                txtBilldate.Text = BillDate.ToString("dd-MM-yyyy");
+                string pochk = dt.Rows[0]["pono"].ToString();
+                if (pochk != "")
+                {
+                    ddlBillAgainst.SelectedItem.Text = "Order";
+                    BindPO(ddlBillAgainst.Text);
+                }
+                else
+                {
+                    ddlBillAgainst.SelectedItem.Text = "Verbal";
+                    BindPO(ddlBillAgainst.Text);
+                    ddlAgainstNumber.SelectedItem.Text = dt.Rows[0]["invoiceno"].ToString();
+                }
+                ddlBillAgainst.Enabled = false;
+                if (pochk != "")
+                {
+                    ddlAgainstNumber.SelectedItem.Text = dt.Rows[0]["pono"].ToString();
+                }
+                ddlAgainstNumber.Enabled = false;
+                BindInwardByPO();
+                ddinwardAgainstNumber.SelectedItem.Text = dt.Rows[0]["OrderNo"].ToString();
+                ddinwardAgainstNumber.Enabled = false;
+                bindOrderNodetails(ID);
+            }
+        }
+        catch (Exception)
         {
             throw;
         }
@@ -155,7 +198,17 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
         sad31.Fill(dtt1);
         if (dtt1.Rows.Count > 0)
         {
-
+            dgvTaxinvoiceDetails.DataSource = dtt1;
+            dgvTaxinvoiceDetails.DataBind();
+        }
+    }
+    public void bindOrderNodetails(string id)
+    {
+        DataTable dtt1 = new DataTable();
+        SqlDataAdapter sad31 = new SqlDataAdapter(@"select componentname as Particulars,Quantity AS Qty,Quantity AS InQty,Batch AS Batchno,Discountpercentage as Discount, * from tbl_PendingInwardDtls  WHERE OrderNo = '" + id + "'", con);
+        sad31.Fill(dtt1);
+        if (dtt1.Rows.Count > 0)
+        {
             dgvTaxinvoiceDetails.DataSource = dtt1;
             dgvTaxinvoiceDetails.DataBind();
         }
@@ -487,7 +540,6 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
             throw ex;
         }
     }
-
     public string ConvertNumbertoWords(int number)
     {
         if (number == 0)
@@ -848,18 +900,15 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
     protected void BindPO(string type)
     {
         string query = string.Empty;
-       
+
         if (type == "Order")
         {
-            query = "SELECT Distinct PONo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono!='--- select ---'";
-
-          
+            query = "SELECT Distinct PONo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono IS NOT NULL";
         }
         else if (type == "Verbal")
         {
             query = @"select Distinct InvoiceNo AS PONo from tbl_PendingInwardHdr AS PH
-                      INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where SupplierName='" + txtsupliername.Text.Trim() + "' AND pono='--- select ---'";
-            ddinwardAgainstNumber.Enabled = false;
+                      INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where SupplierName='" + txtsupliername.Text.Trim() + "' AND pono IS NULL";
         }
         else
         {
@@ -868,7 +917,7 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
         SqlDataAdapter ad = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();
         ad.Fill(dt);
-       if (dt.Rows.Count > 0)
+        if (dt.Rows.Count > 0)
         {
             ddlAgainstNumber.DataSource = dt;
             ddlAgainstNumber.DataBind();
@@ -893,7 +942,6 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
             throw;
         }
     }
-
     protected void ddlBindInwardChnage(object sender, EventArgs e)
     {
         BindInwardByPO();
@@ -903,14 +951,24 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
         string query = string.Empty;
         if (ddlBillAgainst.SelectedItem.Text == "Order")
         {
-           
-            query = " SELECT OrderNo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono!='--- select ---' AND pono ='"+ ddlAgainstNumber.SelectedItem.Text + "' " +
+
+            query = " SELECT OrderNo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono IS NOT NULL  AND pono ='" + ddlAgainstNumber.SelectedItem.Text + "' " +
                      " AND OrderNo NOT IN((SELECT OrderNo FROM tblPurchaseBillHdr WHERE OrderNo IS NOT NULL)) " +
                      " order by CAST(SUBSTRING(OrderNo, CHARINDEX('-', OrderNo) + 1, LEN(OrderNo)) AS INT) DESC ";
+            if (Request.QueryString["OrderNo"] != null)
+            {
+                ddinwardAgainstNumber.Enabled = false;
+            }
+            else
+            {
+                ddinwardAgainstNumber.Enabled = true;
+            }
         }
         else if (ddlBillAgainst.SelectedItem.Text == "Verbal")
         {
-            ddinwardAgainstNumber.Enabled = false;
+            query = " SELECT OrderNo FROM tbl_PendingInwardHdr where SupplierName='" + txtsupliername.Text.Trim() + "'AND pono IS NULL AND invoiceno ='" + ddlAgainstNumber.SelectedItem.Text + "' " +
+                     " AND OrderNo NOT IN((SELECT OrderNo FROM tblPurchaseBillHdr WHERE OrderNo IS NOT NULL)) " +
+                     " order by CAST(SUBSTRING(OrderNo, CHARINDEX('-', OrderNo) + 1, LEN(OrderNo)) AS INT) DESC ";
         }
         else
         {
@@ -919,16 +977,24 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
 
         SqlDataAdapter ad = new SqlDataAdapter(query, con);
         DataTable dt = new DataTable();
-        ad.Fill(dt);
+        if (query != "")
+        {
+            ad.Fill(dt);
+        }
         if (dt.Rows.Count > 0)
         {
-           
+
             ddinwardAgainstNumber.DataSource = dt;
             ddinwardAgainstNumber.DataBind();
             ddinwardAgainstNumber.DataTextField = "OrderNo";
             ddinwardAgainstNumber.DataValueField = "OrderNo";
             ddinwardAgainstNumber.DataBind();
 
+        }
+        else
+        {
+            ddinwardAgainstNumber.DataSource = "No Data";
+            ddinwardAgainstNumber.DataBind();
         }
         ddinwardAgainstNumber.Items.Insert(0, new System.Web.UI.WebControls.ListItem("--Select Inward--", "0"));
     }
@@ -1084,11 +1150,13 @@ INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where Invoiceno
         }
         else
         {
-            var tot = Convert.ToDecimal(txtGrandTot.Text) + Convert.ToDecimal(txtCost.Text); //hdnGrandtotal.Value
+           // var tot = Convert.ToDecimal(txtGrandTot.Text) + Convert.ToDecimal(txtCost.Text); //hdnGrandtotal.Value
+            var tot = Convert.ToDecimal(hdnGrandtotal.Value) + Convert.ToDecimal(txtCost.Text); //hdnGrandtotal.Value
             var TcsAmt = Convert.ToDecimal(txtTCSPer.Text) * tot / 100;
             txtTCSAmt.Text = TcsAmt.ToString("##.00");
 
-            var grandtot = Convert.ToDecimal(txtTCSAmt.Text) + Convert.ToDecimal(txtGrandTot.Text) + Convert.ToDecimal(txtCost.Text) + Convert.ToDecimal(txtTCost.Text);
+            //var grandtot = Convert.ToDecimal(txtTCSAmt.Text) + Convert.ToDecimal(txtGrandTot.Text) + Convert.ToDecimal(txtCost.Text) + Convert.ToDecimal(txtTCost.Text);
+            var grandtot = Convert.ToDecimal(txtTCSAmt.Text) + Convert.ToDecimal(hdnGrandtotal.Value) + Convert.ToDecimal(txtCost.Text) + Convert.ToDecimal(txtTCost.Text);
             txtGrandTot.Text = grandtot.ToString("##.00");
         }
     }
@@ -1166,6 +1234,7 @@ INNER JOIN tbl_PendingInwardDtls AS  PD ON PD.OrderNo=PH.OrderNo where Invoiceno
 
         txtTCost.Text = Finalresult.ToString("0.00", CultureInfo.InvariantCulture);
 
+       // txtGrandTot.Text = (Convert.ToDecimal(hdnGrandtotal.Value) + Convert.ToDecimal(txtTCost.Text)).ToString();
 
     }
     protected void txtTCharge_TextChanged(object sender, EventArgs e)

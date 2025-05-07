@@ -287,10 +287,12 @@
 
     <script type="text/javascript">
         function calculateRowTotal(input) {
+            debugger;
             var grid = document.getElementById("ContentPlaceHolder1_dgvTaxinvoiceDetails");
             var rows = grid.getElementsByTagName("tr");
             var total = 0;
             var totals = 0;
+
             for (var i = 0; i < rows.length; i++) {
                 var qtyField = rows[i].querySelector('[id*="txtQuantity"]');
                 var rateField = rows[i].querySelector('[id*="txtRate"]');
@@ -307,6 +309,7 @@
                 total = qty * rate;
                 totals += total;
             }
+
             var discountAmount = (totals * discount) / 100;
             var afterDiscount = totals - discountAmount;
             var taxAmount = (afterDiscount * (cgst + sgst + igst)) / 100;

@@ -12,6 +12,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.Reporting.WebForms;
 
 public partial class Purchase_PurchaseBillList : System.Web.UI.Page
 {
@@ -27,11 +28,20 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
         {
             if (!IsPostBack)
             {
+                int jobCount = GetJobCount();
+                lblcount.Text = jobCount.ToString();
+                if (Convert.ToInt32(lblcount.Text) > 0)
+                {
+                    lnkshow.Attributes.Add("class", "bell-bounce");
+                }
+                else
+                {
+                    lnkshow.Attributes.Remove("class");
+                }
                 Gvbind();
             }
         }
     }
-
     private void Gvbind()
     {
         string query = string.Empty;
@@ -52,14 +62,13 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(Page, this.GetType(), "Key", "<script>MakeStaticHeader('" + GvPurchaseBill.ClientID + "', 500, 1020 , 40 ,true); </script>", false);
         }
     }
-
     protected void GvPurchaseBill_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         ViewState["CompRowId"] = e.CommandArgument.ToString();
         if (e.CommandName == "RowEdit")
         {
             ViewState["id"] = e.CommandArgument.ToString();
-            Response.Redirect("PurchaseBill.aspx?ID=" + obj.encrypt(e.CommandArgument.ToString()));
+            Response.Redirect("PurchaseBillEntry.aspx?ID=" + obj.encrypt(e.CommandArgument.ToString()));
         }
         if (e.CommandName == "Suppliername")
         {
@@ -74,9 +83,7 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
         {
             if (!string.IsNullOrEmpty(e.CommandArgument.ToString()))
             {
-                Session["PDFID"] = e.CommandArgument.ToString();
-                // Response.Write("<script>window.open('PurchaseBillPDF.aspx','_blank');</script>");
-                Response.Redirect("PurchaseBillPDF.aspx?Id=" + obj.encrypt(e.CommandArgument.ToString()) + " ");
+                Report(e.CommandArgument.ToString());
             }
         }
 
@@ -110,9 +117,7 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
 
 
     }
-    
     #region Filter
-
     protected void txtcnamefilter_TextChanged(object sender, EventArgs e)
     {
         string query = string.Empty;
@@ -139,7 +144,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
             GvPurchaseBill.DataBind();
         }
     }
-
     protected void txtSupplierBill_TextChanged(object sender, EventArgs e)
     {
         string query = string.Empty;
@@ -167,7 +171,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
         }
     }
     #endregion Filter
-
     protected void btnresetfilter_Click(object sender, EventArgs e)
     {
         Response.Redirect("PurchaseBillList.aspx");
@@ -179,7 +182,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
     {
         return AutoFillSupplierName(prefixText);
     }
-
     public static List<string> AutoFillSupplierName(string prefixText)
     {
         using (SqlConnection con = new SqlConnection())
@@ -206,14 +208,12 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
             }
         }
     }
-
     [System.Web.Script.Services.ScriptMethod()]
     [System.Web.Services.WebMethod]
     public static List<string> GetbillnoList(string prefixText, int count)
     {
         return AutoFillbillno(prefixText);
     }
-
     public static List<string> AutoFillbillno(string prefixText)
     {
         using (SqlConnection con = new SqlConnection())
@@ -240,7 +240,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
             }
         }
     }
-
     private string GetMailIdOfEmpl(string Empcode)
     {
         string query1 = "SELECT [email] FROM [employees] where [empcode]='" + Empcode + "' ";
@@ -254,19 +253,16 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
         }
         return email;
     }
-
     protected void ddlsalesMainfilter_TextChanged(object sender, EventArgs e)
     {
         Gvbind();
     }
-
     protected void btnAddEnq_Click(object sender, EventArgs e)
     {
         string Cname = ((sender as Button).CommandArgument).ToString();
         Response.Redirect("AddEnquiry.aspx?Cname=" + obj.encrypt(Cname));
         //Page.ClientScript.RegisterStartupScript(GetType(), "", "window.open('EnquiryFile.aspx?Fileid=" + id + "','','width=700px,height=600px');", true);
     }
-
     protected void linkbtnfile_Click(object sender, EventArgs e)
     {
         string id = obj.encrypt(((sender as ImageButton).CommandArgument).ToString());
@@ -283,7 +279,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
         }
         //Page.ClientScript.RegisterStartupScript(GetType(), "", "window.open('EnquiryFile.aspx?Fileid=" + id + "&SN=1','','width=700px,height=600px');", true);
     }
-
     private DataTable GetData(SqlCommand cmd)
     {
         DataTable dt = new DataTable();
@@ -310,7 +305,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
             con.Dispose();
         }
     }
-
     private void download(DataTable dt)
     {
         if (dt.Rows[0]["RefDocument"].ToString() != "")
@@ -330,7 +324,6 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
             ScriptManager.RegisterStartupScript(this, this.GetType(), "Alert", "alert('File Not Found !!');", true);
         }
     }
-
     protected void GvPurchaseBill_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.DataRow)
@@ -357,12 +350,127 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
                     btnPDF.Visible = true;
                 }
             }
-           
+
+        }
+    }
+    protected void LinkButton1_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("PurchaseBillEntry.aspx");
+    }
+    //---------------------------------------------------------------------------
+    public void Report(string BillNo)
+    {
+
+        try
+        {
+            DataSet Dtt = new DataSet();
+            string strConnString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(strConnString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[SP_PurchaseBill]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Action", "GetBillDetails");
+                    cmd.Parameters.AddWithValue("@BillNo", BillNo);
+
+                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                    {
+                        cmd.Connection = con;
+                        sda.SelectCommand = cmd;
+                        using (DataSet ds = new DataSet())
+                        {
+                            sda.Fill(Dtt);
+
+                        }
+                    }
+                }
+            }
+
+            if (Dtt.Tables.Count > 0)
+            {
+                if (Dtt.Tables[0].Rows.Count > 0)
+                {
+                    ReportDataSource obj1 = new ReportDataSource("DataSet1", Dtt.Tables[0]);
+                    ReportDataSource obj2 = new ReportDataSource("DataSet2", Dtt.Tables[1]);
+                    ReportViewer1.LocalReport.DataSources.Add(obj1);
+                    ReportViewer1.LocalReport.DataSources.Add(obj2);
+                    ReportViewer1.LocalReport.ReportPath = "RDLC_Reports\\PurchaseBill.rdlc";
+                    ReportViewer1.LocalReport.Refresh();
+                    //-------- Print PDF directly without showing ReportViewer ----
+                    Warning[] warnings;
+                    string[] streamids;
+                    string mimeType;
+                    string encoding;
+                    string extension;
+                    byte[] bytePdfRep = ReportViewer1.LocalReport.Render("PDF", null, out mimeType, out encoding, out extension, out streamids, out warnings);
+
+                    Response.ClearContent();
+                    Response.ClearHeaders();
+
+                    Response.Buffer = true;
+                    string Filename = BillNo + "_PurchaseBill.pdf";
+                    Response.ContentType = "application/vnd.pdf";
+                    Response.AddHeader("content-disposition", "attachment; filename=" + Filename + "");
+                    Response.BinaryWrite(bytePdfRep);
+
+                    ReportViewer1.LocalReport.DataSources.Clear();
+                    ReportViewer1.Reset();
+
+                }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Record Not Found...........!')", true);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw (ex);
         }
     }
 
-    protected void LinkButton1_Click(object sender, EventArgs e)
+    // New Bell icon by Nikhil 05-05-2025
+    protected void lnkshow_Click(object sender, EventArgs e)
     {
-        Response.Redirect("PurchaseBill.aspx");
+
+        string query = string.Empty;
+        query = @"SELECT * FROM tbl_PendingInwardHdr WHERE orderno NOT IN (SELECT OrderNo from tblPurchaseBillHdr) order by Id desc";
+        SqlDataAdapter ad = new SqlDataAdapter(query, con);
+        DataTable dt = new DataTable();
+        ad.Fill(dt);
+        if (dt.Rows.Count > 0)
+        {
+            gv_EstimationList.DataSource = dt;
+            gv_EstimationList.DataBind();
+            modelprofile.Show();
+        }
+        else
+        {
+            gv_EstimationList.DataSource = "No Data Found";
+            gv_EstimationList.DataBind();
+            modelprofile.Show();
+        }
+
+    }
+    public static int GetJobCount()
+    {
+        int jobCount = 0;
+        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(connString))
+        {
+
+            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_PendingInwardHdr WHERE orderno NOT IN(SELECT OrderNo from tblPurchaseBillHdr)", con);
+            con.Open();
+            jobCount = (int)cmd.ExecuteScalar();
+        }
+
+        return jobCount;
+    }
+    protected void gv_EstimationList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "RowCorrect")
+        {
+            Response.Redirect("PurchaseBillEntry.aspx?OrderNo=" + obj.encrypt(e.CommandArgument.ToString()));
+        }
     }
 }
