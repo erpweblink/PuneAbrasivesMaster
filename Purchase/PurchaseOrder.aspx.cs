@@ -366,8 +366,6 @@ public partial class Purchase_PurchaseOrder : System.Web.UI.Page
     ) AS maxno
 FROM tblPurchaseOrderHdr
 WHERE CHARINDEX('/', PONo) > 0 AND  PONo like  '%" + fY + "%' order by id desc";
-
-      
         // string strSelect = @"SELECT TOP 1 ISNULL(MAX(PONo), '') AS maxno FROM tblPurchaseOrderHdr where PONo like '%" + fY + "%' ORDER BY ID DESC";
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = con;
@@ -375,12 +373,7 @@ WHERE CHARINDEX('/', PONo) > 0 AND  PONo like  '%" + fY + "%' order by id desc";
         cmd.CommandType = CommandType.Text;
         cmd.CommandText = strSelect;
         con.Open();
-        object status = cmd.ExecuteScalar();
-        string result = string.Empty;
-        if (status != null)
-        {
-            result = cmd.ExecuteScalar().ToString();
-        }
+        string result = cmd.ExecuteScalar().ToString();
         // string result = "";
         con.Close();
         if (result != "")
@@ -391,7 +384,7 @@ WHERE CHARINDEX('/', PONo) > 0 AND  PONo like  '%" + fY + "%' order by id desc";
         }
         else
         {
-            strInvoiceNumber = previousyear.ToString() + "-" + FinYear + "/" + "01" + "-R0";
+            strInvoiceNumber = previousyear.ToString() + "-" + FinYear + "/" + "01";
         }
         return strInvoiceNumber;
     }
@@ -1177,7 +1170,7 @@ WHERE CHARINDEX('/', PONo) > 0 AND  PONo like  '%" + fY + "%' order by id desc";
             if (txts == null)
             {
                 Totalamt += Convert.ToDecimal((e.Row.FindControl("lblTotalAmount") as Label).Text);
-                hdnGrandtotal.Value = Totalamt.ToString();
+                hdnGrandtotal.Value = Totalamt.ToString();               
             }
             else
             {

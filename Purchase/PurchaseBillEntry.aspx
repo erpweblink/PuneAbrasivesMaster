@@ -265,6 +265,8 @@
 
 
     <script>
+
+
         $(document).on('click', '.suggestion-item', function () {
             var selectedText = $(this).text();
             // Find the parent GridView row
@@ -286,8 +288,10 @@
     </script>
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            calculateRowTotal(2);
+        });
         function calculateRowTotal(input) {
-            debugger;
             var grid = document.getElementById("ContentPlaceHolder1_dgvTaxinvoiceDetails");
             var rows = grid.getElementsByTagName("tr");
             var total = 0;
@@ -314,21 +318,125 @@
             var afterDiscount = totals - discountAmount;
             var taxAmount = (afterDiscount * (cgst + sgst + igst)) / 100;
             var total1 = afterDiscount + taxAmount;
-            var totalLabel = document.querySelector("[id$='sumofAmount']");
+            var sumofAmount = document.querySelector("[id$='sumofAmount']");
             var hdnGrandtotal = document.querySelector("[id$='hdnGrandtotal']");
             var txtGrandTot = document.querySelector("[id$='txtGrandTot']");
+            var hdnProductAmt = document.querySelector("[id$='hdnProductAmt']");
 
-            if (totalLabel) {
-                totalLabel.value = totals.toFixed(2);
+            if (totals) {
+                sumofAmount.value = totals.toFixed(2);
+
             }
-            if (hdnGrandtotal) {
+            if (total1) {
                 hdnGrandtotal.value = total1.toFixed(2);
-            }
-            if (txtGrandTot) {
+                hdnProductAmt.value = total1.toFixed(2);
                 txtGrandTot.value = total1.toFixed(2);
             }
+
+            calculateFright(2);
+            calculateTransport(2);
+          
+
+
         }
 
+        function calculateFright(input) {
+            var sumofAmount = document.getElementById('<%= sumofAmount.ClientID %>');
+            var rateField = document.getElementById('<%= txtRate.ClientID %>');
+            var FBasicAmt = document.getElementById('<%= txtBasic.ClientID %>');
+            var FCost = document.getElementById('<%= txtCost.ClientID %>');
+            var FCGSTPer = document.getElementById('<%= CGSTPer.ClientID %>');
+            var FSGSTPer = document.getElementById('<%= SGSTPer.ClientID %>');
+            var FIGSTPer = document.getElementById('<%= IGSTPer.ClientID %>');
+            var amount = parseFloat(sumofAmount.value) || 0;
+            var rate = parseFloat(rateField.value) || 0;
+            var Cost = parseFloat(FCost.value) || 0;
+            var CGSTPer = parseFloat(FCGSTPer.value) || 0;
+            var SGSTPer = parseFloat(FSGSTPer.value) || 0;
+            var IGSTPer = parseFloat(FIGSTPer.value) || 0;
+
+            var FranAmount = (amount * rate) / 100;
+            var FGstAmount = (FranAmount * (CGSTPer + SGSTPer + IGSTPer)) / 100;
+            var FgrdTotal = FGstAmount + FranAmount;
+
+            FBasicAmt.value = FranAmount.toFixed(2);
+            FCost.value = FgrdTotal.toFixed(2);
+            calculateTCS(2);
+        }
+
+        function calculateTransport(input) {
+            var sumofAmount = document.getElementById('<%= sumofAmount.ClientID %>');
+            var TCharge = document.getElementById('<%= txtTCharge.ClientID %>');
+            var TCost = document.getElementById('<%= txtTCost.ClientID %>');
+            var TCGSTPer = document.getElementById('<%= txtTCGSTPer.ClientID %>');
+            var TSGSTPer = document.getElementById('<%= txtTSGSTPer.ClientID %>');
+            var TIGSTPer = document.getElementById('<%= txtTIGSTPer.ClientID %>');
+
+            var TCGSTAmt = document.getElementById('<%= txtTCGSTamt.ClientID %>');
+            var TSGSTAmt = document.getElementById('<%= txtTSGSTamt.ClientID %>');
+            var TIGSTAmt = document.getElementById('<%= txtTIGSTamt.ClientID %>');
+
+            var amount = parseFloat(sumofAmount.value) || 0;
+            var Charge = parseFloat(TCharge.value) || 0;
+            var CGST = parseFloat(TCGSTPer.value) || 0;
+            var SGST = parseFloat(TSGSTPer.value) || 0;
+            var IGST = parseFloat(TIGSTPer.value) || 0;
+
+            var CGSTAmt = parseFloat(TCGSTAmt.value) || 0;
+            var SGSTAmt = parseFloat(TSGSTAmt.value) || 0;
+            var IGSTAmt = parseFloat(TIGSTAmt.value) || 0;
+            if (CGST) {
+                CGSTAmt = (Charge * CGST) / 100;
+                TCGSTAmt.value = CGSTAmt.toFixed(2);
+            }
+            if (SGST) {
+
+                SGSTAmt = (Charge * SGST) / 100;
+                TSGSTAmt.value = SGSTAmt.toFixed(2);
+            }
+            if (IGST) {
+                IGSTAmt = (Charge * IGST) / 100;
+                TIGSTAmt.value = IGSTAmt.toFixed(2);
+            }
+
+            var TGstAmount = Charge + CGSTAmt + SGSTAmt + IGSTAmt;
+            var TgrdTotal = TGstAmount;
+            TCost.value = TgrdTotal.toFixed(2);
+            calculateTCS(2);
+        }
+
+        function calculateTCS(input) {
+            var txtTCSPer = document.getElementById('<%= txtTCSPer.ClientID %>');
+            var txtTCSAmt = document.getElementById('<%= txtTCSAmt.ClientID %>');
+
+            var TCSPer = parseFloat(txtTCSPer.value) || 0;
+            var TCSAmt = parseFloat(txtTCSAmt.value) || 0;
+
+            var hdnProductAmt = document.getElementById('<%= hdnProductAmt.ClientID %>');
+            var FCost = document.getElementById('<%= txtCost.ClientID %>');
+            var TCost = document.getElementById('<%= txtTCost.ClientID %>');
+
+            var ProductAmt = parseFloat(hdnProductAmt.value) || 0;
+            var FRigCost = parseFloat(FCost.value) || 0;
+            var TranCost = parseFloat(TCost.value) || 0;
+
+            var Total = ProductAmt + FRigCost + TranCost;
+            var TCSAmt = (Total * TCSPer) / 100;
+            if (TCSAmt) {
+                txtTCSAmt.value = TCSAmt.toFixed(2);
+            }
+           
+            var grandtotal = TCSAmt + Total;
+            
+            //Grandtotal calculation
+            var hdnGrandtotal = document.getElementById('<%= hdnGrandtotal.ClientID %>');
+            var txtGrandTot = document.getElementById('<%= txtGrandTot.ClientID %>');
+            if (grandtotal) {
+                hdnGrandtotal.value = grandtotal.toFixed(2);
+                txtGrandTot.value = grandtotal.toFixed(2);
+            }
+            
+        }
 
     </script>
 
@@ -539,7 +647,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Quantity" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:TextBox ID="txtQuantity" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" TextMode="Number" CssClass="form-control" Text='<%# Eval("Qty") %>'></asp:TextBox>
+                                            <asp:TextBox ID="txtQuantity" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" CssClass="form-control" Text='<%# Eval("Qty") %>'></asp:TextBox>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Unit" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
@@ -549,27 +657,27 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Rate" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:TextBox ID="txtRate" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" TextMode="Number" CssClass="form-control" Text='<%# Eval("Rate") %>'></asp:TextBox>
+                                            <asp:TextBox ID="txtRate" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" CssClass="form-control" Text='<%# Eval("Rate") %>'></asp:TextBox>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="CGST(%)" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:TextBox ID="txtCGST" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" TextMode="Number" CssClass="form-control" Text='<%# Eval("CGSTPer") %>'></asp:TextBox>
+                                            <asp:TextBox ID="txtCGST" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" CssClass="form-control" Text='<%# Eval("CGSTPer") %>'></asp:TextBox>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="SGST(%)" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:TextBox ID="txtSGST" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" TextMode="Number" CssClass="form-control" Text='<%# Eval("SGSTPer") %>'></asp:TextBox>
+                                            <asp:TextBox ID="txtSGST" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" CssClass="form-control" Text='<%# Eval("SGSTPer") %>'></asp:TextBox>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="IGST(%)" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:TextBox ID="txtIGST" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" TextMode="Number" CssClass="form-control" Text='<%# Eval("IGSTPer") %>'></asp:TextBox>
+                                            <asp:TextBox ID="txtIGST" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" CssClass="form-control" Text='<%# Eval("IGSTPer") %>'></asp:TextBox>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Discount(%)" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:TextBox ID="txtDiscount" runat="server" oninput="calculateRowTotal(this)" TextMode="Number" Style="text-align: center" CssClass="form-control" Text='<%# Eval("Discount") %>'></asp:TextBox>
+                                            <asp:TextBox ID="txtDiscount" runat="server" oninput="calculateRowTotal(this)" Style="text-align: center" CssClass="form-control" Text='<%# Eval("Discount") %>'></asp:TextBox>
 
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -603,6 +711,7 @@
                                         <div class="col-md-4"><b>Sum of Material Amount :</b></div>
                                         <div class="col-md-4">
                                             <asp:TextBox ID="sumofAmount" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>
+                                            <asp:HiddenField ID="hdnProductAmt" runat="server" />
                                         </div>
                                     </div>
                                 </center>
@@ -631,19 +740,19 @@
                                         <asp:TextBox ID="txtHSN" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtRate" Width="100px" runat="server" Text="0" OnTextChanged="txtRate_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtRate" Width="100px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtBasic" Width="100px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtBasic_TextChanged"></asp:TextBox>
+                                        <asp:TextBox ID="txtBasic" Width="100px" runat="server" Text="0"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="CGSTPer" Width="50px" runat="server" Text="0" OnTextChanged="CGSTPer_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="CGSTPer" Width="50px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="SGSTPer" Width="50px" runat="server" Text="0" OnTextChanged="SGSTPer_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="SGSTPer" Width="50px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="IGSTPer" Width="50px" runat="server" Text="0" OnTextChanged="IGSTPer_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="IGSTPer" Width="50px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
                                         <asp:TextBox ID="txtCost" Width="100px" runat="server" Enabled="false" Text="0"></asp:TextBox>
@@ -663,18 +772,18 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <asp:TextBox ID="txtTCharge" Width="250px" runat="server" Text="0" OnTextChanged="txtTCharge_TextChanged" AutoPostBack="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCharge" Width="250px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTCGSTPer" Width="50px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTCGSTPer_TextChanged"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCGSTPer" Width="50px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
                                         <asp:TextBox ID="txtTCGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTSGSTPer_TextChanged"></asp:TextBox>
+                                        <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
                                         <asp:TextBox ID="txtTSGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server" Text="0" AutoPostBack="true" OnTextChanged="txtTIGSTPer_TextChanged"></asp:TextBox>
+                                        <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
                                         <asp:TextBox ID="txtTIGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
                                     </td>
                                     <td>
@@ -691,27 +800,21 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             TCS (%)
-                                            <asp:DropDownList runat="server" CssClass="form-control" ID="txtTCSPer" OnSelectedIndexChanged="txtTCSPer_SelectedIndexChanged" AutoPostBack="true">
-                                                <asp:ListItem Value="0">0</asp:ListItem>
-                                                <asp:ListItem Value="0.01">0.01</asp:ListItem>
-                                                <asp:ListItem Value="0.075">0.075</asp:ListItem>
-                                                <asp:ListItem Value="0.075">0.075</asp:ListItem>
-                                                <asp:ListItem Value="0.08">0.08</asp:ListItem>
+                                            <asp:DropDownList runat="server" CssClass="form-control" ID="txtTCSPer" oninput="calculateTCS(this)">
+
+                                                <asp:ListItem Value="">--SELECT--</asp:ListItem>
                                                 <asp:ListItem Value="0.0888">0.0888</asp:ListItem>
-                                                <asp:ListItem Value="0.1">0.1</asp:ListItem>
-                                                <asp:ListItem Value="0.1">0.1</asp:ListItem>
-                                                <asp:ListItem Value="0.1">0.1</asp:ListItem>
-                                                <asp:ListItem Value="0.1">0.1</asp:ListItem>
-                                                <asp:ListItem Value="0.1">0.1</asp:ListItem>
                                                 <asp:ListItem Value="0.118">0.118</asp:ListItem>
-                                                <asp:ListItem Value="0.6">0.6</asp:ListItem>
                                                 <asp:ListItem Value="0.65">0.65</asp:ListItem>
                                                 <asp:ListItem Value="0.75">0.75</asp:ListItem>
-                                                <asp:ListItem Value="0.75">0.75</asp:ListItem>
                                                 <asp:ListItem Value="0.9">0.9</asp:ListItem>
-                                                <asp:ListItem Value="1">1</asp:ListItem>
+                                                <asp:ListItem Value="0.6">0.6</asp:ListItem>
+                                                <asp:ListItem Value="0.1">0.1</asp:ListItem>
+                                                <asp:ListItem Value="0.08">0.08</asp:ListItem>
+                                                <asp:ListItem Value="0">0</asp:ListItem>
                                                 <asp:ListItem Value="1">1</asp:ListItem>
                                                 <asp:ListItem Value="20">20</asp:ListItem>
+
                                             </asp:DropDownList>
 
                                             <%-- <asp:TextBox runat="server" ID="txtTCSPer" CssClass="form-control" placeholder="TCS (%)" Text="0" OnTextChanged="txtTCSPer_TextChanged" AutoPostBack="true"></asp:TextBox>--%>

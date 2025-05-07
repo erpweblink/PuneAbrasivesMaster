@@ -83,7 +83,10 @@ public partial class Purchase_PurchaseBillList : System.Web.UI.Page
         {
             if (!string.IsNullOrEmpty(e.CommandArgument.ToString()))
             {
-                Report(e.CommandArgument.ToString());
+                //Report(e.CommandArgument.ToString());
+                Session["PDFID"] = e.CommandArgument.ToString();
+                // Response.Write("<script>window.open('PurchaseBillPDF.aspx','_blank');</script>");
+                Response.Redirect("PurchaseBillPDF.aspx?Id=" + obj.encrypt(e.CommandArgument.ToString()) + " ");
             }
         }
 
