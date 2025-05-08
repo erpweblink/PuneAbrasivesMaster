@@ -68,12 +68,25 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
                     hhd.Value = ID;
                     Load_OrderNORecord(ID);
                 }
-               
 
-                
+
+                enable();
 
             }
         }
+    }
+
+    public void enable()
+    {
+      
+        txtCost.Enabled = false;
+        txtTCGSTamt.Enabled = false;
+        txtTSGSTamt.Enabled = false;
+        txtTIGSTamt.Enabled = false;
+        txtTCost.Enabled = false;
+        txtTCSAmt.Enabled = false;
+        txtGrandTot.Enabled = false;
+        
     }
     //Data Fetch
     private void Load_Record(string ID)
@@ -327,11 +340,11 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@CGSTPer", CGSTPer.Text.Trim());
         cmd.Parameters.AddWithValue("@SGSTPer", SGSTPer.Text.Trim());
         cmd.Parameters.AddWithValue("@IGSTPer", IGSTPer.Text.Trim());
-        cmd.Parameters.AddWithValue("@Cost", txtCost.Text.Trim());
+        cmd.Parameters.AddWithValue("@Cost", hdnFCost.Value);
         cmd.Parameters.AddWithValue("@TCSPer", txtTCSPer.Text.Trim());
         cmd.Parameters.AddWithValue("@TCSAmount", txtTCSAmt.Text.Trim());
         cmd.Parameters.AddWithValue("@sumofAmount", sumofAmount.Text.Trim());
-        cmd.Parameters.AddWithValue("@GrandTotal", txtGrandTot.Text.Trim());
+        cmd.Parameters.AddWithValue("@GrandTotal", hdnGrandtotal.Value);
         cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());
         cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
 
@@ -343,7 +356,7 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@TSGSTAmt", txtTSGSTamt.Text.Trim());
         cmd.Parameters.AddWithValue("@TIGSTPer", txtTIGSTPer.Text.Trim());
         cmd.Parameters.AddWithValue("@TIGSTAmt", txtTIGSTamt.Text.Trim());
-        cmd.Parameters.AddWithValue("@TotalCost", txtTCost.Text.Trim());
+        cmd.Parameters.AddWithValue("@TotalCost", hdnTCost.Value);
         cmd.Parameters.AddWithValue("@DateOfReceived", txtDOR.Text.Trim());
         int a = 0;
         con.Open();
@@ -409,7 +422,7 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
                 // Discount calculation
                 decimal discountAmount = basic * discount / 100;
                 decimal afterDiscount = basic - discountAmount;
-                decimal taxAmount = (afterDiscount * gstamt) / 100;
+                decimal taxAmount = gstamt;
                 decimal total = afterDiscount + taxAmount;
                 total = total != 0 ? total : 0;
 
@@ -925,9 +938,6 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
     {
         try
         {
-            hdnGrandtotal.Value = "0";
-            txtGrandTot.Text = "0";
-            txtTCost.Text = "0";
             getOrderDatailsdts();
         }
         catch (Exception ex)

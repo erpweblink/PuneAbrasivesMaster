@@ -345,6 +345,7 @@
             var rateField = document.getElementById('<%= txtRate.ClientID %>');
             var FBasicAmt = document.getElementById('<%= txtBasic.ClientID %>');
             var FCost = document.getElementById('<%= txtCost.ClientID %>');
+            var hdnFCost = document.getElementById('<%= hdnFCost.ClientID %>');
             var FCGSTPer = document.getElementById('<%= CGSTPer.ClientID %>');
             var FSGSTPer = document.getElementById('<%= SGSTPer.ClientID %>');
             var FIGSTPer = document.getElementById('<%= IGSTPer.ClientID %>');
@@ -361,6 +362,7 @@
 
             FBasicAmt.value = FranAmount.toFixed(2);
             FCost.value = FgrdTotal.toFixed(2);
+            hdnFCost.value = FgrdTotal.toFixed(2);
             calculateTCS(2);
         }
 
@@ -368,6 +370,7 @@
             var sumofAmount = document.getElementById('<%= sumofAmount.ClientID %>');
             var TCharge = document.getElementById('<%= txtTCharge.ClientID %>');
             var TCost = document.getElementById('<%= txtTCost.ClientID %>');
+            var hdnTCost = document.getElementById('<%= hdnTCost.ClientID %>');
             var TCGSTPer = document.getElementById('<%= txtTCGSTPer.ClientID %>');
             var TSGSTPer = document.getElementById('<%= txtTSGSTPer.ClientID %>');
             var TIGSTPer = document.getElementById('<%= txtTIGSTPer.ClientID %>');
@@ -402,6 +405,7 @@
             var TGstAmount = Charge + CGSTAmt + SGSTAmt + IGSTAmt;
             var TgrdTotal = TGstAmount;
             TCost.value = TgrdTotal.toFixed(2);
+            hdnTCost.value= TgrdTotal.toFixed(2);
             calculateTCS(2);
         }
 
@@ -740,22 +744,23 @@
                                         <asp:TextBox ID="txtHSN" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtRate" Width="100px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtRate" Width="100px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtBasic" Width="100px" runat="server" Text="0"></asp:TextBox>
+                                        <asp:TextBox ID="txtBasic" Width="100px" runat="server" ></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="CGSTPer" Width="50px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="CGSTPer" Width="50px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="SGSTPer" Width="50px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="SGSTPer" Width="50px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="IGSTPer" Width="50px" runat="server" Text="0" oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="IGSTPer" Width="50px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtCost" Width="100px" runat="server" Enabled="false" Text="0"></asp:TextBox>
+                                        <asp:TextBox ID="txtCost" Width="100px" runat="server"  ></asp:TextBox>
+                                        <asp:HiddenField ID="hdnFCost" runat="server" />
                                     </td>
                                 </tr>
                             </table>
@@ -772,22 +777,23 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <asp:TextBox ID="txtTCharge" Width="250px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCharge" Width="250px" runat="server"  oninput="calculateTransport(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTCGSTPer" Width="50px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
-                                        <asp:TextBox ID="txtTCGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCGSTPer" Width="50px" runat="server" oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCGSTamt" Width="100px" runat="server" ></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
-                                        <asp:TextBox ID="txtTSGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server"  oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTSGSTamt" Width="100px" runat="server"  ></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server" Text="0" oninput="calculateTransport(this)"></asp:TextBox>
-                                        <asp:TextBox ID="txtTIGSTamt" Width="100px" runat="server" Text="0" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server"  oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTIGSTamt" Width="100px" runat="server"  ></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTCost" Width="100px" runat="server" Enabled="false" Text="0"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCost" Width="100px" runat="server" ></asp:TextBox>
+                                        <asp:HiddenField ID="hdnTCost" runat="server" />
                                     </td>
                                 </tr>
                             </table>
@@ -819,7 +825,7 @@
 
                                             <%-- <asp:TextBox runat="server" ID="txtTCSPer" CssClass="form-control" placeholder="TCS (%)" Text="0" OnTextChanged="txtTCSPer_TextChanged" AutoPostBack="true"></asp:TextBox>--%>
                                         </div>
-                                        <div class="col-md-8">TCS Amt<asp:TextBox ID="txtTCSAmt" CssClass="form-control" runat="server" Width="100%" ReadOnly="true" Text="0" placeholder="TCS amount"></asp:TextBox></div>
+                                        <div class="col-md-8">TCS Amt<asp:TextBox ID="txtTCSAmt" CssClass="form-control" runat="server" Width="100%"  placeholder="TCS amount"></asp:TextBox></div>
                                     </div>
                                 </div>
                             </center>
@@ -827,7 +833,7 @@
                                 <div class="col-md-8">
                                     <div class="col-md-4"><b>Grand Total :</b></div>
                                     <div class="col-md-4">
-                                        <asp:TextBox ID="txtGrandTot" CssClass="form-control" runat="server" Width="100%" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtGrandTot" CssClass="form-control" runat="server" Width="100%" ></asp:TextBox>
                                     </div>
                                 </div>
                             </center>
