@@ -339,10 +339,10 @@ public partial class Admin_PurchaseBillEntry : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@Basic", txtBasic.Text.Trim());
         cmd.Parameters.AddWithValue("@CGSTPer", CGSTPer.Text.Trim());
         cmd.Parameters.AddWithValue("@SGSTPer", SGSTPer.Text.Trim());
-        cmd.Parameters.AddWithValue("@IGSTPer", IGSTPer.Text.Trim());
+        cmd.Parameters.AddWithValue("@IGSTPer", IGSTPer.Text.Trim());  
         cmd.Parameters.AddWithValue("@Cost", hdnFCost.Value);
         cmd.Parameters.AddWithValue("@TCSPer", txtTCSPer.Text.Trim());
-        cmd.Parameters.AddWithValue("@TCSAmount", txtTCSAmt.Text.Trim());
+        cmd.Parameters.AddWithValue("@TCSAmount", hdnTCSAmount.Value);
         cmd.Parameters.AddWithValue("@sumofAmount", sumofAmount.Text.Trim());
         cmd.Parameters.AddWithValue("@GrandTotal", hdnGrandtotal.Value);
         cmd.Parameters.AddWithValue("@CreatedBy", Session["UserCode"].ToString());

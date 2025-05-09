@@ -335,7 +335,7 @@
 
             calculateFright(2);
             calculateTransport(2);
-          
+
 
 
         }
@@ -405,7 +405,7 @@
             var TGstAmount = Charge + CGSTAmt + SGSTAmt + IGSTAmt;
             var TgrdTotal = TGstAmount;
             TCost.value = TgrdTotal.toFixed(2);
-            hdnTCost.value= TgrdTotal.toFixed(2);
+            hdnTCost.value = TgrdTotal.toFixed(2);
             calculateTCS(2);
         }
 
@@ -417,6 +417,7 @@
             var TCSAmt = parseFloat(txtTCSAmt.value) || 0;
 
             var hdnProductAmt = document.getElementById('<%= hdnProductAmt.ClientID %>');
+            var hdnTCSAmount = document.getElementById('<%= hdnTCSAmount.ClientID %>');
             var FCost = document.getElementById('<%= txtCost.ClientID %>');
             var TCost = document.getElementById('<%= txtTCost.ClientID %>');
 
@@ -428,10 +429,11 @@
             var TCSAmt = (Total * TCSPer) / 100;
             if (TCSAmt) {
                 txtTCSAmt.value = TCSAmt.toFixed(2);
+                hdnTCSAmount.value = TCSAmt.toFixed(2);
             }
-           
+
             var grandtotal = TCSAmt + Total;
-            
+
             //Grandtotal calculation
             var hdnGrandtotal = document.getElementById('<%= hdnGrandtotal.ClientID %>');
             var txtGrandTot = document.getElementById('<%= txtGrandTot.ClientID %>');
@@ -439,7 +441,7 @@
                 hdnGrandtotal.value = grandtotal.toFixed(2);
                 txtGrandTot.value = grandtotal.toFixed(2);
             }
-            
+
         }
 
     </script>
@@ -744,22 +746,22 @@
                                         <asp:TextBox ID="txtHSN" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtRate" Width="100px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtRate" Width="100px" runat="server" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtBasic" Width="100px" runat="server" ></asp:TextBox>
+                                        <asp:TextBox ID="txtBasic" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="CGSTPer" Width="50px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="CGSTPer" Width="50px" runat="server" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="SGSTPer" Width="50px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="SGSTPer" Width="50px" runat="server" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="IGSTPer" Width="50px" runat="server"  oninput="calculateFright(this)"></asp:TextBox>
+                                        <asp:TextBox ID="IGSTPer" Width="50px" runat="server" oninput="calculateFright(this)"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtCost" Width="100px" runat="server"  ></asp:TextBox>
+                                        <asp:TextBox ID="txtCost" Width="100px" runat="server"></asp:TextBox>
                                         <asp:HiddenField ID="hdnFCost" runat="server" />
                                     </td>
                                 </tr>
@@ -777,22 +779,22 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <asp:TextBox ID="txtTCharge" Width="250px" runat="server"  oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTCharge" Width="250px" runat="server" oninput="calculateTransport(this)"></asp:TextBox>
                                     </td>
                                     <td>
                                         <asp:TextBox ID="txtTCGSTPer" Width="50px" runat="server" oninput="calculateTransport(this)"></asp:TextBox>
-                                        <asp:TextBox ID="txtTCGSTamt" Width="100px" runat="server" ></asp:TextBox>
+                                        <asp:TextBox ID="txtTCGSTamt" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server"  oninput="calculateTransport(this)"></asp:TextBox>
-                                        <asp:TextBox ID="txtTSGSTamt" Width="100px" runat="server"  ></asp:TextBox>
+                                        <asp:TextBox ID="txtTSGSTPer" Width="50px" runat="server" oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTSGSTamt" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server"  oninput="calculateTransport(this)"></asp:TextBox>
-                                        <asp:TextBox ID="txtTIGSTamt" Width="100px" runat="server"  ></asp:TextBox>
+                                        <asp:TextBox ID="txtTIGSTPer" Width="50px" runat="server" oninput="calculateTransport(this)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTIGSTamt" Width="100px" runat="server"></asp:TextBox>
                                     </td>
                                     <td>
-                                        <asp:TextBox ID="txtTCost" Width="100px" runat="server" ></asp:TextBox>
+                                        <asp:TextBox ID="txtTCost" Width="100px" runat="server"></asp:TextBox>
                                         <asp:HiddenField ID="hdnTCost" runat="server" />
                                     </td>
                                 </tr>
@@ -825,7 +827,11 @@
 
                                             <%-- <asp:TextBox runat="server" ID="txtTCSPer" CssClass="form-control" placeholder="TCS (%)" Text="0" OnTextChanged="txtTCSPer_TextChanged" AutoPostBack="true"></asp:TextBox>--%>
                                         </div>
-                                        <div class="col-md-8">TCS Amt<asp:TextBox ID="txtTCSAmt" CssClass="form-control" runat="server" Width="100%"  placeholder="TCS amount"></asp:TextBox></div>
+                                        <div class="col-md-8">
+                                            TCS Amt<asp:TextBox ID="txtTCSAmt" CssClass="form-control" runat="server" Width="100%" placeholder="TCS amount"></asp:TextBox>
+                                            <asp:HiddenField ID="hdnTCSAmount" runat="server" />
+
+                                        </div>
                                     </div>
                                 </div>
                             </center>
@@ -833,7 +839,7 @@
                                 <div class="col-md-8">
                                     <div class="col-md-4"><b>Grand Total :</b></div>
                                     <div class="col-md-4">
-                                        <asp:TextBox ID="txtGrandTot" CssClass="form-control" runat="server" Width="100%" ></asp:TextBox>
+                                        <asp:TextBox ID="txtGrandTot" CssClass="form-control" runat="server" Width="100%"></asp:TextBox>
                                     </div>
                                 </div>
                             </center>

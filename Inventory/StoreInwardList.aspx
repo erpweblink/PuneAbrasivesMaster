@@ -274,9 +274,9 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Total Price" HeaderStyle-CssClass="gvhead">
+                                    <asp:TemplateField HeaderText="PO No." HeaderStyle-CssClass="gvhead">
                                         <ItemTemplate>
-                                            <asp:Label ID="Total_Price" runat="server" Text='<%#Eval("Total_Price")%>'></asp:Label>
+                                            <asp:Label ID="Total_Price" runat="server" Text='<%#Eval("pono")%>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
 

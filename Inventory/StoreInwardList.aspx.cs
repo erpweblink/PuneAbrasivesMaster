@@ -4,11 +4,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -34,7 +29,7 @@ public partial class Admin_StoreInwardList : System.Web.UI.Page
     //Fill GridView
     private void FillGrid()
     {
-        DataTable Dt = Cls_Main.Read_Table("SELECT * FROM [tbl_PendingInwardHdr] WHERE IsDeleted = 0 ORDER BY ID DESC");
+        DataTable Dt = Cls_Main.Read_Table("SELECT CASE WHEN pono='--- select ---' THEN '' ELSE pono END AS pono, * FROM [tbl_PendingInwardHdr] WHERE IsDeleted = 0 ORDER BY ID DESC");
         GVInward.DataSource = Dt;
         GVInward.DataBind();
     }
