@@ -53,7 +53,8 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                     dt.Columns.Add("Description");
                     dt.Columns.Add("HSN");
                     dt.Columns.Add("TotalQty");
-                    dt.Columns.Add("Qty");
+                    dt.Columns.Add("Qty");              
+
                     dt.Columns.Add("InQty");
                     dt.Columns.Add("Batchno");
 
@@ -808,6 +809,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
         dt.Columns.Add("Particulars", typeof(string));
         dt.Columns.Add("Description");
         dt.Columns.Add("HSN");
+        dt.Columns.Add("TotalQty");
         dt.Columns.Add("Qty");
         dt.Columns.Add("InQty");
         dt.Columns.Add("Batchno");
@@ -820,16 +822,17 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                 TextBox Particulars = (grd1.FindControl("txtProduct") as TextBox);
                 string Description = (grd1.FindControl("txtDescription") as TextBox).Text;
                 string HSN = (grd1.FindControl("txtHSN") as TextBox).Text;
+                string TotalQty = (grd1.FindControl("txtQuantity") as TextBox).Text;
                 string Qty = (grd1.FindControl("txtQuantity") as TextBox).Text;
                 string InQty = (grd1.FindControl("txtInQuantity") as TextBox).Text;
                 string Batchno = (grd1.FindControl("txtBatchno") as TextBox).Text;
 
-                dt.Rows.Add(false, "", Particulars.Text, Description, HSN, Qty, InQty, Batchno);
+                dt.Rows.Add(false, "", Particulars.Text, Description, HSN, TotalQty, Qty, InQty, Batchno);
             }
 
         }
 
-        dt.Rows.Add(false, "", "", "", "", "", "", "");
+        dt.Rows.Add(false, "", "", "", "", "","", "", "");
 
         dgvTaxinvoiceDetails.DataSource = dt;
         dgvTaxinvoiceDetails.DataBind();
