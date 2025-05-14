@@ -134,7 +134,11 @@ public partial class Reports_SalesReport : System.Web.UI.Page
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Action", "GetSalesReportNew");
                     cmd.Parameters.AddWithValue("@CompanyName", txtCustomerName.Text);
-                    //cmd.Parameters.AddWithValue("@Status", ddlStatus.SelectedItem.Text);
+                    cmd.Parameters.AddWithValue("@IsTaxInvoiceChecked", isTaxInvoiceChecked);
+                    cmd.Parameters.AddWithValue("@IsEInvoiceChecked", isEInvoiceChecked);
+                    cmd.Parameters.AddWithValue("@IsCancelEInvoiceChecked", isCancelEInvoiceChecked);
+                    cmd.Parameters.AddWithValue("@IsEWayBillChecked", isEWayBillChecked);
+                    cmd.Parameters.AddWithValue("@IsCancelEWayBillChecked", isCancelEWayBillChecked);
                     cmd.Parameters.AddWithValue("@FromDate", txtfromdate.Text);
                     cmd.Parameters.AddWithValue("@ToDate", txttodate.Text);
                     using (SqlDataAdapter sda = new SqlDataAdapter())
