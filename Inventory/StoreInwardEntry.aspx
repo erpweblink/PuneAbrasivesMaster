@@ -3,6 +3,12 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            document.body.classList.add('sb-sidenav-toggled');
+        });
+    </script>
     <style>
         .spancls {
             color: #5d5656 !important;
@@ -558,6 +564,12 @@
                                                 ForeColor="Red"
                                                 Display="Dynamic"
                                                 ValidationGroup="1" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:TemplateField HeaderText="Rate" ItemStyle-Width="120" HeaderStyle-CssClass="gvhead" Visible="false">
+                                        <ItemTemplate>
+
+                                            <asp:Label runat="server" ID="lblrate" Text='<%# Eval("Rate") %>'></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Batch No." ItemStyle-Width="120" HeaderStyle-CssClass="gvhead">

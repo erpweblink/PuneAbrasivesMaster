@@ -3,6 +3,12 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+   
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            document.body.classList.add('sb-sidenav-toggled');
+        });
+    </script>
     <style>
         .spancls {
             color: #5d5656 !important;
@@ -342,13 +348,13 @@
 
         function calculateFright(input) {
             var sumofAmount = document.getElementById('<%= sumofAmount.ClientID %>');
-            var rateField = document.getElementById('<%= txtRate.ClientID %>');
-            var FBasicAmt = document.getElementById('<%= txtBasic.ClientID %>');
-            var FCost = document.getElementById('<%= txtCost.ClientID %>');
-            var hdnFCost = document.getElementById('<%= hdnFCost.ClientID %>');
-            var FCGSTPer = document.getElementById('<%= CGSTPer.ClientID %>');
-            var FSGSTPer = document.getElementById('<%= SGSTPer.ClientID %>');
-            var FIGSTPer = document.getElementById('<%= IGSTPer.ClientID %>');
+                var rateField = document.getElementById('<%= txtRate.ClientID %>');
+                var FBasicAmt = document.getElementById('<%= txtBasic.ClientID %>');
+                var FCost = document.getElementById('<%= txtCost.ClientID %>');
+                var hdnFCost = document.getElementById('<%= hdnFCost.ClientID %>');
+                var FCGSTPer = document.getElementById('<%= CGSTPer.ClientID %>');
+                var FSGSTPer = document.getElementById('<%= SGSTPer.ClientID %>');
+                var FIGSTPer = document.getElementById('<%= IGSTPer.ClientID %>');
             var amount = parseFloat(sumofAmount.value) || 0;
             var rate = parseFloat(rateField.value) || 0;
             var Cost = parseFloat(FCost.value) || 0;
@@ -368,16 +374,16 @@
 
         function calculateTransport(input) {
             var sumofAmount = document.getElementById('<%= sumofAmount.ClientID %>');
-            var TCharge = document.getElementById('<%= txtTCharge.ClientID %>');
-            var TCost = document.getElementById('<%= txtTCost.ClientID %>');
-            var hdnTCost = document.getElementById('<%= hdnTCost.ClientID %>');
-            var TCGSTPer = document.getElementById('<%= txtTCGSTPer.ClientID %>');
-            var TSGSTPer = document.getElementById('<%= txtTSGSTPer.ClientID %>');
-            var TIGSTPer = document.getElementById('<%= txtTIGSTPer.ClientID %>');
+                var TCharge = document.getElementById('<%= txtTCharge.ClientID %>');
+                var TCost = document.getElementById('<%= txtTCost.ClientID %>');
+                var hdnTCost = document.getElementById('<%= hdnTCost.ClientID %>');
+                var TCGSTPer = document.getElementById('<%= txtTCGSTPer.ClientID %>');
+                var TSGSTPer = document.getElementById('<%= txtTSGSTPer.ClientID %>');
+                var TIGSTPer = document.getElementById('<%= txtTIGSTPer.ClientID %>');
 
-            var TCGSTAmt = document.getElementById('<%= txtTCGSTamt.ClientID %>');
-            var TSGSTAmt = document.getElementById('<%= txtTSGSTamt.ClientID %>');
-            var TIGSTAmt = document.getElementById('<%= txtTIGSTamt.ClientID %>');
+                var TCGSTAmt = document.getElementById('<%= txtTCGSTamt.ClientID %>');
+                var TSGSTAmt = document.getElementById('<%= txtTSGSTamt.ClientID %>');
+                var TIGSTAmt = document.getElementById('<%= txtTIGSTamt.ClientID %>');
 
             var amount = parseFloat(sumofAmount.value) || 0;
             var Charge = parseFloat(TCharge.value) || 0;
@@ -411,32 +417,32 @@
 
         function calculateTCS(input) {
             var txtTCSPer = document.getElementById('<%= txtTCSPer.ClientID %>');
-            var txtTCSAmt = document.getElementById('<%= txtTCSAmt.ClientID %>');
+                var txtTCSAmt = document.getElementById('<%= txtTCSAmt.ClientID %>');
 
-            var TCSPer = parseFloat(txtTCSPer.value) || 0;
-            var TCSAmt = parseFloat(txtTCSAmt.value) || 0;
+                var TCSPer = parseFloat(txtTCSPer.value) || 0;
+                var TCSAmt = parseFloat(txtTCSAmt.value) || 0;
 
-            var hdnProductAmt = document.getElementById('<%= hdnProductAmt.ClientID %>');
-            var hdnTCSAmount = document.getElementById('<%= hdnTCSAmount.ClientID %>');
-            var FCost = document.getElementById('<%= txtCost.ClientID %>');
-            var TCost = document.getElementById('<%= txtTCost.ClientID %>');
+                var hdnProductAmt = document.getElementById('<%= hdnProductAmt.ClientID %>');
+                var hdnTCSAmount = document.getElementById('<%= hdnTCSAmount.ClientID %>');
+                var FCost = document.getElementById('<%= txtCost.ClientID %>');
+                var TCost = document.getElementById('<%= txtTCost.ClientID %>');
 
-            var ProductAmt = parseFloat(hdnProductAmt.value) || 0;
-            var FRigCost = parseFloat(FCost.value) || 0;
-            var TranCost = parseFloat(TCost.value) || 0;
+                var ProductAmt = parseFloat(hdnProductAmt.value) || 0;
+                var FRigCost = parseFloat(FCost.value) || 0;
+                var TranCost = parseFloat(TCost.value) || 0;
 
-            var Total = ProductAmt + FRigCost + TranCost;
-            var TCSAmt = (Total * TCSPer) / 100;
-            if (TCSAmt) {
-                txtTCSAmt.value = TCSAmt.toFixed(2);
-                hdnTCSAmount.value = TCSAmt.toFixed(2);
-            }
+                var Total = ProductAmt + FRigCost + TranCost;
+                var TCSAmt = (Total * TCSPer) / 100;
+                if (TCSAmt) {
+                    txtTCSAmt.value = TCSAmt.toFixed(2);
+                    hdnTCSAmount.value = TCSAmt.toFixed(2);
+                }
 
-            var grandtotal = TCSAmt + Total;
+                var grandtotal = TCSAmt + Total;
 
-            //Grandtotal calculation
-            var hdnGrandtotal = document.getElementById('<%= hdnGrandtotal.ClientID %>');
-            var txtGrandTot = document.getElementById('<%= txtGrandTot.ClientID %>');
+                //Grandtotal calculation
+                var hdnGrandtotal = document.getElementById('<%= hdnGrandtotal.ClientID %>');
+                var txtGrandTot = document.getElementById('<%= txtGrandTot.ClientID %>');
             if (grandtotal) {
                 hdnGrandtotal.value = grandtotal.toFixed(2);
                 txtGrandTot.value = grandtotal.toFixed(2);

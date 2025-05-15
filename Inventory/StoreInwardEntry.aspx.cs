@@ -53,9 +53,9 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                     dt.Columns.Add("Description");
                     dt.Columns.Add("HSN");
                     dt.Columns.Add("TotalQty");
-                    dt.Columns.Add("Qty");              
-
+                    dt.Columns.Add("Qty");       
                     dt.Columns.Add("InQty");
+                    dt.Columns.Add("Rate");
                     dt.Columns.Add("Batchno");
 
                     //Added Empty Row
@@ -113,7 +113,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                 DataTable dtt1 = new DataTable();
                 // SqlDataAdapter sad31 = new SqlDataAdapter(@"select componentname as Particulars,'N/A' AS TotalQty ,Quantity AS Qty,Quantity AS InQty,Batch AS Batchno, * from tbl_PendingInwardDtls  WHERE OrderNo = '" + hdnOrderNo.Value + "'", con);
 
-                SqlDataAdapter sad31 = new SqlDataAdapter("SELECT PD.ID,PD.HSN,PD.IsSelected,PD.Description,PD.ComponentName AS Particulars,Billed.TotalBilledQty AS TotalQty,PD.Quantity AS Qty,PD.Quantity AS InQty,PD.Batch AS Batchno " +
+                SqlDataAdapter sad31 = new SqlDataAdapter("SELECT PD.ID,PD.HSN,PD.IsSelected,PD.Description,PD.ComponentName AS Particulars,Rate,Billed.TotalBilledQty AS TotalQty,PD.Quantity AS Qty,PD.Quantity AS InQty,PD.Batch AS Batchno " +
                                 " FROM tbl_PendingInwardHdr AS PH " +
                                 " LEFT JOIN tbl_PendingInwardDtls AS PD ON PD.OrderNo = PH.OrderNo " +
                                 " LEFT JOIN ( " +
@@ -253,13 +253,14 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             string txtDescription = (grd1.FindControl("txtDescription") as TextBox).Text;
             string txtHSN = (grd1.FindControl("txtHSN") as TextBox).Text;
             string txtInQuantity = (grd1.FindControl("txtInQuantity") as TextBox).Text;
+            string lblrate = (grd1.FindControl("lblrate") as Label).Text;
             string txtBatchno = (grd1.FindControl("txtBatchno") as TextBox).Text;
             bool chkRow = (grd1.FindControl("chkRow") as CheckBox).Checked;
 
             string lblDescription = "";
             string lblhsn = "";
             string lblUnit = "";
-            string lblRate = "";
+            string lblRate = lblrate;
             string lblTotal = "";
             string lblCGSTPer = "";
             string lblCGST = "";
@@ -725,7 +726,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
             //WHERE PONo = '" + ddlponumber.SelectedItem.Text + "'", con); 
 
             SqlDataAdapter sad31 = new SqlDataAdapter("with Record as( " +
-                " SELECT PD.Qty AS TotalQty,PH.IsSelected,PD.ID AS id,PD.Particulars,PD.Batchno,PD.Description,PD.HSN AS HSN, " +
+                " SELECT PD.Qty AS TotalQty,PH.IsSelected,PD.ID AS id,PD.Particulars,PD.Batchno,Rate,PD.Description,PD.HSN AS HSN, " +
                         " (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, 0)) AS Qty, (CONVERT(INT, PD.Qty) - ISNULL(Billed.TotalBilledQty, " +
                         " 0)) AS InQty  FROM tblPurchaseOrderHdr AS PH" +
                         " LEFT JOIN tblPurchaseOrderDtls AS PD ON PD.HeaderID = PH.Id " +
@@ -738,7 +739,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                             " GROUP BY PBB.ComponentName, PBB.HSN " +
                         " ) AS Billed ON Billed.ComponentName = PD.Particulars AND Billed.HSN = PD.HSN " +
                         " WHERE PH.PONo = '" + ddlponumber.SelectedItem.Text + "') " +
-                        " Select TotalQty,IsSelected,ID AS id,Particulars,Batchno,Description,HSN AS HSN, " +
+                        " Select TotalQty,IsSelected,ID AS id,Particulars,Rate,Batchno,Description,HSN AS HSN, " +
                         " Qty, InQty  from Record Where Qty <>'0' ", con);
             sad31.Fill(dtt1);
             if (dtt1.Rows.Count > 0)
@@ -812,6 +813,7 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
         dt.Columns.Add("TotalQty");
         dt.Columns.Add("Qty");
         dt.Columns.Add("InQty");
+        dt.Columns.Add("Rate");
         dt.Columns.Add("Batchno");
 
         if (dgvTaxinvoiceDetails.Rows.Count > 0)
@@ -825,14 +827,15 @@ public partial class Admin_StoreInwardEntry : System.Web.UI.Page
                 string TotalQty = (grd1.FindControl("txtQuantity") as TextBox).Text;
                 string Qty = (grd1.FindControl("txtQuantity") as TextBox).Text;
                 string InQty = (grd1.FindControl("txtInQuantity") as TextBox).Text;
+                string Rate = (grd1.FindControl("lblrate") as Label).Text;
                 string Batchno = (grd1.FindControl("txtBatchno") as TextBox).Text;
 
-                dt.Rows.Add(false, "", Particulars.Text, Description, HSN, TotalQty, Qty, InQty, Batchno);
+                dt.Rows.Add(false, "", Particulars.Text, Description, HSN, TotalQty, Qty, InQty,Rate, Batchno);
             }
 
         }
 
-        dt.Rows.Add(false, "", "", "", "", "","", "", "");
+        dt.Rows.Add(false, "", "", "", "", "","", "","", "");
 
         dgvTaxinvoiceDetails.DataSource = dt;
         dgvTaxinvoiceDetails.DataBind();

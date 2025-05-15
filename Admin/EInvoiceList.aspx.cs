@@ -989,6 +989,10 @@ public partial class Admin_TaxInvoiceList : System.Web.UI.Page
                                 Status = JsonRespons["data"]["Status"].ToString();
                                 Remarks = JsonRespons["data"]["Remarks"].ToString();
                             }
+                            else
+                            {
+                                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + result2 + "');", true);
+                            }
                         }
                     }
                 }
