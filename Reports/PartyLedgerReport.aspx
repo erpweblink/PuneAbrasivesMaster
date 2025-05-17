@@ -203,6 +203,7 @@
                                         <div class="col-xl-6 col-md-6">
                                             <asp:Button ID="btnexcel" runat="server" ValidationGroup="form1" CssClass="btn btn-success" Text="Excel" OnClick="ExportExcel" />
                                             <asp:Button ID="btnpdf" runat="server" ValidationGroup="form1" CssClass="btn btn-success" Text="PDF" OnClick="btnpdf_Click" />
+                                            <asp:Button ID="btnxml" runat="server" ValidationGroup="form1" CssClass="btn btn-success" Text="XML" OnClick="btnpdf_Click1" />
 
                                         </div>
                                         <div class="col-xl-4 col-md-4"></div>

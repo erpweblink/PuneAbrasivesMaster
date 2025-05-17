@@ -94,16 +94,16 @@ public partial class Repoerts_OutstandingReport : System.Web.UI.Page
             AutoCompleteExtender1.Enabled = true;
             txtPartyName.Text = string.Empty;
             GetCustomerList(txtPartyName.Text, count);
-            // AutoCompleteExtender2.Enabled = false;
-
+             AutoCompleteExtender2.Enabled = false;
+            
         }
         else if (ddltype.Text == "PURCHASE")
         {
-            // AutoCompleteExtender2.Enabled = true;
+             AutoCompleteExtender2.Enabled = true;
             txtPartyName.Text = string.Empty;
             GetSupplierList(txtPartyName.Text, count);
             AutoCompleteExtender1.Enabled = false;
-
+           
         }
     }
     [System.Web.Script.Services.ScriptMethod()]
@@ -353,10 +353,30 @@ public partial class Repoerts_OutstandingReport : System.Web.UI.Page
                 if (row.RowType == DataControlRowType.DataRow)
                 {
                     // Calculate the total for each column
-                    totalPayable += Convert.ToDecimal((row.FindControl("lblPayable") as Label).Text);
-                    totalReceived += Convert.ToDecimal((row.FindControl("lblReceived") as Label).Text);
-                    totalBalance += Convert.ToDecimal((row.FindControl("lblbalance") as Label).Text);
-                    totalCumBalance += Convert.ToDecimal((row.FindControl("lblCum_Balance") as Label).Text);
+                    Label lblPayable = row.FindControl("lblPayable") as Label;
+                    if (lblPayable != null && !string.IsNullOrWhiteSpace(lblPayable.Text))
+                    {
+                        totalPayable += Convert.ToDecimal(lblPayable.Text);
+                    }
+
+                    Label lblReceived = row.FindControl("lblReceived") as Label;
+                    if (lblReceived != null && !string.IsNullOrWhiteSpace(lblReceived.Text))
+                    {
+                        totalReceived += Convert.ToDecimal(lblReceived.Text);
+                    }
+
+                    Label lblBalance = row.FindControl("lblbalance") as Label;
+                    if (lblBalance != null && !string.IsNullOrWhiteSpace(lblBalance.Text))
+                    {
+                        totalBalance += Convert.ToDecimal(lblBalance.Text);
+                    }
+
+                    Label lblCumBalance = row.FindControl("lblCum_Balance") as Label;
+                    if (lblCumBalance != null && !string.IsNullOrWhiteSpace(lblCumBalance.Text))
+                    {
+                        totalCumBalance += Convert.ToDecimal(lblCumBalance.Text);
+                    }
+
 
                 }
             }

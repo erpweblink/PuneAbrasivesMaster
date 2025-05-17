@@ -8,6 +8,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using Microsoft.Reporting.WebForms;
+using System.IO;
+using iTextSharp.text.pdf.qrcode;
+using System.Text;
+using System.Xml.Linq;
+using System.Xml;
 
 public partial class Reports_PartyLedgerReport : System.Web.UI.Page
 {
@@ -143,21 +148,17 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
 
     protected void ExportExcel(object sender, EventArgs e)
     {
-        Report("Excel");
+        Report("Excel");     
    
     }
-
     protected void Report(string flg)
     {
-
-
         DataSet Dtt = new DataSet();
         string strConnString = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
         using (SqlConnection con = new SqlConnection(strConnString))
         {
             using (SqlCommand cmd = new SqlCommand("[SP_PartyLedgerRDLC]", con))
             {
-                
                 string fdate;
                 string tdate;
                 string ft = txtfromdate.Text;
@@ -170,9 +171,6 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
                 {
                     DateTime ftdate = Convert.ToDateTime(ft, System.Globalization.CultureInfo.GetCultureInfo("ur-PK").DateTimeFormat);
                     fdate = ftdate.ToString("yyyy-MM-dd");
-
-                    //var fttime = Convert.ToDateTime(ft);
-                    //fdate = fttime.ToString("yyyy-MM-dd");
                 }
 
                 if (tt == "")
@@ -181,12 +179,10 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
                 }
                 else
                 {
-
                     DateTime date = Convert.ToDateTime(tt, System.Globalization.CultureInfo.GetCultureInfo("ur-PK").DateTimeFormat);
                     tdate = date.ToString("yyyy-MM-dd");
-                    //var tttime = Convert.ToDateTime(tt);
-                    //tdate = tttime.ToString("yyyy-MM-dd");
                 }
+
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Type", "SALE");
                 cmd.Parameters.AddWithValue("@PartyName", txtPartyName.Text);
@@ -198,7 +194,7 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
                 {
                     cmd.Parameters.AddWithValue("@ToDate", tdate);
                 }
-              
+
                 using (SqlDataAdapter sda = new SqlDataAdapter())
                 {
                     cmd.Connection = con;
@@ -206,8 +202,6 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
                     using (DataSet ds = new DataSet())
                     {
                         sda.Fill(Dtt);
-
-
                     }
                 }
             }
@@ -215,7 +209,6 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
 
         if (Dtt.Tables.Count > 0)
         {
-
             if (Dtt.Tables[0].Rows.Count > 0)
             {
                 ReportDataSource obj1 = new ReportDataSource("DataSet1", Dtt.Tables[0]);
@@ -226,40 +219,56 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
                 ReportViewer1.LocalReport.DataSources.Add(obj3);
                 ReportViewer1.LocalReport.ReportPath = "RDLC_Reports\\PartyLedger.rdlc";
                 ReportViewer1.LocalReport.Refresh();
-                //-------- Print PDF directly without showing ReportViewer ----
-                Warning[] warnings;
-                string[] streamids;
-                string mimeType;
-                string encoding;
-                string extension;
-                byte[] bytePdfRep = ReportViewer1.LocalReport.Render(flg, null, out mimeType, out encoding, out extension, out streamids, out warnings);
-                Response.ClearContent();
-                Response.ClearHeaders();
-                Response.Buffer = true;
-                if (flg == "Excel")
-                {
-                    Response.ContentType = "application/vnd.xls";
-                    Response.AddHeader("content-disposition", "attachment;filename=\"" + txtPartyName.Text + "_PartyLadger.xls"); //Give file name here
 
-                    Response.BinaryWrite(bytePdfRep);
-                    ReportViewer1.LocalReport.DataSources.Clear();
-                    
+                //--------- For Exporting as XML --------------
+                if (flg == "XML")
+                {
+                    // Export dataset as XML
+                    Response.Clear();
+                    Response.ContentType = "text/xml";
+                    Response.AddHeader("content-disposition", "attachment;filename=\"" + txtPartyName.Text + "_PartyLedger.xml\"");
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        // Write the XML to memory stream
+                        Dtt.WriteXml(ms);
+                        Response.BinaryWrite(ms.ToArray());
+                    }
+
+                    Response.End();
+                    return;
                 }
                 else
                 {
-                    //string filePath = Server.MapPath("~") + "/PDF_Files/PartyLedgerReport.pdf";
-                    //System.IO.File.WriteAllBytes(filePath, bytePdfRep);
-                    //ifrRight6.Attributes["src"] = @"../PDF_Files/" + "PartyLedgerReport.pdf";
-                    Response.ContentType = "application/vnd.pdf";
-                    Response.AddHeader("content-disposition", "attachment;filename=\"" + txtPartyName.Text + "_PartyLadger.pdf"); //Give file name here
+                    //--------- For other formats like PDF --------
+                    Warning[] warnings;
+                    string[] streamids;
+                    string mimeType;
+                    string encoding;
+                    string extension;
+                    byte[] bytePdfRep = ReportViewer1.LocalReport.Render(flg, null, out mimeType, out encoding, out extension, out streamids, out warnings);
 
-                    Response.BinaryWrite(bytePdfRep);
-                    ReportViewer1.LocalReport.DataSources.Clear();
+                    Response.ClearContent();
+                    Response.ClearHeaders();
+                    Response.Buffer = true;
 
+                    // Handle other formats like PDF, Excel, etc.
+                    if (flg == "Excel")
+                    {
+                        Response.ContentType = "application/vnd.ms-excel";
+                        Response.AddHeader("content-disposition", "attachment;filename=\"" + txtPartyName.Text + "_PartyLedger.xls\"");
+
+                        Response.BinaryWrite(bytePdfRep);
+                    }
+                    else
+                    {
+                        Response.ContentType = mimeType;
+                        Response.AddHeader("content-disposition", "attachment;filename=\"" + txtPartyName.Text + "_PartyLedger." + extension + "\"");
+
+                        Response.BinaryWrite(bytePdfRep);
+                    }
+                    Response.End();
                 }
-                this.ReportViewer1.Reset();
-
-
             }
             else
             {
@@ -267,6 +276,8 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
             }
         }
     }
+
+
 
     public void GetData()
     {
@@ -384,5 +395,10 @@ public partial class Reports_PartyLedgerReport : System.Web.UI.Page
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         GetData();
+    }
+
+    protected void btnpdf_Click1(object sender, EventArgs e)
+    {
+        Report("XML");
     }
 }
